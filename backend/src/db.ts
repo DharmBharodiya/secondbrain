@@ -50,6 +50,8 @@ const ContentSchema = new Schema({
     type: mongoose.Types.ObjectId,
     ref: "Users",
   },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 const UserModel = model("Users", UserSchema);

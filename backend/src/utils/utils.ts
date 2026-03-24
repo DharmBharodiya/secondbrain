@@ -5,7 +5,7 @@ export function generateHash(length: number) {
   let hash = "";
 
   for (let i = 0; i < length; i++) {
-    hash += Math.floor(Math.random() * length);
+    hash += options[Math.floor(Math.random() * length)];
   }
 
   return hash;
