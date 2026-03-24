@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET_USER || "thisisasecret";
+const JWT_SECRET = process.env.JWT_SECRET_USER || "thisisactuallyasecret";
 
 export interface CustomRequest extends Request {
   id?: string;

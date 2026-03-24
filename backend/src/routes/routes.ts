@@ -8,7 +8,7 @@ import type { CustomRequest } from "../middlewares/AuthMiddleware.js";
 import mongoose from "mongoose";
 import { generateHash } from "../utils/utils.js";
 
-const JWT_SECRET = "thisisasecret";
+const JWT_SECRET = process.env.JWT_SECRET_USER || "thisisactuallyasecret";
 
 const router = express.Router();
 
@@ -19,6 +19,12 @@ router.post("/signup", async (req, res) => {
     return res
       .status(400)
       .json({ message: "Username and password are required" });
+  }
+
+  const userAlreadyExists = await UserModel.findOne({ username });
+
+  if (userAlreadyExists) {
+    return res.status(400).json({ message: "The user already exists." });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -67,15 +73,30 @@ router.post(
   "/content",
   AuthMiddleware,
   async (req: CustomRequest, res: Response) => {
-    const { title, link, type } = req.body;
+    const { title, link, type, notes, tags } = req.body;
     const userId = req.id;
+
+    let tagIds: mongoose.Types.ObjectId[] = [];
+
+    for (let tagname of tags) {
+      let tag = await TagModel.findOne({ title: tagname });
+
+      if (!tag) {
+        await TagModel.create({
+          title: tagname,
+        });
+      } else {
+        tagIds.push(tag._id);
+      }
+    }
 
     await ContentModel.create({
       title: title,
       link: link,
       type: type,
+      notes: notes,
       userId: new mongoose.Types.ObjectId(userId),
-      tags: [],
+      tags: tagIds || [],
     });
 
     res.status(201).json({ message: "Content added." });
@@ -91,7 +112,9 @@ router.get(
     //populate helps you fill in the information, as references were used during schema definition
     const contents = await ContentModel.find({
       userId: new mongoose.Types.ObjectId(userId),
-    }).populate("userId", "username");
+    })
+      .populate("userId", "username")
+      .populate("tags", "title");
 
     res.json({ contents });
   },

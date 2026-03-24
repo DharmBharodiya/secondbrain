@@ -17,7 +17,6 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    unique: true,
     required: true,
   },
 });
@@ -45,6 +44,7 @@ const ContentSchema = new Schema({
   link: String,
   type: String,
   title: String,
+  notes: String,
   tags: [{ type: mongoose.Types.ObjectId, ref: "Tags" }],
   userId: {
     type: mongoose.Types.ObjectId,
