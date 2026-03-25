@@ -1,11 +1,16 @@
 import Button from "./Button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Menu, X } from "lucide-react";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { AuthContext } from "../Context/AuthContext";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const { loggedIn, logOut } = useContext(AuthContext);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,6 +20,12 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleLogout = () => {
+    logOut();
+    setMenuOpen(false);
+    navigate("/");
+  };
 
   return (
     <div
@@ -32,16 +43,27 @@ const Navbar = () => {
       </div>
 
       <div className="hidden md:flex justify-center items-center">
-        <NavLink to="/login">
-          <Button text={"Log in"} variant="normal" />
-        </NavLink>
-        <NavLink to="/signup">
+        {!loggedIn ? (
+          <>
+            <NavLink to="/login">
+              <Button text={"Log in"} variant="normal" />
+            </NavLink>
+            <NavLink to="/signup">
+              <Button
+                text={"Sign Up"}
+                variant="orange"
+                extraStyles=" hover:shadow-orange-500 hover:shadow-xl transition-all duration-75"
+              />
+            </NavLink>
+          </>
+        ) : (
           <Button
-            text={"Sign Up"}
+            text={"Log Out"}
             variant="orange"
-            extraStyles=" hover:shadow-orange-500 hover:shadow-xl transition-all duration-75"
+            clickEvent={handleLogout}
+            extraStyles="hover:shadow-orange-500 hover:shadow-xl transition-all duration-75"
           />
-        </NavLink>
+        )}
       </div>
 
       <div className="flex justify-center items-center md:hidden relative">
@@ -62,17 +84,28 @@ const Navbar = () => {
           <div
             className={`absolute -left-45 top-5 px-4 rounded-full bg-white/70 backdrop-blur-lg shadow-md py-3 w-fit flex justify-between items-center `}
           >
-            <div className="flex justify-center items-center">
-              <NavLink to="/login">
-                <Button text={"Log in"} variant="normal" />
-              </NavLink>
-              <NavLink to="/signup">
+            <div className="hidden md:flex justify-center items-center">
+              {!loggedIn ? (
+                <>
+                  <NavLink to="/login">
+                    <Button text={"Log in"} variant="normal" />
+                  </NavLink>
+                  <NavLink to="/signup">
+                    <Button
+                      text={"Sign Up"}
+                      variant="orange"
+                      extraStyles=" hover:shadow-orange-500 hover:shadow-xl transition-all duration-75"
+                    />
+                  </NavLink>
+                </>
+              ) : (
                 <Button
-                  text={"Sign Up"}
+                  text={"Log Out"}
                   variant="orange"
-                  extraStyles=" hover:shadow-orange-500 hover:shadow-xl transition-all duration-75"
+                  clickEvent={handleLogout}
+                  extraStyles="hover:shadow-orange-500 hover:shadow-xl transition-all duration-75"
                 />
-              </NavLink>
+              )}
             </div>
           </div>
         ) : (

@@ -3,6 +3,7 @@ type ButtonProps = {
   variant: "orange" | "normal";
   extraStyles?: string;
   children?: React.ReactNode;
+  clickEvent?: () => void;
 };
 
 const styles = {
@@ -12,11 +13,18 @@ const styles = {
   cta: "bg-orange-500 text-white",
 };
 
-const Button = ({ text, variant, extraStyles, children }: ButtonProps) => {
+const Button = ({
+  text,
+  variant,
+  extraStyles,
+  children,
+  clickEvent,
+}: ButtonProps) => {
   const variantStyles = styles[variant];
   return (
     <button
       className={`${styles.base} ${variantStyles} ${extraStyles && extraStyles}`}
+      onClick={clickEvent}
     >
       {text}
       {children}

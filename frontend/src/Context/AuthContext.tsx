@@ -4,16 +4,23 @@ import { useState, useEffect } from "react";
 type AuthContextType = {
   token: string | null;
   setToken: (token: string | null) => void;
+  loggedIn: boolean;
+  setLoggedIn: (loggedIn: boolean) => void;
+  logOut: () => void;
 };
 
-export const AuthContext = createContext<AuthContextType | null>({
+export const AuthContext = createContext<AuthContextType>({
   token: null,
   setToken: () => {},
+  loggedIn: false,
+  setLoggedIn: () => {},
+  logOut: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>("");
   const [loading, setLoading] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   // Restore token from localStorage on mount
   useEffect(() => {
@@ -28,8 +35,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return <div>Loading...</div>;
   }
 
+  function logOut() {
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+  }
+
   return (
-    <AuthContext.Provider value={{ token, setToken }}>
+    <AuthContext.Provider
+      value={{ token, setToken, loggedIn, setLoggedIn, logOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -11,7 +11,11 @@ const LoginPage = () => {
   const [message, setMessage] = useState("");
 
   const context = useContext(AuthContext);
-  const { setToken } = context || { token: null, setToken: () => {} };
+  const { setToken, setLoggedIn } = context || {
+    token: null,
+    setToken: () => {},
+    setLoggedIn: () => {},
+  };
 
   const handleLogin = async () => {
     try {
@@ -21,6 +25,7 @@ const LoginPage = () => {
 
         localStorage.setItem("token", token);
         setToken(token);
+        setLoggedIn(true);
         setMessage(result.message);
         console.log(
           "Login Successful. Token: " + token + " Message: " + result.message,
