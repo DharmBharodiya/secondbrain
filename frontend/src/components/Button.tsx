@@ -1,6 +1,7 @@
 type ButtonProps = {
   text: string;
   variant: "orange" | "normal";
+  extraStyles?: string;
 };
 
 const styles = {
@@ -10,9 +11,15 @@ const styles = {
   cta: "bg-orange-500 text-white",
 };
 
-const Button = ({ text, variant }: ButtonProps) => {
+const Button = ({ text, variant, extraStyles }: ButtonProps) => {
   const variantStyles = styles[variant];
-  return <button className={`${styles.base} ${variantStyles}`}>{text}</button>;
+  return (
+    <button
+      className={`${styles.base} ${variantStyles} ${extraStyles && extraStyles}`}
+    >
+      {text}
+    </button>
+  );
 };
 
 export default Button;
