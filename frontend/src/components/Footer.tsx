@@ -9,17 +9,25 @@ const Footer = () => {
       //     backgroundSize: "cover",
       //   }}
     >
-      <h1 className="font-advercase text-3xl mb-2">
+      <h1 className="font-advercase text-3xl mb-2 text-center">
         Ready to clear your head?
       </h1>
-      <p className="mb-6">
+      <p className="mb-6 text-center text-sm md:text-md">
         Join the archive of thousands who have found a better way to think.
       </p>
       <Button
-        variant="orange"
         text="Start your archive"
-        extraStyles={" shadow-orange-500 shadow-xl font-semibold"}
-      />
+        variant="orange"
+        extraStyles={
+          " shadow-orange-500 shadow-xl font-semibold flex justify-center items-center"
+        }
+      >
+        <img
+          src="src/assets/images/white-logo.PNG"
+          className="w-7 h-7 ml-2 self-start"
+          alt="logo"
+        />
+      </Button>
     </div>
   );
 };

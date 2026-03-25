@@ -132,6 +132,14 @@ router.post(
   },
 );
 
+router.get("/user", AuthMiddleware, async (req: CustomRequest, res) => {
+  const userId = req.id;
+
+  const userInfo = await UserModel.findOne({ _id: userId });
+
+  return res.status(200).json({ user: userInfo });
+});
+
 router.get(
   "/content",
   AuthMiddleware,

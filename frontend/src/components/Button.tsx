@@ -2,6 +2,7 @@ type ButtonProps = {
   text: string;
   variant: "orange" | "normal";
   extraStyles?: string;
+  children?: React.ReactNode;
 };
 
 const styles = {
@@ -11,13 +12,14 @@ const styles = {
   cta: "bg-orange-500 text-white",
 };
 
-const Button = ({ text, variant, extraStyles }: ButtonProps) => {
+const Button = ({ text, variant, extraStyles, children }: ButtonProps) => {
   const variantStyles = styles[variant];
   return (
     <button
       className={`${styles.base} ${variantStyles} ${extraStyles && extraStyles}`}
     >
       {text}
+      {children}
     </button>
   );
 };

@@ -2,7 +2,7 @@ import HeroCard from "./HeroCard";
 
 const HeroCardMaster = () => {
   return (
-    <div className="md:w-[80%] h-full flex flex-col justify-center items-center  px-10 py-5">
+    <div className="w-full md:w-[80%] h-full flex flex-col justify-center items-center  px-10 py-5">
       <div className="w-full grid place-items-center md:grid-cols-2 grid-rows-2 px-6 py-2 gap-y-6 gap-x-4">
         <HeroCard
           title="Capture"

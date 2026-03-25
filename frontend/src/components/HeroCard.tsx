@@ -17,12 +17,12 @@ const HeroCard = ({
     <div
       className={`w-full h-auto px-4 py-4 rounded-lg shadow-md ${extraStyles}`}
     >
-      <div className="h-30 w-[95%]">
-        <p className="text-xs mb-1">{Icon}</p>
+      <div className="h-37 md:h-30 w-[95%]">
+        <p className="text-[12px] md:text-xs mb-1">{Icon}</p>
         <h1 className="font-bold font-advercase text-2xl text-gray-900">
           {title}
         </h1>
-        <p className="text-sm text-gray-700">{description}</p>
+        <p className="text-[13px] md:text-sm text-gray-700">{description}</p>
       </div>
       <div className="w-full h-40 rounded-md">
         <img
