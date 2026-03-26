@@ -6,6 +6,7 @@ import SignupPage from "./pages/SignupPage";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
+import ContentForm from "./components/ContentForm";
 
 function App() {
   return (
@@ -35,6 +36,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-content"
+          element={
+            <ProtectedRoute>
+              <ContentForm />
             </ProtectedRoute>
           }
         />

@@ -13,3 +13,34 @@ export async function FetchContentService(token) {
   console.log(data);
   return data.contents;
 }
+
+interface UploadContentProps {
+  token: string;
+  title: string;
+  link: string;
+  type: string;
+  notes: string;
+  separatedTags: string[];
+}
+
+export async function UploadContentService({
+  token,
+  title,
+  link,
+  type,
+  notes,
+  separatedTags,
+}: UploadContentProps) {
+  const result = await fetch(BACKEND_URL + "/content", {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title, type, notes, tags: separatedTags, link }),
+    method: "POST",
+  });
+
+  const data = await result.json();
+
+  return data.message;
+}

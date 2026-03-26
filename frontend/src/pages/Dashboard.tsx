@@ -5,11 +5,11 @@ import { FetchContentService } from "../services/ContentService";
 import YouTubeBanner from "../components/Dashboard/YoutubeBanner";
 import SpotifyBanner from "../components/Dashboard/Spotify";
 
-import { SearchIcon, ArrowUpRight } from "lucide-react";
+import { SearchIcon, ArrowUpRight, PlusIcon, X } from "lucide-react";
 import Article from "../components/Dashboard/Article";
 import TwitterEmbed from "../components/Dashboard/TwitterEmbed";
-import InstagramEmbed from "../components/Dashboard/InstagramEmbed";
 import InstagramImage from "../components/Dashboard/InstagramImage";
+import ContentForm from "../components/ContentForm";
 
 type UserContent = {
   title: string;
@@ -40,24 +40,34 @@ const Dashboard = () => {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
 
+  const [contentFormOpen, setContentFormOpen] = useState(false);
+
   const context = useContext(AuthContext);
   const token = context?.token;
+
+  const fetchUserContent = async () => {
+    if (token) {
+      try {
+        setError("");
+        const result = await UserFetchService(token);
+        const fetchedUserContent: UserContent[] =
+          await FetchContentService(token);
+
+        setUserContent(fetchedUserContent);
+        setUsername(result.user.username);
+      } catch (e) {
+        console.log("User fetch error: " + e);
+        setError("Failed to load data. Please try again.");
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (token) {
         try {
           setLoading(true);
-          setError("");
-          const result = await UserFetchService(token);
-          const fetchedUserContent: UserContent[] =
-            await FetchContentService(token);
-
-          setUserContent(fetchedUserContent);
-          setUsername(result.user.username);
-        } catch (e) {
-          console.log("User fetch error: " + e);
-          setError("Failed to load data. Please try again.");
+          await fetchUserContent();
         } finally {
           setLoading(false);
         }
@@ -90,7 +100,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="p-6 mt-10 w-full min-h-screen  flex flex-col justify-center items-center bg-slate-200">
+    <div className="p-6 mt-32 w-full flex flex-col items-center bg-slate-200 min-h-screen">
       <div className="mb-8">
         <h1 className="text-2xl font-advercase">{username}'s Dashboard</h1>
       </div>
@@ -102,10 +112,36 @@ const Dashboard = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button className="bg-orange-600 rounded-full p-2 text-xs cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center">
+        <button className="bg-orange-600 rounded-full p-2 text-xs cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center mr-2">
           <SearchIcon className="text-white" />
         </button>
+        <button
+          className="bg-orange-600 rounded-full p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl"
+          onClick={() => {
+            setContentFormOpen((prev) => !prev);
+          }}
+        >
+          <PlusIcon />
+        </button>
       </div>
+
+      {contentFormOpen && (
+        <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50000 w-full">
+          <div
+            onClick={() => setContentFormOpen(false)}
+            className="absolute inset-0"
+          />
+          <div className="relative z-51 mx-auto w-full max-w-120">
+            <ContentForm
+              handleClick={() => setContentFormOpen((prev) => !prev)}
+              onContentAdded={fetchUserContent}
+              contentFormOpenFunction={(value: boolean) =>
+                setContentFormOpen(value)
+              }
+            />
+          </div>
+        </div>
+      )}
 
       <div className="w-[90%] columns-1 sm:columns-2 lg:columns-4 rounded-lg gap-2">
         {userContent.map((content) => (
@@ -155,7 +191,7 @@ const Dashboard = () => {
               {content.link ? (
                 <div className="w-fit bottom-10 right-4 absolute group-hover:flex justify-center items-center bg-orange-600/90 rounded-lg text-xs pr-10 py-2 px-3 hidden">
                   <a href={content.link} target="_blank">
-                    {content.link.slice(6, 18)}...
+                    {content.link.slice(8, 18)}...
                     <ArrowUpRight className="w-4 float-right absolute top-1 right-4" />
                   </a>
                 </div>
@@ -167,10 +203,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
-interface InstagramSmallProps {
-  url: string;
-  scale?: number; // e.g., 0.5 for half size
-}
 
 export default Dashboard;
