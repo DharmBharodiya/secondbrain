@@ -10,6 +10,7 @@ import Article from "../components/Dashboard/Article";
 import TwitterEmbed from "../components/Dashboard/TwitterEmbed";
 import InstagramImage from "../components/Dashboard/InstagramImage";
 import ContentForm from "../components/ContentForm";
+import ContentCard from "../components/Dashboard/ContentCard";
 
 type UserContent = {
   title: string;
@@ -28,10 +29,10 @@ type UserContent = {
   tags: [];
 };
 
-// type Tags = {
-//   _id: string;
-//   title: string;
-// };
+type Tags = {
+  _id: string;
+  title: string;
+};
 
 const Dashboard = () => {
   const [username, setUsername] = useState("");
@@ -40,7 +41,11 @@ const Dashboard = () => {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
 
+  const [searchUserContent, setSearchUserContent] = useState<UserContent[]>([]);
+
   const [contentFormOpen, setContentFormOpen] = useState(false);
+  const [contentCardOpen, setContentCardOpen] = useState(false);
+  const [selectedContent, setSelectedContent] = useState<UserContent>();
 
   const context = useContext(AuthContext);
   const token = context?.token;
@@ -54,6 +59,7 @@ const Dashboard = () => {
           await FetchContentService(token);
 
         setUserContent(fetchedUserContent);
+        setSearchUserContent(fetchedUserContent);
         setUsername(result.user.username);
       } catch (e) {
         console.log("User fetch error: " + e);
@@ -61,6 +67,20 @@ const Dashboard = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (search.trim() === "") {
+      setSearchUserContent(userContent);
+    } else {
+      const filtered = userContent.filter(
+        (content) =>
+          content.title.toLowerCase().includes(search.toLowerCase()) ||
+          content.notes.toLowerCase().includes(search.toLowerCase()) ||
+          content.link?.toLowerCase().includes(search.toLowerCase()),
+      );
+      setSearchUserContent(filtered);
+    }
+  }, [search, userContent]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -100,7 +120,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="p-6 mt-32 w-full flex flex-col items-center bg-slate-200 min-h-screen">
+    <div className="p-6 mt-32 flex flex-col items-center bg-slate-200 min-h-screen">
       <div className="mb-8">
         <h1 className="text-2xl font-advercase">{username}'s Dashboard</h1>
       </div>
@@ -131,7 +151,7 @@ const Dashboard = () => {
             onClick={() => setContentFormOpen(false)}
             className="absolute inset-0"
           />
-          <div className="relative z-51 mx-auto w-full max-w-120">
+          <div className="relative z-51 mx-auto">
             <ContentForm
               handleClick={() => setContentFormOpen((prev) => !prev)}
               onContentAdded={fetchUserContent}
@@ -143,9 +163,34 @@ const Dashboard = () => {
         </div>
       )}
 
+      {contentCardOpen && (
+        <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50000">
+          <div
+            onClick={() => setContentCardOpen(false)}
+            className="absolute inset-0"
+          />
+          <div className="relative z-51 w-[90%]">
+            {selectedContent && (
+              <ContentCard
+                setcardopen={setContentCardOpen}
+                fetchContentAgain={fetchUserContent}
+                content={selectedContent}
+              />
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="w-[90%] columns-1 sm:columns-2 lg:columns-4 rounded-lg gap-2">
-        {userContent.map((content) => (
-          <div key={content._id} className="break-inside-avoid relative group">
+        {searchUserContent.map((content: UserContent) => (
+          <div
+            key={content._id}
+            className="break-inside-avoid relative group"
+            onClick={() => {
+              setSelectedContent(content);
+              setContentCardOpen(true);
+            }}
+          >
             <div>
               <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0">
                 {/* for spotify */}

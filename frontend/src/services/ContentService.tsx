@@ -44,3 +44,23 @@ export async function UploadContentService({
 
   return data.message;
 }
+
+interface DeleteContentProps {
+  token: string;
+  contentId: string;
+}
+
+export async function DeleteContentService({
+  token,
+  contentId,
+}: DeleteContentProps) {
+  const result = await fetch(BACKEND_URL + `/content/${contentId}`, {
+    headers: {
+      Authorization: token,
+    },
+    method: "DELETE",
+  });
+
+  const data = await result.json();
+  return data.message;
+}

@@ -39,14 +39,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/create-content"
-          element={
-            <ProtectedRoute>
-              <ContentForm />
-            </ProtectedRoute>
-          }
-        />
 
         {/* Add more routes here */}
       </Routes>

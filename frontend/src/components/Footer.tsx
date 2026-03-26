@@ -1,4 +1,5 @@
 import Button from "./Button";
+import { NavLink } from "react-router";
 
 const Footer = () => {
   return (
@@ -15,19 +16,21 @@ const Footer = () => {
       <p className="mb-6 text-center text-sm md:text-md">
         Join the archive of thousands who have found a better way to think.
       </p>
-      <Button
-        text="Start your archive"
-        variant="orange"
-        extraStyles={
-          " shadow-orange-500 shadow-xl font-semibold flex justify-center items-center"
-        }
-      >
-        <img
-          src="src/assets/images/white-logo.PNG"
-          className="w-7 h-7 ml-2 self-start"
-          alt="logo"
-        />
-      </Button>
+      <NavLink to={"/dashboard"}>
+        <Button
+          text="Start your archive"
+          variant="orange"
+          extraStyles={
+            " shadow-orange-500 shadow-xl font-semibold flex justify-center items-center"
+          }
+        >
+          <img
+            src="src/assets/images/white-logo.PNG"
+            className="w-7 h-7 ml-2 self-start"
+            alt="logo"
+          />
+        </Button>
+      </NavLink>
     </div>
   );
 };

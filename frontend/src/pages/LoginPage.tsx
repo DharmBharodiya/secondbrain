@@ -45,7 +45,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="mt-30 md:mt-4 flex-col md:flex md:flex-row justify-center items-center">
+    <div className="mt-30 min-h-screen md:mt-4 flex-col md:flex md:flex-row justify-center items-center">
       <div className="hidden md:block rounded-lg md:mb-0 mb-5">
         <img
           className="w-80 h-80 rounded-lg"
