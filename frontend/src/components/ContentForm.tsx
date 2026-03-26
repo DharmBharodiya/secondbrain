@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, X } from "lucide-react";
 import { UploadContentService } from "../services/ContentService";
 import { AuthContext } from "../Context/AuthContext";
@@ -19,7 +19,6 @@ const ContentForm = ({
   const [link, setLink] = useState("");
   const [tags, setTags] = useState("");
   const [notes, setNotes] = useState("");
-  const [separatedTags, setSeparatedTags] = useState<string[]>([]);
   const [message, setMessage] = useState("");
 
   const { token } = useContext(AuthContext);
@@ -29,11 +28,13 @@ const ContentForm = ({
       .split(",")
       .map((tag) => tag.trim())
       .filter((tag) => tag !== "");
-    setSeparatedTags(newTags);
+    return newTags;
   };
 
   const handleSubmit = async () => {
-    tagsSorted();
+    const separatedTagsArray = tagsSorted();
+    console.log("Separated tags:", separatedTagsArray);
+    console.log("Original tags:", tags);
 
     try {
       if (token) {
@@ -42,7 +43,7 @@ const ContentForm = ({
           title,
           type,
           notes,
-          separatedTags,
+          separatedTags: separatedTagsArray,
           link,
         });
 
@@ -54,7 +55,6 @@ const ContentForm = ({
         setLink("");
         setTags("");
         setNotes("");
-        setSeparatedTags([]);
 
         setTimeout(() => {
           contentFormOpenFunction(false);
