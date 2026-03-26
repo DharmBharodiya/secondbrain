@@ -85,9 +85,12 @@ router.post("/signin", async (req, res) => {
 
 const contentSchema = z.object({
   title: z.string().min(3, "Please give proper title."),
-  link: z.url(),
+  link: z
+    .string()
+    .transform((val) => (val === "" ? undefined : val))
+    .pipe(z.string().url().optional()),
   type: z.string(),
-  notes: z.string(),
+  notes: z.string().optional(),
   tags: z.array(z.string()),
 });
 
@@ -115,9 +118,9 @@ router.post(
 
       await ContentModel.create({
         title: title,
-        link: link,
+        link: link || null,
         type: type,
-        notes: notes,
+        notes: notes || null,
         userId: new mongoose.Types.ObjectId(userId),
         tags: tagIds || [],
       });

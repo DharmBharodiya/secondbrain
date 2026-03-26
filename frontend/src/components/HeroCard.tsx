@@ -15,7 +15,7 @@ const HeroCard = ({
 }: HeroCardProps) => {
   return (
     <div
-      className={`w-full h-auto px-4 py-4 rounded-lg shadow-md ${extraStyles}`}
+      className={`w-full h-auto px-4 py-4 rounded-lg shadow-md bg-white ${extraStyles}`}
     >
       <div className="h-37 md:h-30 w-[95%]">
         <p className="text-[12px] md:text-xs mb-1">{Icon}</p>

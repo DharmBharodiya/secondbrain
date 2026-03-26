@@ -42,7 +42,20 @@ const LinkSchema = new Schema({
 
 const ContentSchema = new Schema({
   link: String,
-  type: String,
+  type: {
+    type: String,
+    enum: [
+      "youtube",
+      "twitter",
+      "instagram",
+      "article",
+      "spotify",
+      "note",
+      "quote",
+      "default",
+    ],
+    default: "default",
+  },
   title: String,
   notes: String,
   tags: [{ type: mongoose.Types.ObjectId, ref: "Tags" }],

@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 
 const HomePage = () => {
   return (
-    <div className="w-full min-h-screen flex flex-col justify-center items-center">
+    <div className="w-full min-h-screen flex flex-col bg-white justify-center items-center">
       <Hero />
       <HeroCardMaster />
       <Footer />

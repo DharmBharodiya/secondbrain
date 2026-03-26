@@ -9,7 +9,7 @@ import PublicRoute from "./routes/PublicRoute";
 
 function App() {
   return (
-    <div className="w-full min-h-screen flex flex-col justify-center items-center bg-white selection:bg-orange-600 selection:text-white">
+    <div className="w-full min-h-screen flex flex-col justify-center items-center bg-slate-200 selection:bg-orange-600 selection:text-white">
       <Navbar />
 
       <Routes>
