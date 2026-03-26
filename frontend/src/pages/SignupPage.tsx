@@ -1,20 +1,25 @@
 import { useState } from "react";
 import InputBox from "../components/auth/InputBox";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { SignupService } from "../services/AuthService";
 
 const SignupPage = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const navigate = useNavigate();
+
   const [message, setMessage] = useState("");
   const handleSignup = async () => {
     try {
       const result = await SignupService({ username, password });
 
-      if (result.ok) {
+      if (result) {
         setMessage(result);
         console.log("Signup Successful.");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
       } else {
         setMessage(result);
         console.log("Error");

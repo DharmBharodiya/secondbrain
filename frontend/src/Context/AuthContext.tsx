@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       setToken(storedToken);
+      setLoggedIn(true);
     }
     setLoading(false);
   }, []);
@@ -37,6 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   function logOut() {
     localStorage.removeItem("token");
+    setToken("");
     setLoggedIn(false);
   }
 

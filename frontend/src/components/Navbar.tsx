@@ -84,7 +84,7 @@ const Navbar = () => {
           <div
             className={`absolute -left-45 top-5 px-4 rounded-full bg-white/70 backdrop-blur-lg shadow-md py-3 w-fit flex justify-between items-center `}
           >
-            <div className="hidden md:flex justify-center items-center">
+            <div className="md:hidden flex justify-center items-center">
               {!loggedIn ? (
                 <>
                   <NavLink to="/login">

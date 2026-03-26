@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import InputBox from "../components/auth/InputBox";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { LoginService } from "../services/AuthService";
 import { AuthContext } from "../Context/AuthContext";
 
@@ -17,6 +17,8 @@ const LoginPage = () => {
     setLoggedIn: () => {},
   };
 
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
     try {
       const result = await LoginService({ username, password });
@@ -30,6 +32,9 @@ const LoginPage = () => {
         console.log(
           "Login Successful. Token: " + token + " Message: " + result.message,
         );
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
       } else {
         console.log("Login Error");
         setMessage(result.message);
