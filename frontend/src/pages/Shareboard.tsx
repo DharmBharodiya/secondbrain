@@ -62,7 +62,7 @@ const ShareBoard = () => {
         />
       </div>
       <div className="w-full flex justify-center items-center">
-        <div className="w-[90%] columns-1 sm:columns-2 lg:columns-4 rounded-lg gap-2">
+        <div className="w-[90%] columns-1 xs:columns-2 md:columns-3 lg:columns-4 rounded-lg gap-2">
           {userContent ? (
             userContent.map((content: UserContent) => (
               <div

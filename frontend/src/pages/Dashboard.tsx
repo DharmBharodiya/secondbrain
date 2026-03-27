@@ -144,11 +144,11 @@ const Dashboard = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <button className="bg-orange-600 rounded-full p-2 text-xs cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center mr-2">
+        <button className="bg-orange-500 hover:scale-104 transition-all duration-100 rounded-full p-2 text-xs cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center mr-2">
           <SearchIcon className="text-white" />
         </button>
         <button
-          className="bg-orange-600 rounded-full p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl mr-2"
+          className="bg-orange-500 hover:scale-104 transition-all duration-100 rounded-full p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl mr-2"
           onClick={() => {
             setContentFormOpen((prev) => !prev);
           }}
@@ -156,7 +156,7 @@ const Dashboard = () => {
           <PlusIcon />
         </button>
         <button
-          className="bg-orange-600 rounded-full p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl"
+          className="bg-orange-500 hover:scale-104 transition-all duration-100 rounded-full p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl"
           onClick={handleShare}
         >
           <Share2 />

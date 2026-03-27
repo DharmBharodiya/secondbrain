@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 import ShareBoard from "./pages/Shareboard";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -40,6 +41,8 @@ function App() {
           }
         />
         <Route path="/brain/:shareId" element={<ShareBoard />} />
+
+        <Route path="/*" element={<NotFound />} />
 
         {/* Add more routes here */}
       </Routes>
