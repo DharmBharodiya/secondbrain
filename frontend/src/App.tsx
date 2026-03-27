@@ -6,7 +6,7 @@ import SignupPage from "./pages/SignupPage";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
-import ContentForm from "./components/ContentForm";
+import ShareBoard from "./pages/Shareboard";
 
 function App() {
   return (
@@ -39,6 +39,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/brain/:shareId" element={<ShareBoard />} />
 
         {/* Add more routes here */}
       </Routes>

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Link, X } from "lucide-react";
 import { UploadContentService } from "../services/ContentService";
 import { AuthContext } from "../Context/AuthContext";

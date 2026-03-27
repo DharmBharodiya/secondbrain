@@ -259,24 +259,23 @@ router.post("/brain/share", AuthMiddleware, async (req: CustomRequest, res) => {
     const userId = req.id;
     const share = shareSchema.parse(req.body.share);
 
-    const hash = generateHash(10);
-
-    const isAlreadySharing = await LinkModel.findOne({
-      userId: new mongoose.Types.ObjectId(userId),
-    });
-
-    if (isAlreadySharing) {
-      res.json({ message: "/share/" + isAlreadySharing.hash });
-      return;
-    }
-
     if (share) {
+      const isAlreadySharing = await LinkModel.findOne({
+        userId: new mongoose.Types.ObjectId(userId),
+      });
+
+      if (isAlreadySharing) {
+        res.json({ message: "/brain/" + isAlreadySharing.hash });
+        return;
+      }
+
+      const hash = generateHash(10);
       await LinkModel.create({
         userId: new mongoose.Types.ObjectId(userId),
         hash: hash,
       });
 
-      res.json({ message: "/share/" + hash });
+      res.json({ message: "/brain/" + hash });
     } else {
       await LinkModel.deleteOne({
         userId: new mongoose.Types.ObjectId(userId),

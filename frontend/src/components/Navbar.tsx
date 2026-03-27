@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { Menu, X } from "lucide-react";
 import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
+import BlackLogo from "../assets/images/black-logo.PNG";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -33,11 +34,7 @@ const Navbar = () => {
     >
       <div className="ml-4 flex justify-center items-center">
         <NavLink to="/" className="flex justify-center items-center">
-          <img
-            src="src/assets/images/black-logo.PNG"
-            className="w-7 h-7 mr-2"
-            alt="logo"
-          />{" "}
+          <img src={BlackLogo} className="w-7 h-7 mr-2" alt="logo" />{" "}
           <h1 className="font-advercase text-2xl text-gray-800 ">Archive</h1>
         </NavLink>
       </div>
