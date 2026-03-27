@@ -8,6 +8,7 @@ import TwitterEmbed from "../components/Dashboard/TwitterEmbed";
 import InstagramImage from "../components/Dashboard/InstagramImage";
 import { ArrowUpRight } from "lucide-react";
 import Button from "../components/Button";
+import { motion } from "framer-motion";
 
 type UserContent = {
   _id: string;
@@ -51,6 +52,21 @@ const ShareBoard = () => {
     return match && match[2].length === 11 ? match[2] : null;
   };
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+      },
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0 },
+  };
+
   return (
     <div>
       <div className="mt-32 mb-8 text-center">
@@ -62,12 +78,18 @@ const ShareBoard = () => {
         />
       </div>
       <div className="w-full flex justify-center items-center">
-        <div className="w-[90%] columns-1 xs:columns-2 md:columns-3 lg:columns-4 rounded-lg gap-2">
+        <motion.div
+          className="w-[90%] columns-1 xs:columns-2 md:columns-3 lg:columns-4 rounded-lg gap-2"
+          variants={container}
+          initial="show"
+          animate="show"
+        >
           {userContent ? (
             userContent.map((content: UserContent) => (
-              <div
+              <motion.div
                 key={content._id}
                 className="break-inside-avoid relative group"
+                variants={item}
                 // onClick={() => {
                 //   setSelectedContent(content);
                 //   setContentCardOpen(true);
@@ -125,14 +147,14 @@ const ShareBoard = () => {
                     </div>
                   ) : null}
                 </div>
-              </div>
+              </motion.div>
             ))
           ) : (
             <p className="font-advercase text-xl">
               No links yet. Start building your archive
             </p>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

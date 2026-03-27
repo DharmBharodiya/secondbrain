@@ -14,6 +14,8 @@ import TwitterEmbed from "../components/Dashboard/TwitterEmbed";
 import InstagramImage from "../components/Dashboard/InstagramImage";
 import ContentForm from "../components/ContentForm";
 import ContentCard from "../components/Dashboard/ContentCard";
+import { motion } from "framer-motion";
+import { a } from "framer-motion/client";
 
 type UserContent = {
   title: string;
@@ -83,6 +85,16 @@ const Dashboard = () => {
   }, [search, userContent]);
 
   useEffect(() => {
+    if (shareMessage) {
+      const timer = setTimeout(() => {
+        setShareMessage("");
+      }, 30000); // 30 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [shareMessage]);
+
+  useEffect(() => {
     const fetchUserProfile = async () => {
       if (token) {
         try {
@@ -98,15 +110,22 @@ const Dashboard = () => {
   }, [token]);
 
   const handleShare = async () => {
-    const newShareValue = !shareValue;
-    setShareValue(newShareValue);
+    try {
+      const newShareValue = !shareValue;
+      setShareValue(newShareValue);
 
-    const res = await SetSharedBrainService({
-      token,
-      shareValue: newShareValue,
-    });
+      const res = await SetSharedBrainService({
+        token,
+        shareValue: newShareValue,
+      });
 
-    setShareMessage(res);
+      console.log("Share response:", res);
+      setShareMessage(res);
+    } catch (error) {
+      console.error("Share error:", error);
+      setShareMessage("Error updating share settings");
+      setShareValue((prev) => !prev); // revert state on error
+    }
   };
 
   const getYouTubeId = (url: string): string | null => {
@@ -121,6 +140,20 @@ const Dashboard = () => {
 
     // Return the ID if it's the standard 11 characters, otherwise null
     return match && match[2].length === 11 ? match[2] : null;
+  };
+
+  const container = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.08, // delay between each child
+      },
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0 },
   };
 
   if (loading) {
@@ -163,15 +196,37 @@ const Dashboard = () => {
         </button>
       </div>
 
-      <div>{shareMessage ? <p>{shareMessage}</p> : null}</div>
+      <div className="mb-3 h-6">
+        {shareMessage && shareValue ? (
+          <a
+            href={`http://localhost:5173${shareMessage}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-orange-600 hover:text-orange-700 underline"
+          >
+            Access Sharable Link
+          </a>
+        ) : shareMessage && !shareValue ? (
+          <p className="text-green-600">Sharing restricted.</p>
+        ) : null}
+      </div>
 
       {contentFormOpen && (
         <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50000 w-full">
-          <div
+          <motion.div
             onClick={() => setContentFormOpen(false)}
             className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           />
-          <div className="relative z-51 mx-auto">
+          <motion.div
+            className="relative z-51 mx-auto"
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+          >
             <ContentForm
               handleClick={() => setContentFormOpen((prev) => !prev)}
               onContentAdded={fetchUserContent}
@@ -179,7 +234,7 @@ const Dashboard = () => {
                 setContentFormOpen(value)
               }
             />
-          </div>
+          </motion.div>
         </div>
       )}
 
@@ -201,10 +256,17 @@ const Dashboard = () => {
         </div>
       )}
 
-      <div className="w-[90%] columns-1 sm:columns-2 lg:columns-4 rounded-lg gap-2">
+      <motion.div
+        className="w-[90%] columns-1 sm:columns-2 lg:columns-4 rounded-lg gap-2"
+        variants={container}
+        initial="show"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         {searchUserContent ? (
           searchUserContent.map((content: UserContent) => (
-            <div
+            <motion.div
+              variants={item}
               key={content._id}
               className="break-inside-avoid relative group"
               onClick={() => {
@@ -263,14 +325,14 @@ const Dashboard = () => {
                   </div>
                 ) : null}
               </div>
-            </div>
+            </motion.div>
           ))
         ) : (
           <p className="font-advercase text-xl">
             No links yet. Start building your archive
           </p>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

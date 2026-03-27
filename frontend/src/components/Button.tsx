@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 type ButtonProps = {
   text: string;
   variant: "orange" | "normal";
@@ -22,13 +24,15 @@ const Button = ({
 }: ButtonProps) => {
   const variantStyles = styles[variant];
   return (
-    <button
+    <motion.button
       className={`${styles.base} ${variantStyles} ${extraStyles && extraStyles}`}
       onClick={clickEvent}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
     >
       {text}
       {children}
-    </button>
+    </motion.button>
   );
 };
 
