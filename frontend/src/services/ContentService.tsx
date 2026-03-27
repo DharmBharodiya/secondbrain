@@ -42,6 +42,16 @@ export async function UploadContentService({
 
   const data = await result.json();
 
+  if (Array.isArray(data.message)) {
+    const errorMessage = data.message.map((err: any) => err.message).join(", ");
+
+    throw new Error(errorMessage);
+  }
+
+  if (!result.ok) {
+    throw new Error(data.message || "Error uploading content");
+  }
+
   return data.message;
 }
 

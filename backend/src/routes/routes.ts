@@ -84,7 +84,10 @@ router.post("/signin", async (req, res) => {
 });
 
 const contentSchema = z.object({
-  title: z.string().min(3, "Please give proper title."),
+  title: z
+    .string()
+    .min(3, "Please give proper title.")
+    .max(18, "Title is too long."),
   link: z
     .string()
     .transform((val) => (val === "" ? undefined : val))
@@ -128,7 +131,7 @@ router.post(
       res.status(201).json({ message: "Content added." });
     } catch (e) {
       if (e instanceof z.ZodError) {
-        return res.status(400).json({ errors: e.issues });
+        return res.status(400).json({ message: e.issues });
       }
       res.status(500).json({ message: "Server error" });
     }

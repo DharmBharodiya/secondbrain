@@ -5,7 +5,7 @@ import InstagramImage from "./InstagramImage";
 import SpotifyBanner from "./Spotify";
 import TwitterEmbed from "./TwitterEmbed";
 import YouTubeBanner from "./YoutubeBanner";
-import { Trash } from "lucide-react";
+import { Trash, Edit2Icon } from "lucide-react";
 import { AuthContext } from "../../Context/AuthContext";
 import { useNavigate } from "react-router";
 
@@ -87,6 +87,8 @@ const ContentCard = ({
     navigate("/dashboard");
   };
 
+  const handleEdit = () => {};
+
   return (
     <div className="w-full px-4 py-4 rounded-2xl bg-white grid grid-cols-2">
       <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0 flex justify-center items-center">
@@ -117,7 +119,7 @@ const ContentCard = ({
           <InstagramImage url={content.link} />
         )}
       </div>
-      <div className="ml-6 flex flex-col justify-around">
+      <div className="ml-6 flex flex-col justify-around relative">
         <div className="mb-6">
           <div>
             <p className="text-sm font-bold">{content.type.toUpperCase()}</p>
@@ -146,13 +148,21 @@ const ContentCard = ({
               </div>
             )}
           </div>
-          <h1 className="text-sm text-orange-600">⬤</h1>
+          {content.link && <h1 className="text-sm text-orange-600">⬤</h1>}
           <button
             className="w-fit relative group ml-2 cursor-pointer"
             onClick={() => handleDelete(content)}
           >
             <Trash className="w-4 text-orange-600" />
             <div className="border-2 border-orange-600 absolute w-full -right-4 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
+          </button>
+        </div>
+        <div className="absolute top-0 right-0">
+          <button
+            className="bg-orange-500 hover:scale-104 transition-all duration-100 rounded-full p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl mr-2"
+            onClick={handleEdit}
+          >
+            <Edit2Icon />
           </button>
         </div>
       </div>

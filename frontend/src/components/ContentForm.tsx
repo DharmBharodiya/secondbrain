@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { Link, X } from "lucide-react";
 import { UploadContentService } from "../services/ContentService";
 import { AuthContext } from "../Context/AuthContext";
+import whiteLogo from "../assets/images/white-logo.PNG";
 
 interface ContentFormProps {
   handleClick: () => void;
@@ -65,8 +66,9 @@ const ContentForm = ({
           onContentAdded();
         }
       }
-    } catch (e) {
-      console.log("Error" + e);
+    } catch (e: any) {
+      console.log("Error:", e.message);
+      setMessage(e.message || "Failed to add content");
     }
   };
 
@@ -142,12 +144,25 @@ const ContentForm = ({
           onClick={handleSubmit}
         >
           add to your archive
-          <img
-            className="ml-2 w-6 h-6"
-            src="src/assets/images/white-logo.PNG"
-          />
+          <img className="ml-2 w-6 h-6" src={whiteLogo} alt="logo" />
         </button>
-        {message !== "" && <p className="text-center text-black">{message}</p>}
+        {message !== "" && (
+          <p
+            className={`text-center text-sm mt-3 ${
+              message.includes("Please") ||
+              message.includes("long") ||
+              message.includes("Error")
+                ? "text-red-600"
+                : "text-green-600"
+            }`}
+          >
+            {message}
+          </p>
+        )}
+
+        {title.length <= 0 && (
+          <p className="text-red-600">Please enter title</p>
+        )}
       </div>
     </div>
   );
