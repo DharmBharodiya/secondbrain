@@ -10,6 +10,8 @@ const LoginPage = () => {
 
   const [message, setMessage] = useState("");
 
+  const { theme } = useContext(AuthContext);
+
   const context = useContext(AuthContext);
   const { setToken, setLoggedIn } = context || {
     token: null,
@@ -55,8 +57,14 @@ const LoginPage = () => {
       </div>
       <div className="md:ml-10 w-80">
         <div className="flex justify-center items-center flex-col">
-          <h1 className="font-advercase text-2xl ">Welcome Back</h1>
-          <p>Step back into your space</p>
+          <h1
+            className={`${theme === "dark" ? "text-white" : "text-black"} font-advercase text-2xl `}
+          >
+            Welcome Back
+          </h1>
+          <p className={`${theme === "dark" ? "text-white" : "text-black"}`}>
+            Step back into your space
+          </p>
         </div>
         <div className="flex flex-col mt-3">
           <InputBox
@@ -80,7 +88,9 @@ const LoginPage = () => {
             Log In
           </button>
           <p className="text-sm text-red-500 text-center">{message}</p>
-          <p className="text-sm text-center mt-2">
+          <p
+            className={`text-sm text-center mt-2 ${theme === "dark" ? "text-white" : "text-black"}`}
+          >
             new →{" "}
             <NavLink to="/signup" className="text-orange-600">
               {" "}

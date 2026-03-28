@@ -46,7 +46,7 @@ type Content = {
   link: string;
   notes: string;
   _id: string;
-  tags: Tags[];
+  tags: string;
 };
 
 type Tags = {
@@ -94,9 +94,9 @@ const ContentCard = ({
   const handleEdit = () => {
     console.log("Content object:", content);
     console.log("Content tags:", content.tags);
-    const tagTitles =
-      content.tags?.map((tag) => tag.title).join(", ") || "No tags";
-    console.log(`Content tags: ${tagTitles}`);
+    // const tagTitles =
+    //   content.tags?.map((tag) => tag.title).join(", ") || "No tags";
+    // console.log(`Content tags: ${tagTitles}`);
     setEditData(content);
     setContentFormOpen(true);
   };
@@ -119,7 +119,7 @@ const ContentCard = ({
           </div>
         </div>
       )}
-      <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0 flex justify-center items-center">
+      <div className="px-1 py-1 rounded-2xl z-15 bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0 flex justify-center items-center">
         {/* for spotify */}
         {content.type === "spotify" && content.link && (
           <SpotifyBanner link={content.link} height="352" />
@@ -177,7 +177,7 @@ const ContentCard = ({
                 <a href={content.link} className="text-orange-600">
                   visit resource
                 </a>
-                <div className="border-2 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
+                <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
               </div>
             )}
           </div>

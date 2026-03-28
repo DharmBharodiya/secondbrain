@@ -8,10 +8,16 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
 import ShareBoard from "./pages/Shareboard";
 import NotFound from "./pages/NotFound";
+import { useContext } from "react";
+import { AuthContext } from "./Context/AuthContext";
 
 function App() {
+  const { theme } = useContext(AuthContext);
+
   return (
-    <div className="w-full min-h-screen flex flex-col justify-center items-center bg-slate-200 selection:bg-orange-600 selection:text-white">
+    <div
+      className={` ${theme === "dark" ? "bg-black text-white" : "bg-slate-200 text-black"} w-full min-h-screen flex flex-col justify-center items-center selection:bg-orange-600 selection:text-white`}
+    >
       <Navbar />
 
       <Routes>

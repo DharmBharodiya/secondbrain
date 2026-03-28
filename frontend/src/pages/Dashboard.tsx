@@ -66,6 +66,7 @@ const Dashboard = () => {
 
         setUserContent(fetchedUserContent);
         setSearchUserContent(fetchedUserContent);
+        console.log("fetched: ", fetchedUserContent);
         setUsername(result.user.username);
       } catch (e) {
         console.log("User fetch error: " + e);
@@ -92,7 +93,7 @@ const Dashboard = () => {
     if (shareMessage) {
       const timer = setTimeout(() => {
         setShareMessage("");
-      }, 30000); // 30 seconds
+      }, 15000); // 15 seconds
 
       return () => clearTimeout(timer);
     }
@@ -169,7 +170,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="p-6 mt-32 flex flex-col items-center bg-slate-200 min-h-screen">
+    <div className="w-full p-6 mt-32 flex flex-col items-center bg-slate-200 min-h-screen">
       <div className="mb-8">
         <h1 className="text-2xl font-advercase">{username}'s Dashboard</h1>
       </div>
@@ -261,7 +262,7 @@ const Dashboard = () => {
       )}
 
       <motion.div
-        className="w-[90%] columns-1 sm:columns-2 lg:columns-4 rounded-lg gap-2"
+        className="w-[90%] columns-2 lg:columns-4 rounded-lg gap-2"
         variants={container}
         initial="show"
         whileInView="show"
@@ -275,6 +276,7 @@ const Dashboard = () => {
               className="break-inside-avoid relative group"
               onClick={() => {
                 setSelectedContent(content);
+                console.log("SelectedContent:", content);
                 setContentCardOpen(true);
               }}
             >
@@ -299,8 +301,11 @@ const Dashboard = () => {
                     </div>
                   ) : null}
 
+                  {/* Inside searchUserContent.map in Dashboard.tsx */}
                   {content.type === "twitter" && content.link && (
-                    <TwitterEmbed url={content.link} />
+                    <div className="w-full flex justify-center items-start min-h-[200px] overflow-visible">
+                      <TwitterEmbed url={content.link} />
+                    </div>
                   )}
 
                   {content.type === "instagram" && content.link && (
@@ -317,7 +322,7 @@ const Dashboard = () => {
                 ))}
               </div> */}
                 </div>
-                <div className="flex justify-center items-center flex-col mt-1">
+                <div className="flex justify-center items-center flex-col mt-1 mb-1">
                   <h1 className="text-slate-600 text-xs">{content.title}</h1>
                 </div>
                 {content.link ? (

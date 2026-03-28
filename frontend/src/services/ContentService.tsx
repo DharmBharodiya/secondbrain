@@ -61,27 +61,44 @@ interface DeleteContentProps {
   contentId: string;
 }
 interface UpdateContentProps {
-  title: string;
-  link: string;
-  type: string;
-  notes: string;
-  tags: string[];
+  title?: string;
+  link?: string;
+  type?: string;
+  notes?: string;
+  tags?: string[];
 }
 export async function UpdateContentService(
   contentId: string,
   token: string,
   data: UpdateContentProps,
 ) {
+  // Filter out empty values to avoid validation errors
+  const filteredData: any = {};
+  if (data.title?.trim()) filteredData.title = data.title.trim();
+  if (data.link?.trim()) filteredData.link = data.link.trim();
+  if (data.type?.trim()) filteredData.type = data.type.trim();
+  if (data.notes?.trim()) filteredData.notes = data.notes.trim();
+  if (data.tags && data.tags.length > 0) filteredData.tags = data.tags;
+
+  console.log(`ContentId: ${contentId} - token ${token} - data ${JSON.stringify(filteredData)}`);
+
   const res = await fetch(BACKEND_URL + `/content/${contentId}`, {
     headers: {
       Authorization: token,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(filteredData),
     method: "PUT",
   });
 
   const returnedData = await res.json();
+
+  // Handle server errors first
+  if (!res.ok) {
+    throw new Error(
+      returnedData.message || returnedData.errors?.[0]?.message || "Error updating content",
+    );
+  }
 
   // Handle validation errors - backend returns either "message" or "errors"
   if (Array.isArray(returnedData.message)) {
@@ -97,13 +114,6 @@ export async function UpdateContentService(
       .map((err: { message: string }) => err.message)
       .join(", ");
     throw new Error(errorMessages);
-  }
-
-  // Handle server errors
-  if (!res.ok) {
-    throw new Error(
-      returnedData.message || returnedData.errors || "Error updating content",
-    );
   }
 
   return returnedData.message || "Content updated successfully";

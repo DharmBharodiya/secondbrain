@@ -78,22 +78,18 @@ const ShareBoard = () => {
         />
       </div>
       <div className="w-full flex justify-center items-center">
-        <motion.div
-          className="w-[90%] columns-1 xs:columns-2 md:columns-3 lg:columns-4 rounded-lg gap-2"
-          variants={container}
-          initial="show"
-          animate="show"
-        >
-          {userContent ? (
-            userContent.map((content: UserContent) => (
+        {userContent && userContent.length > 0 ? (
+          <motion.div
+            className="w-[90%] columns-1 xs:columns-2 md:columns-3 lg:columns-4 rounded-lg gap-2"
+            variants={container}
+            initial="show"
+            animate="show"
+          >
+            {userContent.map((content: UserContent) => (
               <motion.div
                 key={content._id}
                 className="break-inside-avoid relative group"
                 variants={item}
-                // onClick={() => {
-                //   setSelectedContent(content);
-                //   setContentCardOpen(true);
-                // }}
               >
                 <div>
                   <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0">
@@ -124,16 +120,6 @@ const ShareBoard = () => {
                     {content.type === "instagram" && content.link && (
                       <InstagramImage url={content.link} />
                     )}
-                    {/* <div className="flex items-center">
-                {content.tags.map((tag: Tags) => (
-                  <div
-                    key={tag._id}
-                    className="bg-gray-200 text-xs rounded-full px-2 py-1 max-w-fit w-fit"
-                  >
-                    <h1>{tag.title}</h1>
-                  </div>
-                ))}
-              </div> */}
                   </div>
                   <div className="flex justify-center items-center flex-col mt-1">
                     <h1 className="text-slate-600 text-xs">{content.title}</h1>
@@ -148,13 +134,13 @@ const ShareBoard = () => {
                   ) : null}
                 </div>
               </motion.div>
-            ))
-          ) : (
-            <p className="font-advercase text-xl">
-              No links yet. Start building your archive
-            </p>
-          )}
-        </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <p className="font-advercase text-xl text-center">
+            No links yet. Start building your archive
+          </p>
+        )}
       </div>
     </div>
   );

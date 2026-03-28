@@ -11,7 +11,7 @@ type ButtonProps = {
 const styles = {
   base: "px-4 py-2 rounded-full cursor-pointer",
   orange: "bg-orange-500 text-white",
-  normal: "bg-transparent text-gray-600",
+  normal: "bg-transparent text-black",
   white: "bg-white text-orange-500",
   cta: "bg-orange-500 text-white",
 };

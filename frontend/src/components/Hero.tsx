@@ -16,10 +16,10 @@ const Hero = () => {
       }}
     >
       <div className="flex justify-center items-center flex-col">
-        <h1 className="font-garamond text-6xl md:text-8xl text-gray-800 text-center">
+        <h1 className="font-garamond text-6xl md:text-8xl text-black text-center">
           Your second brain, <br /> <span className="italic">organized</span>
         </h1>
-        <p className="text-sm md:text-sm mt-5 w-[80%] md:w-[55%] text-center">
+        <p className="text-sm font-semibold md:text-sm mt-5 w-[80%] md:w-[55%] text-center">
           {/* Archive is your space for thoughts, visuals, and everything worth
           keeping — a place to collect, revisit, and share what matters. */}
           Archive is an intellectual sanctuary for your fragmented thoughts. We

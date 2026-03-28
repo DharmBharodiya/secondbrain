@@ -1,7 +1,9 @@
+import { useContext } from "react";
 import Footer from "../components/Footer";
 import Hero from "../components/Hero";
 import HeroCardMaster from "../components/HeroCardMaster";
 import { motion } from "framer-motion";
+import { AuthContext } from "../Context/AuthContext";
 
 const container = {
   hidden: {},
@@ -18,9 +20,11 @@ const item = {
 };
 
 const HomePage = () => {
+  const { theme } = useContext(AuthContext);
+
   return (
     <motion.div
-      className="w-full min-h-screen relative flex flex-col bg-white justify-center items-center"
+      className={`${theme === "dark" ? "text-white bg-black" : "bg-white text-black"} w-full min-h-screen relative flex flex-col justify-center items-center`}
       variants={container}
       initial="hidden"
       whileInView="show"

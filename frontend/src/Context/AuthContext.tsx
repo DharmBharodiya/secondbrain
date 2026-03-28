@@ -7,7 +7,7 @@ type Tags = {
 };
 
 type UserContent = {
-  title: string | null;
+  title: string;
   type:
     | "youtube"
     | "twitter"
@@ -17,10 +17,10 @@ type UserContent = {
     | "quote"
     | "note"
     | "instagram"
-    | null;
-  link: string | null;
-  notes: string | null;
-  _id: string | null;
+    | string;
+  link: string;
+  notes: string;
+  _id: string;
   tags: Tags[];
 };
 
@@ -32,6 +32,8 @@ type AuthContextType = {
   logOut: () => void;
   editData: UserContent;
   setEditData: (value: UserContent) => void;
+  theme: "light" | "dark";
+  setTheme: (value: "light" | "dark") => void;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -41,14 +43,16 @@ export const AuthContext = createContext<AuthContextType>({
   setLoggedIn: () => {},
   logOut: () => {},
   editData: {
-    title: null,
-    type: null,
-    link: null,
+    title: "",
+    type: "",
+    link: "",
     tags: [],
-    notes: null,
-    _id: null,
+    notes: "",
+    _id: "",
   },
   setEditData: () => {},
+  theme: "light",
+  setTheme: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -56,13 +60,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
   const [editData, setEditData] = useState<UserContent>({
-    title: null,
-    type: null,
-    link: null,
+    title: "",
+    type: "",
+    link: "",
     tags: [],
-    notes: null,
-    _id: null,
+    notes: "",
+    _id: "",
   });
+
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   // Restore token from localStorage on mount
   useEffect(() => {
@@ -94,6 +100,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         logOut,
         editData,
         setEditData,
+        theme,
+        setTheme,
       }}
     >
       {children}
