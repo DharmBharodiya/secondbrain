@@ -15,14 +15,14 @@ const ContentForm = ({
   onContentAdded,
   contentFormOpenFunction,
 }: ContentFormProps) => {
+  const { token } = useContext(AuthContext);
+
   const [title, setTitle] = useState("");
   const [type, setType] = useState("");
   const [link, setLink] = useState("");
   const [tags, setTags] = useState("");
   const [notes, setNotes] = useState("");
   const [message, setMessage] = useState("");
-
-  const { token } = useContext(AuthContext);
 
   const tagsSorted = () => {
     const newTags = tags

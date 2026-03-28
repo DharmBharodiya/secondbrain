@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DeleteContentService } from "../../services/ContentService";
 import Article from "./Article";
 import InstagramImage from "./InstagramImage";
@@ -8,6 +8,8 @@ import YouTubeBanner from "./YoutubeBanner";
 import { Trash, Edit2Icon } from "lucide-react";
 import { AuthContext } from "../../Context/AuthContext";
 import { useNavigate } from "react-router";
+import ContentForm from "../ContentForm";
+import EditContent from "../EditContent";
 
 type UserContent = {
   content: {
@@ -24,7 +26,7 @@ type UserContent = {
     link: string;
     notes: string;
     _id: string;
-    tags: [];
+    tags: Tags[];
   };
   setcardopen: (value: boolean) => void;
   fetchContentAgain: () => void;
@@ -44,7 +46,7 @@ type Content = {
   link: string;
   notes: string;
   _id: string;
-  tags: [];
+  tags: Tags[];
 };
 
 type Tags = {
@@ -57,8 +59,10 @@ const ContentCard = ({
   setcardopen,
   fetchContentAgain,
 }: UserContent) => {
-  const { token } = useContext(AuthContext);
+  const { token, setEditData } = useContext(AuthContext);
   const [message, setMessage] = useState("");
+  const [contentFormOpen, setContentFormOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const getYouTubeId = (url: string): string | null => {
@@ -87,10 +91,34 @@ const ContentCard = ({
     navigate("/dashboard");
   };
 
-  const handleEdit = () => {};
+  const handleEdit = () => {
+    console.log("Content object:", content);
+    console.log("Content tags:", content.tags);
+    const tagTitles =
+      content.tags?.map((tag) => tag.title).join(", ") || "No tags";
+    console.log(`Content tags: ${tagTitles}`);
+    setEditData(content);
+    setContentFormOpen(true);
+  };
 
   return (
     <div className="w-full px-4 py-4 rounded-2xl bg-white grid grid-cols-2">
+      {contentFormOpen && (
+        <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50000 w-full">
+          <div
+            onClick={() => setContentFormOpen(false)}
+            className="absolute inset-0"
+          />
+          <div className="relative z-51 mx-auto">
+            <EditContent
+              handleClick={() => setContentFormOpen((prev) => !prev)}
+              contentFormOpenFunction={(value: boolean) =>
+                setContentFormOpen(value)
+              }
+            />
+          </div>
+        </div>
+      )}
       <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0 flex justify-center items-center">
         {/* for spotify */}
         {content.type === "spotify" && content.link && (
@@ -122,20 +150,25 @@ const ContentCard = ({
       <div className="ml-6 flex flex-col justify-around relative">
         <div className="mb-6">
           <div>
-            <p className="text-sm font-bold">{content.type.toUpperCase()}</p>
+            <p className="text-sm font-bold text-gray-500">
+              {content.type.toUpperCase()}
+            </p>
             <h1 className="text-4xl font-advercase">{content.title}</h1>
             <h1 className="text-md">{content.notes}</h1>
           </div>
-          <div>
-            <h1 className="font-bold text-md mb-1">TAGS</h1>
-            <div className="flex gap-2">
-              {content.tags.map((tag: Tags) => (
-                <div className="text-white bg-orange-600 rounded-full px-4 text-center font-semibold text-sm py-1 flex w-fit">
-                  {tag.title}
-                </div>
-              ))}
+          {content.tags.length > 0 && (
+            <div>
+              <h1 className="font-bold text-md mb-1">TAGS</h1>
+              <div className="flex gap-2">
+                {content.tags &&
+                  content.tags.map((tag: Tags) => (
+                    <div className="text-white bg-orange-600 rounded-full px-4 text-center font-semibold text-sm py-1 flex w-fit">
+                      {tag.title}
+                    </div>
+                  ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="flex items-center">
           <div>

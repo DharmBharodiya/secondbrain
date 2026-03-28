@@ -1,12 +1,37 @@
 import { createContext } from "react";
 import { useState, useEffect } from "react";
 
+type Tags = {
+  _id: string;
+  title: string;
+};
+
+type UserContent = {
+  title: string | null;
+  type:
+    | "youtube"
+    | "twitter"
+    | "spotify"
+    | "default"
+    | "article"
+    | "quote"
+    | "note"
+    | "instagram"
+    | null;
+  link: string | null;
+  notes: string | null;
+  _id: string | null;
+  tags: Tags[];
+};
+
 type AuthContextType = {
   token: string | null;
   setToken: (token: string | null) => void;
   loggedIn: boolean;
   setLoggedIn: (loggedIn: boolean) => void;
   logOut: () => void;
+  editData: UserContent;
+  setEditData: (value: UserContent) => void;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -15,12 +40,29 @@ export const AuthContext = createContext<AuthContextType>({
   loggedIn: false,
   setLoggedIn: () => {},
   logOut: () => {},
+  editData: {
+    title: null,
+    type: null,
+    link: null,
+    tags: [],
+    notes: null,
+    _id: null,
+  },
+  setEditData: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>("");
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [editData, setEditData] = useState<UserContent>({
+    title: null,
+    type: null,
+    link: null,
+    tags: [],
+    notes: null,
+    _id: null,
+  });
 
   // Restore token from localStorage on mount
   useEffect(() => {
@@ -44,7 +86,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ token, setToken, loggedIn, setLoggedIn, logOut }}
+      value={{
+        token,
+        setToken,
+        loggedIn,
+        setLoggedIn,
+        logOut,
+        editData,
+        setEditData,
+      }}
     >
       {children}
     </AuthContext.Provider>

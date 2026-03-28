@@ -15,7 +15,11 @@ import InstagramImage from "../components/Dashboard/InstagramImage";
 import ContentForm from "../components/ContentForm";
 import ContentCard from "../components/Dashboard/ContentCard";
 import { motion } from "framer-motion";
-import { a } from "framer-motion/client";
+
+type Tags = {
+  _id: string;
+  title: string;
+};
 
 type UserContent = {
   title: string;
@@ -31,7 +35,7 @@ type UserContent = {
   link: string;
   notes: string;
   _id: string;
-  tags: [];
+  tags: Tags[];
 };
 
 const Dashboard = () => {

@@ -1,9 +1,20 @@
 import Button from "./Button";
 import { NavLink } from "react-router";
+import bgImage from "../assets/images/transparent-bg-1.png";
+import whiteLogo from "../assets/images/white-logo.PNG";
+import orangeLogo from "../assets/images/orange-logo.PNG";
 
 const Hero = () => {
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center mt-40 md:mt-60 mb-20">
+    <div
+      className="w-full flex flex-col justify-center items-center h-[80vh] md:h-screen"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "bottom",
+        width: "100vw",
+      }}
+    >
       <div className="flex justify-center items-center flex-col">
         <h1 className="font-garamond text-6xl md:text-8xl text-gray-800 text-center">
           Your second brain, <br /> <span className="italic">organized</span>
@@ -26,13 +37,13 @@ const Hero = () => {
             }
           >
             <img
-              src="src/assets/images/white-logo.PNG"
+              src={whiteLogo}
               className="w-7 h-7 ml-2 self-start"
               alt="logo"
             />
           </Button>
         </NavLink>
-        <Button text="learn more →" variant="normal" />
+        <Button text="learn more →" variant="normal" extraStyles="text-black" />
       </div>
     </div>
   );

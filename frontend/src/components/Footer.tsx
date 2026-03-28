@@ -1,14 +1,16 @@
 import Button from "./Button";
 import { NavLink } from "react-router";
+import bgImage from "../assets/images/orange-gradient-1.jpg";
 
 const Footer = () => {
   return (
     <div
-      className="w-[80%] mt-20 h-auto px-6 py-8 flex justify-center items-center flex-col mb-15 rounded-lg"
-      //   style={{
-      //     backgroundImage: `url("src/assets/images/orange-bg-1.jpg")`,
-      //     backgroundSize: "cover",
-      //   }}
+      className="md:mt-20 h-[40vh] md:h-[80vh] w-screen px-6 py-8 flex justify-center items-center flex-col rounded-lg"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       <h1 className="font-advercase text-3xl mb-2 text-center">
         Ready to clear your head?

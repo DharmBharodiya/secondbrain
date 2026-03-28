@@ -10,7 +10,6 @@ export async function FetchContentService(token: string) {
 
   const data = await result.json();
 
-  console.log(data);
   return data.contents;
 }
 
@@ -43,7 +42,9 @@ export async function UploadContentService({
   const data = await result.json();
 
   if (Array.isArray(data.message)) {
-    const errorMessage = data.message.map((err: any) => err.message).join(", ");
+    const errorMessage = data.message
+      .map((err: { message: string }) => err.message)
+      .join(", ");
 
     throw new Error(errorMessage);
   }
@@ -53,6 +54,59 @@ export async function UploadContentService({
   }
 
   return data.message;
+}
+
+interface DeleteContentProps {
+  token: string;
+  contentId: string;
+}
+interface UpdateContentProps {
+  title: string;
+  link: string;
+  type: string;
+  notes: string;
+  tags: string[];
+}
+export async function UpdateContentService(
+  contentId: string,
+  token: string,
+  data: UpdateContentProps,
+) {
+  const res = await fetch(BACKEND_URL + `/content/${contentId}`, {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    method: "PUT",
+  });
+
+  const returnedData = await res.json();
+
+  // Handle validation errors - backend returns either "message" or "errors"
+  if (Array.isArray(returnedData.message)) {
+    const errorMessages = returnedData.message
+      .map((err: { message: string }) => err.message)
+      .join(", ");
+    throw new Error(errorMessages);
+  }
+
+  // Handle validation errors in "errors" field (if backend uses that format)
+  if (Array.isArray(returnedData.errors)) {
+    const errorMessages = returnedData.errors
+      .map((err: { message: string }) => err.message)
+      .join(", ");
+    throw new Error(errorMessages);
+  }
+
+  // Handle server errors
+  if (!res.ok) {
+    throw new Error(
+      returnedData.message || returnedData.errors || "Error updating content",
+    );
+  }
+
+  return returnedData.message || "Content updated successfully";
 }
 
 interface DeleteContentProps {
@@ -105,6 +159,5 @@ export async function GetSharedContent(shareId: string) {
 
   const data = await res.json();
 
-  console.log(data);
   return data.content;
 }

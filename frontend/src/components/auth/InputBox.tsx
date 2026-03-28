@@ -18,7 +18,7 @@ const InputBox = ({
       type={type}
       name={name}
       placeholder={placeholder}
-      className="pl-2 pr-4 py-2 mb-3 text-black border-b-3 border-orange-600 font-advercase"
+      className="pl-2 pr-4 py-2 mb-3 text-black border-b-3 border-orange-600 font-advercase outline-0"
       value={value}
       onChange={changeEvent}
     />
