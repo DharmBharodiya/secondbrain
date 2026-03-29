@@ -1,22 +1,36 @@
 import Button from "./Button";
 import { NavLink } from "react-router";
-import bgImage from "../assets/images/transparent-bg-1.png";
+import bgImage from "../assets/images/bg-trans-3.png";
+import bgImage2 from "../assets/images/bg-trans-3.png";
 import whiteLogo from "../assets/images/white-logo.PNG";
 import orangeLogo from "../assets/images/orange-logo.PNG";
+import { useContext } from "react";
+import { AuthContext } from "../Context/AuthContext";
 
 const Hero = () => {
+  const { theme } = useContext(AuthContext);
+  let image = bgImage;
+
+  if (theme === "dark") {
+    image = bgImage2;
+  } else {
+    image = bgImage;
+  }
+
   return (
     <div
       className="w-full flex flex-col justify-center items-center h-[80vh] md:h-screen"
       style={{
-        backgroundImage: `url(${bgImage})`,
+        backgroundImage: `url(${image})`,
         backgroundSize: "cover",
         backgroundPosition: "bottom",
         width: "100vw",
       }}
     >
       <div className="flex justify-center items-center flex-col">
-        <h1 className="font-garamond text-6xl md:text-8xl text-black text-center">
+        <h1
+          className={`${theme === "dark" ? "text-white" : " text-black"} text-center font-garamond text-6xl md:text-8xl`}
+        >
           Your second brain, <br /> <span className="italic">organized</span>
         </h1>
         <p className="text-sm font-semibold md:text-sm mt-5 w-[80%] md:w-[55%] text-center">
@@ -43,7 +57,11 @@ const Hero = () => {
             />
           </Button>
         </NavLink>
-        <Button text="learn more →" variant="normal" extraStyles="text-black" />
+        <Button
+          text="learn more →"
+          variant={theme == "dark" ? "dark" : "normal"}
+          extraStyles="text-black"
+        />
       </div>
     </div>
   );

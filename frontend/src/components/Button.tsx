@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 type ButtonProps = {
   text: string;
-  variant: "orange" | "normal" | "white";
+  variant: "orange" | "normal" | "white" | "dark";
   extraStyles?: string;
   children?: React.ReactNode;
   clickEvent?: () => void;
@@ -14,6 +14,7 @@ const styles = {
   normal: "bg-transparent text-black",
   white: "bg-white text-orange-500",
   cta: "bg-orange-500 text-white",
+  dark: "text-white bg-transparent",
 };
 
 const Button = ({

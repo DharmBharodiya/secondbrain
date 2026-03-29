@@ -130,6 +130,7 @@ const ContentForm = ({
             className="text-orange-600 border-2 border-orange-600 px-2 py-1 rounded-md ml-2 cursor-pointer"
           >
             <option value="instagram">instagram</option>
+            <option value="pinterest">pinterest</option>
             <option value="youtube">youtube</option>
             <option value="twitter">twitter</option>
             <option value="spotify">spotify</option>

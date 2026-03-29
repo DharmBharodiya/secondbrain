@@ -15,6 +15,8 @@ import InstagramImage from "../components/Dashboard/InstagramImage";
 import ContentForm from "../components/ContentForm";
 import ContentCard from "../components/Dashboard/ContentCard";
 import { motion } from "framer-motion";
+import PinterestImage from "../components/Dashboard/PinterstEmbed";
+import PinterestEmbed from "../components/Dashboard/PinterstEmbed";
 
 type Tags = {
   _id: string;
@@ -31,7 +33,8 @@ type UserContent = {
     | "article"
     | "quote"
     | "note"
-    | "instagram";
+    | "instagram"
+    | "pinterest";
   link: string;
   notes: string;
   _id: string;
@@ -308,6 +311,11 @@ const Dashboard = () => {
                     </div>
                   )}
 
+                  {content.type === "pinterest" && content.link && (
+                    <div className="w-full mb-2">
+                      <PinterestImage url={content.link} />
+                    </div>
+                  )}
                   {content.type === "instagram" && content.link && (
                     <InstagramImage url={content.link} />
                   )}

@@ -64,7 +64,8 @@ const EditContent = ({
           ...(title && { title: title.trim() }),
           ...(link && { link: link.trim() }),
           ...(type && { type: type.trim() }),
-          ...(tags && separatedTagsArray.length > 0 && { tags: separatedTagsArray }),
+          ...(tags &&
+            separatedTagsArray.length > 0 && { tags: separatedTagsArray }),
           ...(notes && { notes: notes.trim() }),
         });
 
@@ -180,9 +181,9 @@ const EditContent = ({
           </p>
         )}
 
-        {title.length <= 0 && (
+        {/* {title.length <= 0 && (
           <p className="text-red-600">Please enter title</p>
-        )}
+        )} */}
       </div>
     </div>
   );

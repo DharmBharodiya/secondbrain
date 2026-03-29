@@ -53,6 +53,7 @@ const ContentSchema = new Schema({
       "note",
       "quote",
       "default",
+      "pinterest",
     ],
     default: "default",
   },
