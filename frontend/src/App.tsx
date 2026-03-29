@@ -16,7 +16,7 @@ function App() {
 
   return (
     <div
-      className={` ${theme === "dark" ? "bg-black text-white" : "bg-slate-200 text-black"} w-full min-h-screen flex flex-col justify-center items-center selection:bg-orange-600 selection:text-white`}
+      className={`${theme === "dark" ? "bg-black text-white" : "bg-slate-200 text-black"} w-screen min-h-screen flex flex-col justify-center items-center selection:bg-orange-600 selection:text-white`}
     >
       <Navbar />
 

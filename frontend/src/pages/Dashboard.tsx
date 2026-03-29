@@ -59,6 +59,8 @@ const Dashboard = () => {
   const context = useContext(AuthContext);
   const token = context?.token as string;
 
+  const { theme } = useContext(AuthContext);
+
   const fetchUserContent = async () => {
     if (token) {
       try {
@@ -173,7 +175,9 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="w-full p-6 mt-32 flex flex-col items-center bg-slate-200 min-h-screen">
+    <div
+      className={`${theme === "dark" ? "bg-black text-white" : "bg-slate-200 text-black"} w-full p-6 mt-32 flex flex-col items-center min-h-screen`}
+    >
       <div className="mb-8">
         <h1 className="text-2xl font-advercase">{username}'s Dashboard</h1>
       </div>
@@ -331,7 +335,11 @@ const Dashboard = () => {
               </div> */}
                 </div>
                 <div className="flex justify-center items-center flex-col mt-1 mb-1">
-                  <h1 className="text-slate-600 text-xs">{content.title}</h1>
+                  <h1
+                    className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
+                  >
+                    {content.title}
+                  </h1>
                 </div>
                 {content.link ? (
                   <div className="w-fit bottom-10 right-4 absolute group-hover:flex justify-center items-center bg-orange-600/90 rounded-lg text-xs pr-10 py-2 px-3 hidden">

@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import InputBox from "../components/auth/InputBox";
 import { NavLink, useNavigate } from "react-router";
 import { SignupService } from "../services/AuthService";
+import { AuthContext } from "../Context/AuthContext";
 
 const SignupPage = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const navigate = useNavigate();
+
+  const { theme } = useContext(AuthContext);
 
   const [message, setMessage] = useState("");
   const handleSignup = async () => {
@@ -59,10 +62,10 @@ const SignupPage = () => {
             changeEvent={(e) => setPassword(e.target.value)}
           />
           <button
-            className="text-white bg-black px-6 py-2 rounded-lg font-semibold cursor-pointer"
+            className={`${theme === "dark" ? "bg-white text-black" : "bg-black text-white"} px-6 py-2 rounded-lg font-semibold cursor-pointer`}
             onClick={handleSignup}
           >
-            Sign Up
+            Log In
           </button>
           <p className="text-sm text-red-600 text-center">{message}</p>
           <p className="text-sm text-center mt-2">

@@ -72,8 +72,12 @@ const ContentForm = ({
     }
   };
 
+  const { theme } = useContext(AuthContext);
+
   return (
-    <div className="w-full p-5 rounded-md relative bg-white flex justify-center items-center flex-col">
+    <div
+      className={`${theme === "dark" ? "text-black" : "text-black"} w-full p-5 rounded-md relative bg-white flex justify-center items-center flex-col`}
+    >
       <button
         className="bg-orange-600 rounded-full absolute -right-4 -top-4 p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl"
         onClick={handleClick}

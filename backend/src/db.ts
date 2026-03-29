@@ -54,6 +54,7 @@ const ContentSchema = new Schema({
       "quote",
       "default",
       "pinterest",
+      "image",
     ],
     default: "default",
   },

@@ -101,8 +101,11 @@ const ContentCard = ({
     setContentFormOpen(true);
   };
 
+  const { theme } = useContext(AuthContext);
   return (
-    <div className="w-full px-4 py-4 rounded-2xl bg-white grid grid-cols-2">
+    <div
+      className={`${theme === "dark" ? "text-black" : "text-black"} w-full px-4 py-4 rounded-2xl bg-white grid grid-cols-2`}
+    >
       {contentFormOpen && (
         <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50000 w-full">
           <div

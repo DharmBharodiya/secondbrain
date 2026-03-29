@@ -8,6 +8,11 @@ import type { CustomRequest } from "../middlewares/AuthMiddleware.js";
 import mongoose from "mongoose";
 import { generateHash } from "../utils/utils.js";
 import * as z from "zod";
+import multer from "multer";
+import cloudinary from "../config/cloudinary.js";
+import fs from "fs";
+
+const upload = multer({ dest: "uploads/" });
 
 const JWT_SECRET = process.env.JWT_SECRET_USER || "thisisactuallyasecret";
 
@@ -96,14 +101,19 @@ const contentSchema = z.object({
   notes: z.string().optional(),
   tags: z.array(z.string()),
 });
-
 router.post(
   "/content",
   AuthMiddleware,
+  upload.single("image"), // 👈 add this
   async (req: CustomRequest, res: Response) => {
     try {
-      const { title, link, type, notes, tags } = contentSchema.parse(req.body);
+      let { title, link, type, notes, tags } = req.body;
       const userId = req.id;
+
+      // tags will come as string if using FormData
+      if (typeof tags === "string") {
+        tags = JSON.parse(tags);
+      }
 
       let tagIds: mongoose.Types.ObjectId[] = [];
 
@@ -111,28 +121,35 @@ router.post(
         let tag = await TagModel.findOne({ title: tagname });
 
         if (!tag) {
-          tag = await TagModel.create({
-            title: tagname,
-          });
+          tag = await TagModel.create({ title: tagname });
         }
 
         tagIds.push(tag._id);
       }
 
+      let finalLink = link || null;
+
+      // 🧠 IMAGE LOGIC HERE
+      if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path);
+
+        fs.unlinkSync(req.file.path); // cleanup
+
+        finalLink = result.secure_url;
+        type = "image"; // override type
+      }
+
       await ContentModel.create({
-        title: title,
-        link: link || null,
-        type: type,
+        title,
+        link: finalLink,
+        type,
         notes: notes || null,
         userId: new mongoose.Types.ObjectId(userId),
-        tags: tagIds || [],
+        tags: tagIds,
       });
 
       res.status(201).json({ message: "Content added." });
     } catch (e) {
-      if (e instanceof z.ZodError) {
-        return res.status(400).json({ message: e.issues });
-      }
       res.status(500).json({ message: "Server error" });
     }
   },

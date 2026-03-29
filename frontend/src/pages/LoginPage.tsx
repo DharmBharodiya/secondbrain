@@ -82,7 +82,7 @@ const LoginPage = () => {
             changeEvent={(e) => setPassword(e.target.value)}
           />
           <button
-            className="text-white bg-black px-6 py-2 rounded-lg font-semibold cursor-pointer"
+            className={`${theme === "dark" ? "bg-white text-black" : "bg-black text-white"} px-6 py-2 rounded-lg font-semibold cursor-pointer`}
             onClick={handleLogin}
           >
             Log In
