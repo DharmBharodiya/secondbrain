@@ -96,7 +96,7 @@ const ContentForm = ({
 
   return (
     <div
-      className={`${theme === "dark" ? "text-black" : "text-black"} w-full p-5 rounded-md relative bg-white flex justify-center items-center flex-col`}
+      className={`${theme === "dark" ? "text-black" : "text-black"} w-80 md:w-100 p-5 rounded-md relative bg-white flex justify-center items-center flex-col`}
     >
       <button
         className="bg-orange-600 rounded-full absolute -right-4 -top-4 p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl"
@@ -144,12 +144,14 @@ const ContentForm = ({
           onChange={(e) => setTags(e.target.value)}
           placeholder="Tags - work, fun..."
         />
-        <input
-          type="file"
-          name="file"
-          className="text-2xl w-full border-b-2 border-orange-600 outline-0 mb-3 text-center font-garamond font-light text-gray-600"
-          onChange={handleFileChange}
-        />
+        {type === "image" ? (
+          <input
+            type="file"
+            name="file"
+            className="text-2xl w-full border-b-2 border-orange-600 outline-0 mb-3 text-center font-garamond font-light text-gray-600"
+            onChange={handleFileChange}
+          />
+        ) : null}
         <div className="flex justify-center w-full my-2 mt-2">
           <p className="font-garamond text-xl">Type : </p>
           <select
