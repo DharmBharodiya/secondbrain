@@ -10,6 +10,7 @@ import { AuthContext } from "../../Context/AuthContext";
 import { useNavigate } from "react-router";
 import ContentForm from "../ContentForm";
 import EditContent from "../EditContent";
+import ImageDisplay from "./ImageDisplay";
 
 type UserContent = {
   content: {
@@ -22,11 +23,13 @@ type UserContent = {
       | "article"
       | "quote"
       | "note"
-      | "instagram";
+      | "instagram"
+      | "image";
     link: string;
     notes: string;
     _id: string;
     tags: Tags[];
+    imageUrl: string;
   };
   setcardopen: (value: boolean) => void;
   fetchContentAgain: () => void;
@@ -42,11 +45,13 @@ type Content = {
     | "article"
     | "quote"
     | "note"
-    | "instagram";
+    | "instagram"
+    | "image";
   link: string;
   notes: string;
   _id: string;
   tags: string;
+  imageUrl: string;
 };
 
 type Tags = {
@@ -142,6 +147,10 @@ const ContentCard = ({
           </div>
         ) : null}
 
+        {content.type === "image" && content.imageUrl && (
+          <ImageDisplay url={content.imageUrl} />
+        )}
+
         {content.type === "twitter" && content.link && (
           <TwitterEmbed url={content.link} />
         )}
@@ -162,7 +171,7 @@ const ContentCard = ({
           {content.tags.length > 0 && (
             <div>
               <h1 className="font-bold text-md mb-1">TAGS</h1>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {content.tags &&
                   content.tags.map((tag: Tags) => (
                     <div className="text-white bg-orange-600 rounded-full px-4 text-center font-semibold text-sm py-1 flex w-fit">

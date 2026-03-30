@@ -16,7 +16,7 @@ import ContentForm from "../components/ContentForm";
 import ContentCard from "../components/Dashboard/ContentCard";
 import { motion } from "framer-motion";
 import PinterestImage from "../components/Dashboard/PinterstEmbed";
-import PinterestEmbed from "../components/Dashboard/PinterstEmbed";
+import ImageDisplay from "../components/Dashboard/ImageDisplay";
 
 type Tags = {
   _id: string;
@@ -30,15 +30,15 @@ type UserContent = {
     | "twitter"
     | "spotify"
     | "default"
-    | "article"
     | "quote"
-    | "note"
     | "instagram"
-    | "pinterest";
+    | "pinterest"
+    | "image";
   link: string;
   notes: string;
   _id: string;
   tags: Tags[];
+  imageUrl: string;
 };
 
 const Dashboard = () => {
@@ -280,7 +280,7 @@ const Dashboard = () => {
             <motion.div
               variants={item}
               key={content._id}
-              className="break-inside-avoid relative group"
+              className="break-inside-avoid relative group mb-2"
               onClick={() => {
                 setSelectedContent(content);
                 console.log("SelectedContent:", content);
@@ -302,6 +302,9 @@ const Dashboard = () => {
                         return <YouTubeBanner videoId={videoId} />;
                       })()
                     : null}
+                  {content.type === "image" && content.imageUrl ? (
+                    <ImageDisplay url={content.imageUrl} />
+                  ) : null}
                   {content.type === "quote" ? (
                     <div className="flex justify-center items-center">
                       <Article content={content} />
@@ -323,24 +326,14 @@ const Dashboard = () => {
                   {content.type === "instagram" && content.link && (
                     <InstagramImage url={content.link} />
                   )}
-                  {/* <div className="flex items-center">
-                {content.tags.map((tag: Tags) => (
-                  <div
-                    key={tag._id}
-                    className="bg-gray-200 text-xs rounded-full px-2 py-1 max-w-fit w-fit"
-                  >
-                    <h1>{tag.title}</h1>
-                  </div>
-                ))}
-              </div> */}
                 </div>
-                <div className="flex justify-center items-center flex-col mt-1 mb-1">
+                {/* <div className="flex justify-center items-center flex-col mt-1 mb-1">
                   <h1
                     className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
                   >
                     {content.title}
                   </h1>
-                </div>
+                </div> */}
                 {content.link ? (
                   <div className="w-fit bottom-10 right-4 absolute group-hover:flex justify-center items-center bg-orange-600/90 rounded-lg text-xs pr-10 py-2 px-3 hidden">
                     <a href={content.link} target="_blank">

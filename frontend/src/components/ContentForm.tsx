@@ -23,6 +23,7 @@ const ContentForm = ({
   const [tags, setTags] = useState("");
   const [notes, setNotes] = useState("");
   const [message, setMessage] = useState("");
+  const [file, setFile] = useState<File | null>(null);
 
   const tagsSorted = () => {
     const newTags = tags
@@ -32,21 +33,39 @@ const ContentForm = ({
     return newTags;
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+
+      // preview only for images
+      // if (selectedFile.type.startsWith("image/")) {
+      //   const url = URL.createObjectURL(selectedFile);
+      //   // setPreview(url);
+      // } else {
+      //   // setPreview(null);
+      // }
+    }
+  };
+
   const handleSubmit = async () => {
     const separatedTagsArray = tagsSorted();
     console.log("Separated tags:", separatedTagsArray);
     console.log("Original tags:", tags);
 
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("type", type);
+    formData.append("link", link);
+    separatedTagsArray.forEach((tag) => formData.append("tags", tag));
+    formData.append("notes", notes);
+    if (file) {
+      formData.append("file", file);
+    }
+
     try {
       if (token) {
-        const result = await UploadContentService({
-          token,
-          title,
-          type,
-          notes,
-          separatedTags: separatedTagsArray,
-          link,
-        });
+        const result = await UploadContentService({ token, formData });
 
         setMessage(result);
 
@@ -56,6 +75,7 @@ const ContentForm = ({
         setLink("");
         setTags("");
         setNotes("");
+        setFile(null);
 
         setTimeout(() => {
           contentFormOpenFunction(false);
@@ -124,6 +144,12 @@ const ContentForm = ({
           onChange={(e) => setTags(e.target.value)}
           placeholder="Tags - work, fun..."
         />
+        <input
+          type="file"
+          name="file"
+          className="text-2xl w-full border-b-2 border-orange-600 outline-0 mb-3 text-center font-garamond font-light text-gray-600"
+          onChange={handleFileChange}
+        />
         <div className="flex justify-center w-full my-2 mt-2">
           <p className="font-garamond text-xl">Type : </p>
           <select
@@ -138,9 +164,8 @@ const ContentForm = ({
             <option value="youtube">youtube</option>
             <option value="twitter">twitter</option>
             <option value="spotify">spotify</option>
-            <option value="article">article</option>
             <option value="quote">quote</option>
-            <option value="note">note</option>
+            <option value="image">image</option>
             <option value="default">default</option>
           </select>
         </div>

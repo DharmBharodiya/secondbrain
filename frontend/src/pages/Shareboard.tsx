@@ -9,6 +9,7 @@ import InstagramImage from "../components/Dashboard/InstagramImage";
 import { ArrowUpRight } from "lucide-react";
 import Button from "../components/Button";
 import { motion } from "framer-motion";
+import ImageDisplay from "../components/Dashboard/ImageDisplay";
 
 type UserContent = {
   _id: string;
@@ -17,6 +18,7 @@ type UserContent = {
   link: string;
   tags: string[];
   notes: string;
+  imageUrl: string;
 };
 
 const ShareBoard = () => {
@@ -107,6 +109,9 @@ const ShareBoard = () => {
                           return <YouTubeBanner videoId={videoId} />;
                         })()
                       : null}
+                    {content.type === "image" && content.imageUrl ? (
+                      <ImageDisplay url={content.imageUrl} />
+                    ) : null}
                     {content.type === "quote" ? (
                       <div className="flex justify-center items-center">
                         <Article content={content} />

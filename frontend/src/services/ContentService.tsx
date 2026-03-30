@@ -15,27 +15,18 @@ export async function FetchContentService(token: string) {
 
 interface UploadContentProps {
   token: string;
-  title: string;
-  link: string;
-  type: string;
-  notes: string;
-  separatedTags: string[];
+  formData: FormData;
 }
 
 export async function UploadContentService({
   token,
-  title,
-  link,
-  type,
-  notes,
-  separatedTags,
+  formData,
 }: UploadContentProps) {
   const result = await fetch(BACKEND_URL + "/content", {
     headers: {
       Authorization: token,
-      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title, type, notes, tags: separatedTags, link }),
+    body: formData,
     method: "POST",
   });
 
@@ -80,7 +71,9 @@ export async function UpdateContentService(
   if (data.notes?.trim()) filteredData.notes = data.notes.trim();
   if (data.tags && data.tags.length > 0) filteredData.tags = data.tags;
 
-  console.log(`ContentId: ${contentId} - token ${token} - data ${JSON.stringify(filteredData)}`);
+  console.log(
+    `ContentId: ${contentId} - token ${token} - data ${JSON.stringify(filteredData)}`,
+  );
 
   const res = await fetch(BACKEND_URL + `/content/${contentId}`, {
     headers: {
@@ -96,7 +89,9 @@ export async function UpdateContentService(
   // Handle server errors first
   if (!res.ok) {
     throw new Error(
-      returnedData.message || returnedData.errors?.[0]?.message || "Error updating content",
+      returnedData.message ||
+        returnedData.errors?.[0]?.message ||
+        "Error updating content",
     );
   }
 
