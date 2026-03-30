@@ -127,7 +127,7 @@ const ContentCard = ({
           </div>
         </div>
       )}
-      <div className="px-1 py-1 rounded-2xl z-15 bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0 flex justify-center items-center">
+      <div className="px-1 py-1 rounded-2xl z-15 bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0 flex justify-center items-center max-h-100">
         {/* for spotify */}
         {content.type === "spotify" && content.link && (
           <SpotifyBanner link={content.link} height="352" />

@@ -280,7 +280,7 @@ const Dashboard = () => {
             <motion.div
               variants={item}
               key={content._id}
-              className="break-inside-avoid relative group mb-2"
+              className="break-inside-avoid relative group mb-2 w-full"
               onClick={() => {
                 setSelectedContent(content);
                 console.log("SelectedContent:", content);
@@ -288,7 +288,7 @@ const Dashboard = () => {
               }}
             >
               <div>
-                <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0">
+                <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 flex justify-center border-slate-100 hover:border-gray-300 cursor-pointer outline-0">
                   {/* for spotify */}
                   {content.type === "spotify" && content.link && (
                     <SpotifyBanner link={content.link} height="152" />
