@@ -2,7 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import { router } from "./routes/routes.js";
 import cors from "cors";
-import uploadRouter from "./routes/upload.js";
 
 const JWT_SECRET = "thisisasecret";
 
@@ -13,7 +12,6 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
-app.use("/upload", uploadRouter);
 
 app.use("/api/v1", router);
 
