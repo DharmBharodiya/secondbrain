@@ -8,7 +8,7 @@ import {
 import YouTubeBanner from "../components/Dashboard/YoutubeBanner";
 import SpotifyBanner from "../components/Dashboard/Spotify";
 
-import { SearchIcon, ArrowUpRight, PlusIcon, Share2 } from "lucide-react";
+import { SearchIcon, ArrowUpRight, PlusIcon, Share2, Star } from "lucide-react";
 import Article from "../components/Dashboard/Article";
 import TwitterEmbed from "../components/Dashboard/TwitterEmbed";
 import InstagramImage from "../components/Dashboard/InstagramImage";
@@ -19,6 +19,7 @@ import PinterestImage from "../components/Dashboard/PinterstEmbed";
 import ImageDisplay from "../components/Dashboard/ImageDisplay";
 import Sidebar from "../components/Dashboard/Sidebar";
 import Navbar from "../components/Navbar";
+import StarComponent from "../components/Dashboard/StarComponent";
 
 type Tags = {
   _id: string;
@@ -57,6 +58,7 @@ const Dashboard = () => {
   const [selectedContent, setSelectedContent] = useState<UserContent>();
   const [shareValue, setShareValue] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
+  const [starred, setStarred] = useState(false);
 
   const context = useContext(AuthContext);
   const token = context?.token as string;
@@ -163,6 +165,10 @@ const Dashboard = () => {
     },
   };
 
+  const handleStarClick = () => {
+    setStarred((prev) => !prev);
+  };
+
   const item = {
     hidden: { opacity: 0, y: 10 },
     show: { opacity: 1, y: 0 },
@@ -178,14 +184,16 @@ const Dashboard = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
+      <div className="inline md:hidden">
+        <Navbar />
+      </div>
       <div
         className={`${theme === "dark" ? "bg-black text-white" : "bg-slate-200 text-black"} w-full flex h-screen relative `}
       >
-        <div>
+        <div className="md:block hidden">
           <Sidebar />
         </div>
-        <div className="p-6 flex flex-col pt-10 items-center h-screen flex-1 max-w-full overflow-x-hidden">
+        <div className="p-6 flex flex-col md:pt-10 pt-30 items-center h-screen flex-1 max-w-full overflow-x-hidden">
           <div className="mb-8">
             <h1 className="text-2xl font-advercase">{username}'s Dashboard</h1>
           </div>
@@ -343,8 +351,11 @@ const Dashboard = () => {
                     {content.title}
                   </h1>
                 </div> */}
+                    <div className="w-8 h-8 top-3 right-4 absolute group-hover:flex justify-center items-center bg-white/80 rounded-full text-xs p-2 hidden">
+                      <StarComponent />
+                    </div>
                     {content.link ? (
-                      <div className="w-fit bottom-10 right-4 absolute group-hover:flex justify-center items-center bg-orange-600/90 rounded-lg text-xs pr-10 py-2 px-3 hidden">
+                      <div className="w-fit bottom-3 right-4 absolute group-hover:flex justify-center items-center bg-orange-600/90 rounded-lg text-xs pr-10 py-2 px-3 hidden">
                         <a href={content.link} target="_blank">
                           {content.link.slice(8, 18)}...
                           <ArrowUpRight className="w-4 float-right absolute top-1 right-4" />

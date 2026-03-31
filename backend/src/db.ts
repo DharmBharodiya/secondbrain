@@ -70,9 +70,21 @@ const ContentSchema = new Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
+const StarredSchema = new mongoose.Schema({
+  contentId: {
+    type: mongoose.Types.ObjectId,
+    ref: "Content",
+  },
+  userId: {
+    type: mongoose.Types.ObjectId,
+    ref: "Users",
+  },
+});
+
 const UserModel = model("Users", UserSchema);
 const TagModel = model("Tags", TagSchema);
 const LinkModel = model("Links", LinkSchema);
 const ContentModel = model("Content", ContentSchema);
+const StarModel = model("Starred", StarredSchema);
 
-export { UserModel, ContentModel, LinkModel, TagModel };
+export { UserModel, ContentModel, LinkModel, TagModel, StarModel };

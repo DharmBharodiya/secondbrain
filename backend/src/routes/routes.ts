@@ -1,7 +1,13 @@
 import express from "express";
 import type { Response } from "express";
 import bcrypt from "bcrypt";
-import { ContentModel, LinkModel, UserModel, TagModel } from "../db.js";
+import {
+  ContentModel,
+  LinkModel,
+  UserModel,
+  TagModel,
+  StarModel,
+} from "../db.js";
 import jwt from "jsonwebtoken";
 import { AuthMiddleware } from "../middlewares/AuthMiddleware.js";
 import type { CustomRequest } from "../middlewares/AuthMiddleware.js";
@@ -154,6 +160,32 @@ router.post(
     }
   },
 );
+
+router.post(
+  "/star/:contentId",
+  AuthMiddleware,
+  async (req: CustomRequest, res) => {
+    const userId = req.id;
+    const contentId = req.params.contentId as string;
+
+    await StarModel.create({
+      contentId: new mongoose.Types.ObjectId(contentId),
+      userId: new mongoose.Types.ObjectId(userId),
+    });
+
+    res.status(200).send({ message: "Starred." });
+  },
+);
+
+router.get("/star", AuthMiddleware, async (req: CustomRequest, res) => {
+  const userId = req.id;
+
+  const starredPosts = await StarModel.find({
+    userId: new mongoose.Types.ObjectId(userId),
+  }).populate("contentId");
+
+  res.json({ starredPosts });
+});
 
 router.get("/user", AuthMiddleware, async (req: CustomRequest, res) => {
   const userId = req.id;
