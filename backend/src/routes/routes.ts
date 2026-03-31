@@ -127,8 +127,19 @@ router.post(
 
       let tagIds: mongoose.Types.ObjectId[] = [];
 
-      if (tags) {
-        for (let tagname of tags) {
+      // Handle tags - convert to array if it's a string
+      let tagsArray = tags;
+      if (typeof tags === "string") {
+        tagsArray = tags
+          .split(",")
+          .map((tag: string) => tag.trim())
+          .filter((tag: string) => tag !== "");
+      } else if (!Array.isArray(tags)) {
+        tagsArray = [];
+      }
+
+      if (tagsArray && tagsArray.length > 0) {
+        for (let tagname of tagsArray) {
           let tag = await TagModel.findOne({ title: tagname });
 
           if (!tag) {
