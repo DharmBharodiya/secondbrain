@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useCallback } from "react";
 import { useState, useEffect } from "react";
 
 type Tags = {
@@ -34,6 +34,8 @@ type AuthContextType = {
   setEditData: (value: UserContent) => void;
   theme: "light" | "dark";
   setTheme: (value: "light" | "dark") => void;
+  starredOpened: boolean;
+  setStarredOpened: (value: boolean) => void;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -53,6 +55,8 @@ export const AuthContext = createContext<AuthContextType>({
   setEditData: () => {},
   theme: "light",
   setTheme: () => {},
+  starredOpened: false,
+  setStarredOpened: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -69,6 +73,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [starredOpened, setStarredOpenedState] = useState(false);
+
+  // Memoized wrapper to update state with logging
+  const setStarredOpened = useCallback((value: boolean) => {
+    console.log("setStarredOpened called with:", value);
+    setStarredOpenedState(value);
+  }, []);
 
   // Restore token from localStorage on mount
   useEffect(() => {
@@ -102,6 +113,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setEditData,
         theme,
         setTheme,
+        starredOpened,
+        setStarredOpened,
       }}
     >
       {children}

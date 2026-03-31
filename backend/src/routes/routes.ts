@@ -168,12 +168,24 @@ router.post(
     const userId = req.id;
     const contentId = req.params.contentId as string;
 
-    await StarModel.create({
+    const alreadyStarred = await StarModel.findOne({
       contentId: new mongoose.Types.ObjectId(contentId),
       userId: new mongoose.Types.ObjectId(userId),
     });
 
-    res.status(200).send({ message: "Starred." });
+    if (alreadyStarred) {
+      await StarModel.deleteOne({
+        userId: new mongoose.Types.ObjectId(userId),
+        contentId: new mongoose.Types.ObjectId(contentId),
+      });
+      return res.status(200).send({ message: "Removed from starred" });
+    } else {
+      await StarModel.create({
+        contentId: new mongoose.Types.ObjectId(contentId),
+        userId: new mongoose.Types.ObjectId(userId),
+      });
+      res.status(200).send({ message: "Starred." });
+    }
   },
 );
 

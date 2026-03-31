@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router";
 
 import BlackLogo from "../../assets/images/black-logo.PNG";
 import WhiteLogo from "../../assets/images/white-logo.PNG";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 import Button from "../Button";
 import { Moon, Sun } from "lucide-react";
@@ -10,7 +10,8 @@ import { Moon, Sun } from "lucide-react";
 const Sidebar = () => {
   const sidebarList = ["starred", "settings"];
   const { theme, setTheme } = useContext(AuthContext);
-  const { loggedIn, logOut } = useContext(AuthContext);
+  const { loggedIn, logOut, starredOpened, setStarredOpened } =
+    useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -20,12 +21,19 @@ const Sidebar = () => {
     navigate("/");
   };
 
+  //   useEffect(() => {
+  //     setStarredOpened(false);
+  //   }, []);
+
   const handleTheme = () => {
     if (theme === "light") {
       setTheme("dark");
     } else {
       setTheme("light");
     }
+  };
+  const handleStarred = () => {
+    setStarredOpened(!starredOpened);
   };
 
   return (
@@ -47,7 +55,7 @@ const Sidebar = () => {
         </NavLink>
       </div>
       <div className="mb-20">
-        {sidebarList.map((bar, index) => (
+        {/* {sidebarList.map((bar, index) => (
           <div className="w-fit relative group ml-4 mb-4" key={index}>
             <a
               href={bar}
@@ -57,7 +65,22 @@ const Sidebar = () => {
             </a>
             <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
           </div>
-        ))}
+        ))} */}
+        <div className="w-fit relative group ml-4 mb-4">
+          <button
+            className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-xl"
+            onClick={handleStarred}
+          >
+            {starredOpened ? <p>back to dashboard</p> : <p>starred</p>}
+          </button>
+          <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
+        </div>
+        <div className="w-fit relative group ml-4 mb-4">
+          <button className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-xl">
+            settings
+          </button>
+          <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
+        </div>
         <button className="ml-3 cursor-pointer" onClick={handleTheme}>
           {theme === "dark" ? <Sun /> : <Moon />}
         </button>

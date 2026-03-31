@@ -3,6 +3,7 @@ import { AuthContext } from "../Context/AuthContext";
 import { UserFetchService } from "../services/AuthService";
 import {
   FetchContentService,
+  GetStarredContent,
   SetSharedBrainService,
 } from "../services/ContentService";
 import YouTubeBanner from "../components/Dashboard/YoutubeBanner";
@@ -59,23 +60,30 @@ const Dashboard = () => {
   const [shareValue, setShareValue] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
   const [starred, setStarred] = useState(false);
+  const [starredPosts, setStarredPosts] = useState([]);
 
   const context = useContext(AuthContext);
   const token = context?.token as string;
 
-  const { theme } = useContext(AuthContext);
+  const { theme, starredOpened, setStarredOpened } = useContext(AuthContext);
 
   const fetchUserContent = async () => {
     if (token) {
       try {
         setError("");
         const result = await UserFetchService(token);
-        const fetchedUserContent: UserContent[] =
-          await FetchContentService(token);
+        if (starredOpened) {
+          const starredContent = await GetStarredContent(token);
+          setUserContent(starredContent);
+          setSearchUserContent(starredContent);
+        } else {
+          const fetchedUserContent: UserContent[] =
+            await FetchContentService(token);
 
-        setUserContent(fetchedUserContent);
-        setSearchUserContent(fetchedUserContent);
-        console.log("fetched: ", fetchedUserContent);
+          setUserContent(fetchedUserContent);
+          setSearchUserContent(fetchedUserContent);
+          console.log("fetched: ", fetchedUserContent);
+        }
         setUsername(result.user.username);
       } catch (e) {
         console.log("User fetch error: " + e);
@@ -83,6 +91,10 @@ const Dashboard = () => {
       }
     }
   };
+
+  useEffect(() => {
+    setStarredOpened(false);
+  }, []);
 
   useEffect(() => {
     if (search.trim() === "") {
@@ -121,7 +133,7 @@ const Dashboard = () => {
     };
 
     fetchUserProfile();
-  }, [token]);
+  }, [token, starredOpened]);
 
   const handleShare = async () => {
     try {
@@ -351,8 +363,11 @@ const Dashboard = () => {
                     {content.title}
                   </h1>
                 </div> */}
-                    <div className="w-8 h-8 top-3 right-4 absolute group-hover:flex justify-center items-center bg-white/80 rounded-full text-xs p-2 hidden">
-                      <StarComponent />
+                    <div
+                      className="w-8 h-8 top-3 right-4 absolute group-hover:flex justify-center items-center bg-white/80 rounded-full text-xs p-2 hidden"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <StarComponent contentId={content._id} />
                     </div>
                     {content.link ? (
                       <div className="w-fit bottom-3 right-4 absolute group-hover:flex justify-center items-center bg-orange-600/90 rounded-lg text-xs pr-10 py-2 px-3 hidden">

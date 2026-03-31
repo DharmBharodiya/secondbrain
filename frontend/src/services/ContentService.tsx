@@ -166,3 +166,30 @@ export async function GetSharedContent(shareId: string) {
 
   return data.content;
 }
+
+export async function StarContent(contentId: string, token: string) {
+  const res = await fetch(BACKEND_URL + `/star/${contentId}`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  const data = await res.json();
+
+  return data.message;
+}
+
+export async function GetStarredContent(token: string) {
+  const res = await fetch(BACKEND_URL + "/star", {
+    headers: {
+      Authorization: token,
+    },
+    method: "GET",
+  });
+
+  const data = await res.json();
+
+  const theContent = data.starredPosts.map((post: any) => post.contentId);
+  return theContent;
+}
