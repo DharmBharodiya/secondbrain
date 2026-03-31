@@ -10,6 +10,7 @@ import { generateHash } from "../utils/utils.js";
 import * as z from "zod";
 import upload from "../middlewares/UploadFile.js";
 import { UploadFile } from "../utils/UploadFile.js";
+import bodyParser from "body-parser";
 
 const JWT_SECRET = process.env.JWT_SECRET_USER || "thisisactuallyasecret";
 
@@ -86,10 +87,7 @@ router.post("/signin", async (req, res) => {
 });
 
 const contentSchema = z.object({
-  title: z
-    .string()
-    .min(3, "Please give proper title.")
-    .max(18, "Title is too long."),
+  title: z.string().min(3, "Please give proper title."),
   link: z
     .string()
     .transform((val) => (val === "" ? undefined : val))
@@ -97,6 +95,7 @@ const contentSchema = z.object({
   type: z.string(),
   notes: z.string().optional(),
   tags: z.array(z.string()).optional(),
+  imageUrl: z.string(),
 });
 
 router.post(
@@ -105,17 +104,20 @@ router.post(
   upload.single("file"),
   async (req: CustomRequest, res: Response) => {
     try {
-      const { title, link, type, notes, tags } = contentSchema.parse(req.body);
       const userId = req.id;
       const file = req.file; // the req.file here is populated my multer
-      if (!file) {
-        return res
-          .status(500)
-          .json({ message: "no file available to upload." });
+      let fileUrl = null;
+      if (file) {
+        const fileUploadRes: any = await UploadFile(file.buffer);
+        fileUrl = fileUploadRes.secure_url;
       }
 
-      const fileUploadRes: any = await UploadFile(file.buffer);
-      const fileUrl = fileUploadRes.secure_url;
+      // const { title, link, type, notes, tags } = contentSchema.parse({
+      //   ...req.body,
+      //   imageUrl: fileUrl || "",
+      // });
+
+      const { title, link, type, notes, tags } = req.body;
 
       let tagIds: mongoose.Types.ObjectId[] = [];
 
@@ -140,7 +142,7 @@ router.post(
         notes: notes || null,
         userId: new mongoose.Types.ObjectId(userId),
         tags: tagIds || [],
-        imageUrl: fileUrl,
+        imageUrl: fileUrl || "",
       });
 
       res.status(201).json({ message: "Content added." });

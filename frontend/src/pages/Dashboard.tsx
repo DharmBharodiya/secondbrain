@@ -17,6 +17,8 @@ import ContentCard from "../components/Dashboard/ContentCard";
 import { motion } from "framer-motion";
 import PinterestImage from "../components/Dashboard/PinterstEmbed";
 import ImageDisplay from "../components/Dashboard/ImageDisplay";
+import Sidebar from "../components/Dashboard/Sidebar";
+import Navbar from "../components/Navbar";
 
 type Tags = {
   _id: string;
@@ -175,183 +177,192 @@ const Dashboard = () => {
   }
 
   return (
-    <div
-      className={`${theme === "dark" ? "bg-black text-white" : "bg-slate-200 text-black"} w-full p-6 mt-32 flex flex-col items-center min-h-screen`}
-    >
-      <div className="mb-8">
-        <h1 className="text-2xl font-advercase">{username}'s Dashboard</h1>
-      </div>
-      <div className="mb-10 flex justify-center items-center w-full">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="font-garamond text-4xl px-4 text-gray-400 font-bold outline-0"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button className="bg-orange-500 hover:scale-104 transition-all duration-100 rounded-full p-2 text-xs cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center mr-2">
-          <SearchIcon className="text-white" />
-        </button>
-        <button
-          className="bg-orange-500 hover:scale-104 transition-all duration-100 rounded-full p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl mr-2"
-          onClick={() => {
-            setContentFormOpen((prev) => !prev);
-          }}
-        >
-          <PlusIcon />
-        </button>
-        <button
-          className="bg-orange-500 hover:scale-104 transition-all duration-100 rounded-full p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl"
-          onClick={handleShare}
-        >
-          <Share2 />
-        </button>
-      </div>
-
-      <div className="mb-3 h-6">
-        {shareMessage && shareValue ? (
-          <a
-            href={`http://localhost:5173${shareMessage}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-orange-600 hover:text-orange-700 underline"
-          >
-            Access Sharable Link
-          </a>
-        ) : shareMessage && !shareValue ? (
-          <p className="text-green-600">Sharing restricted.</p>
-        ) : null}
-      </div>
-
-      {contentFormOpen && (
-        <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50000 w-full">
-          <motion.div
-            onClick={() => setContentFormOpen(false)}
-            className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          />
-          <motion.div
-            className="relative z-51 mx-auto"
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-          >
-            <ContentForm
-              handleClick={() => setContentFormOpen((prev) => !prev)}
-              onContentAdded={fetchUserContent}
-              contentFormOpenFunction={(value: boolean) =>
-                setContentFormOpen(value)
-              }
-            />
-          </motion.div>
-        </div>
-      )}
-
-      {contentCardOpen && (
-        <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50000">
-          <div
-            onClick={() => setContentCardOpen(false)}
-            className="absolute inset-0"
-          />
-          <div className="relative z-51 w-[90%]">
-            {selectedContent && (
-              <ContentCard
-                setcardopen={setContentCardOpen}
-                fetchContentAgain={fetchUserContent}
-                content={selectedContent}
-              />
-            )}
-          </div>
-        </div>
-      )}
-
-      <motion.div
-        className="w-[90%] columns-2 lg:columns-4 rounded-lg gap-2"
-        variants={container}
-        initial="show"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
+    <>
+      {/* <Navbar /> */}
+      <div
+        className={`${theme === "dark" ? "bg-black text-white" : "bg-slate-200 text-black"} w-full flex h-screen relative `}
       >
-        {searchUserContent ? (
-          searchUserContent.map((content: UserContent) => (
-            <motion.div
-              variants={item}
-              key={content._id}
-              className="break-inside-avoid relative group mb-2 w-full"
+        <div>
+          <Sidebar />
+        </div>
+        <div className="p-6 flex flex-col pt-10 items-center h-screen flex-1 max-w-full overflow-x-hidden">
+          <div className="mb-8">
+            <h1 className="text-2xl font-advercase">{username}'s Dashboard</h1>
+          </div>
+          <div className="mb-10 flex justify-center items-center w-full">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="font-garamond text-4xl px-4 text-gray-400 font-bold outline-0"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button className="bg-orange-500 hover:scale-104 transition-all duration-100 rounded-full p-2 text-xs cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center mr-2">
+              <SearchIcon className="text-white" />
+            </button>
+            <button
+              className="bg-orange-500 hover:scale-104 transition-all duration-100 rounded-full p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl mr-2"
               onClick={() => {
-                setSelectedContent(content);
-                console.log("SelectedContent:", content);
-                setContentCardOpen(true);
+                setContentFormOpen((prev) => !prev);
               }}
             >
-              <div>
-                <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 flex justify-center border-slate-100 hover:border-gray-300 cursor-pointer outline-0">
-                  {/* for spotify */}
-                  {content.type === "spotify" && content.link && (
-                    <SpotifyBanner link={content.link} height="152" />
-                  )}
-                  {content.type === "youtube" && content.link
-                    ? (() => {
-                        const videoId = getYouTubeId(content.link);
+              <PlusIcon />
+            </button>
+            <button
+              className="bg-orange-500 hover:scale-104 transition-all duration-100 rounded-full p-2 cursor-pointer shadow-orange-500 shadow-xl font-semibold flex justify-center items-center text-white text-4xl"
+              onClick={handleShare}
+            >
+              <Share2 />
+            </button>
+          </div>
 
-                        if (!videoId) return <span>Invalid YouTube Link</span>;
+          <div className="mb-3 h-6">
+            {shareMessage && shareValue ? (
+              <a
+                href={`http://localhost:5173${shareMessage}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-orange-600 hover:text-orange-700 underline"
+              >
+                Access Sharable Link
+              </a>
+            ) : shareMessage && !shareValue ? (
+              <p className="text-green-600">Sharing restricted.</p>
+            ) : null}
+          </div>
 
-                        return <YouTubeBanner videoId={videoId} />;
-                      })()
-                    : null}
-                  {content.type === "image" && content.imageUrl ? (
-                    <ImageDisplay url={content.imageUrl} />
-                  ) : null}
-                  {content.type === "quote" ? (
-                    <div className="flex justify-center items-center">
-                      <Article content={content} />
+          {contentFormOpen && (
+            <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50000 w-full">
+              <motion.div
+                onClick={() => setContentFormOpen(false)}
+                className="absolute inset-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+              <motion.div
+                className="relative z-51 mx-auto"
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ContentForm
+                  handleClick={() => setContentFormOpen((prev) => !prev)}
+                  onContentAdded={fetchUserContent}
+                  contentFormOpenFunction={(value: boolean) =>
+                    setContentFormOpen(value)
+                  }
+                />
+              </motion.div>
+            </div>
+          )}
+
+          {contentCardOpen && (
+            <div className="fixed inset-0 bg-black/80 flex justify-center items-center z-50000">
+              <div
+                onClick={() => setContentCardOpen(false)}
+                className="absolute inset-0"
+              />
+              <div className="relative z-51 w-[90%]">
+                {selectedContent && (
+                  <ContentCard
+                    setcardopen={setContentCardOpen}
+                    fetchContentAgain={fetchUserContent}
+                    content={selectedContent}
+                  />
+                )}
+              </div>
+            </div>
+          )}
+
+          <motion.div
+            className="w-[90%] columns-2 lg:columns-4 rounded-lg gap-2"
+            variants={container}
+            initial="show"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            {searchUserContent ? (
+              searchUserContent.map((content: UserContent) => (
+                <motion.div
+                  variants={item}
+                  key={content._id}
+                  className="break-inside-avoid relative group mb-2 w-full"
+                  onClick={() => {
+                    setSelectedContent(content);
+                    console.log("SelectedContent:", content);
+                    setContentCardOpen(true);
+                  }}
+                >
+                  <div>
+                    <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 flex justify-center border-slate-100 hover:border-gray-300 cursor-pointer outline-0">
+                      {/* for spotify */}
+                      {content.type === "spotify" && content.link && (
+                        <SpotifyBanner link={content.link} height="152" />
+                      )}
+                      {content.type === "youtube" && content.link
+                        ? (() => {
+                            const videoId = getYouTubeId(content.link);
+
+                            if (!videoId)
+                              return <span>Invalid YouTube Link</span>;
+
+                            return <YouTubeBanner videoId={videoId} />;
+                          })()
+                        : null}
+                      {content.type === "image" && content.imageUrl ? (
+                        <ImageDisplay url={content.imageUrl} />
+                      ) : null}
+                      {content.type === "quote" ? (
+                        <div className="flex justify-center items-center">
+                          <Article content={content} />
+                        </div>
+                      ) : null}
+
+                      {/* Inside searchUserContent.map in Dashboard.tsx */}
+                      {content.type === "twitter" && content.link && (
+                        <div className="w-full flex justify-center items-start min-h-[200px] overflow-visible">
+                          <TwitterEmbed url={content.link} />
+                        </div>
+                      )}
+
+                      {content.type === "pinterest" && content.link && (
+                        <div className="w-full mb-2">
+                          <PinterestImage url={content.link} />
+                        </div>
+                      )}
+                      {content.type === "instagram" && content.link && (
+                        <InstagramImage url={content.link} />
+                      )}
                     </div>
-                  ) : null}
-
-                  {/* Inside searchUserContent.map in Dashboard.tsx */}
-                  {content.type === "twitter" && content.link && (
-                    <div className="w-full flex justify-center items-start min-h-[200px] overflow-visible">
-                      <TwitterEmbed url={content.link} />
-                    </div>
-                  )}
-
-                  {content.type === "pinterest" && content.link && (
-                    <div className="w-full mb-2">
-                      <PinterestImage url={content.link} />
-                    </div>
-                  )}
-                  {content.type === "instagram" && content.link && (
-                    <InstagramImage url={content.link} />
-                  )}
-                </div>
-                {/* <div className="flex justify-center items-center flex-col mt-1 mb-1">
+                    {/* <div className="flex justify-center items-center flex-col mt-1 mb-1">
                   <h1
                     className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
                   >
                     {content.title}
                   </h1>
                 </div> */}
-                {content.link ? (
-                  <div className="w-fit bottom-10 right-4 absolute group-hover:flex justify-center items-center bg-orange-600/90 rounded-lg text-xs pr-10 py-2 px-3 hidden">
-                    <a href={content.link} target="_blank">
-                      {content.link.slice(8, 18)}...
-                      <ArrowUpRight className="w-4 float-right absolute top-1 right-4" />
-                    </a>
+                    {content.link ? (
+                      <div className="w-fit bottom-10 right-4 absolute group-hover:flex justify-center items-center bg-orange-600/90 rounded-lg text-xs pr-10 py-2 px-3 hidden">
+                        <a href={content.link} target="_blank">
+                          {content.link.slice(8, 18)}...
+                          <ArrowUpRight className="w-4 float-right absolute top-1 right-4" />
+                        </a>
+                      </div>
+                    ) : null}
                   </div>
-                ) : null}
-              </div>
-            </motion.div>
-          ))
-        ) : (
-          <p className="font-advercase text-xl">
-            No links yet. Start building your archive
-          </p>
-        )}
-      </motion.div>
-    </div>
+                </motion.div>
+              ))
+            ) : (
+              <p className="font-advercase text-xl">
+                No links yet. Start building your archive
+              </p>
+            )}
+          </motion.div>
+        </div>
+      </div>
+    </>
   );
 };
 

@@ -4,6 +4,8 @@ import Hero from "../components/Hero";
 import HeroCardMaster from "../components/HeroCardMaster";
 import { motion } from "framer-motion";
 import { AuthContext } from "../Context/AuthContext";
+import { div } from "framer-motion/client";
+import Navbar from "../components/Navbar";
 
 const container = {
   hidden: {},
@@ -23,19 +25,22 @@ const HomePage = () => {
   const { theme } = useContext(AuthContext);
 
   return (
-    <motion.div
-      className={`${theme === "dark" ? "text-white bg-black" : "bg-white text-black"} w-full min-h-screen relative flex flex-col justify-center items-center`}
-      variants={container}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
-    >
-      <motion.div variants={item}>
-        <Hero />
+    <div>
+      <Navbar />
+      <motion.div
+        className={`${theme === "dark" ? "text-white bg-black" : "bg-white text-black"} w-full min-h-screen relative flex flex-col justify-center items-center`}
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        <motion.div variants={item}>
+          <Hero />
+        </motion.div>
+        <HeroCardMaster />
+        <Footer />
       </motion.div>
-      <HeroCardMaster />
-      <Footer />
-    </motion.div>
+    </div>
   );
 };
 
