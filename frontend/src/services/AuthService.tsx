@@ -40,6 +40,7 @@ export async function LoginService({ username, password }: AuthServiceProps) {
 
   const result = await res.json();
 
+  // Return the full result - let the component handle success/error
   return result;
 }
 

@@ -193,3 +193,22 @@ export async function GetStarredContent(token: string) {
   const theContent = data.starredPosts.map((post: any) => post.contentId);
   return theContent;
 }
+
+export async function UpdateUsername(newUsername: string, token: string) {
+  console.log(
+    "the stringify username: ",
+    JSON.stringify({ username: newUsername }),
+  );
+  const res = await fetch(BACKEND_URL + "/user", {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify({ username: newUsername }),
+  });
+
+  const data = await res.json();
+  console.log("Message on user update:", data);
+  return data;
+}

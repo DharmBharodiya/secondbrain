@@ -36,6 +36,8 @@ type AuthContextType = {
   setTheme: (value: "light" | "dark") => void;
   starredOpened: boolean;
   setStarredOpened: (value: boolean) => void;
+  settingsOpened: boolean;
+  setSettingsOpened: (value: boolean) => void;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -57,6 +59,8 @@ export const AuthContext = createContext<AuthContextType>({
   setTheme: () => {},
   starredOpened: false,
   setStarredOpened: () => {},
+  settingsOpened: false,
+  setSettingsOpened: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -71,6 +75,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     notes: "",
     _id: "",
   });
+  const [settingsOpened, setSettingsOpened] = useState(false);
 
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [starredOpened, setStarredOpenedState] = useState(false);
@@ -115,6 +120,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setTheme,
         starredOpened,
         setStarredOpened,
+        settingsOpened,
+        setSettingsOpened,
       }}
     >
       {children}

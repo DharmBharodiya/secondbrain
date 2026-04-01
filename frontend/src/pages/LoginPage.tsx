@@ -8,8 +8,9 @@ import Navbar from "../components/Navbar";
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { theme } = useContext(AuthContext);
 
@@ -23,28 +24,59 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    // Validate inputs
+    if (!username.trim()) {
+      setError("Username is required");
+      return;
+    }
+    if (!password.trim()) {
+      setError("Password is required");
+      return;
+    }
+
+    setError("");
+    setMessage("");
+    setIsLoading(true);
+
     try {
       const result = await LoginService({ username, password });
-      if (result) {
-        const token = result.token;
 
+      // Check if login was successful
+      if (result.token) {
+        const token = result.token;
         localStorage.setItem("token", token);
         setToken(token);
         setLoggedIn(true);
-        setMessage(result.message);
-        console.log(
-          "Login Successful. Token: " + token + " Message: " + result.message,
-        );
+        setMessage(result.message || "Login successful!");
+        console.log("Login Successful. Token: " + token);
+
         setTimeout(() => {
           navigate("/dashboard");
         }, 1000);
       } else {
-        console.log("Login Error");
-        setMessage(result.message);
+        // Handle login failure
+        setError(result.message || "Invalid username or password");
+        console.log("Login failed:", result.message);
       }
     } catch (e) {
-      console.log("Login Error: " + e);
+      const errorMessage =
+        e instanceof Error ? e.message : "An error occurred during login";
+      setError(errorMessage);
+      console.error("Login Error:", e);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  // Clear error when user starts typing
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+    setError("");
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    setError("");
   };
 
   return (
@@ -75,24 +107,34 @@ const LoginPage = () => {
               placeholder="Enter your username"
               name="username"
               value={username}
-              changeEvent={(e) => setUsername(e.target.value)}
+              changeEvent={handleUsernameChange}
             />
             <InputBox
               type="password"
               placeholder="Enter your password"
               name="password"
               value={password}
-              changeEvent={(e) => setPassword(e.target.value)}
+              changeEvent={handlePasswordChange}
             />
             <button
-              className={`${theme === "dark" ? "bg-white text-black" : "bg-black text-white"} px-6 py-2 rounded-lg font-semibold cursor-pointer`}
+              className={`${theme === "dark" ? "bg-white text-black" : "bg-black text-white"} px-6 py-2 rounded-lg font-semibold cursor-pointer transition-opacity ${isLoading ? "opacity-60 cursor-not-allowed" : ""}`}
               onClick={handleLogin}
+              disabled={isLoading}
             >
-              Log In
+              {isLoading ? "Logging in..." : "Log In"}
             </button>
-            <p className="text-sm text-red-500 text-center">{message}</p>
+            {error && (
+              <p className="text-sm text-red-500 text-center mt-2 font-medium">
+                {error}
+              </p>
+            )}
+            {message && (
+              <p className="text-sm text-green-500 text-center mt-2 font-medium">
+                {message}
+              </p>
+            )}
             <p
-              className={`text-sm text-center mt-2 ${theme === "dark" ? "text-white" : "text-black"}`}
+              className={`text-sm text-center mt-4 ${theme === "dark" ? "text-white" : "text-black"}`}
             >
               new →{" "}
               <NavLink to="/signup" className="text-orange-600">

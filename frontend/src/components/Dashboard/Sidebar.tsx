@@ -7,11 +7,23 @@ import { AuthContext } from "../../Context/AuthContext";
 import Button from "../Button";
 import { Moon, Sun } from "lucide-react";
 
-const Sidebar = () => {
+const Sidebar = ({
+  settings,
+  setSettings,
+}: {
+  settings: boolean;
+  setSettings: (value: boolean) => void;
+}) => {
   const sidebarList = ["starred", "settings"];
   const { theme, setTheme } = useContext(AuthContext);
-  const { loggedIn, logOut, starredOpened, setStarredOpened } =
-    useContext(AuthContext);
+  const {
+    loggedIn,
+    logOut,
+    starredOpened,
+    setStarredOpened,
+    setSettingsOpened,
+    settingsOpened,
+  } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -36,9 +48,14 @@ const Sidebar = () => {
     setStarredOpened(!starredOpened);
   };
 
+  const handleSettings = () => {
+    setSettingsOpened(!settingsOpened);
+    setSettings(!settings);
+  };
+
   return (
     <div
-      className={`${theme === "dark" ? "bg-slate-950/0" : "bg-slate-100"} px-4 py-3 shrink-0 h-screen w-60 flex flex-col justify-between`}
+      className={`${theme === "dark" ? "bg-orange-900/30" : "bg-slate-100"} px-4 py-3 shrink-0 h-screen w-60 flex flex-col justify-between`}
     >
       <div className="ml-4 mt-6 flex">
         <NavLink to="/" className="flex justify-center items-center">
@@ -76,8 +93,11 @@ const Sidebar = () => {
           <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
         </div>
         <div className="w-fit relative group ml-4 mb-4">
-          <button className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-xl">
-            settings
+          <button
+            className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-xl"
+            onClick={handleSettings}
+          >
+            {settingsOpened ? "back to dashboard" : "settings"}
           </button>
           <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
         </div>
@@ -85,7 +105,7 @@ const Sidebar = () => {
           {theme === "dark" ? <Sun /> : <Moon />}
         </button>
       </div>
-      <div className="mb-10">
+      <div className="mb-10 ml-4">
         {" "}
         {!loggedIn ? (
           <>
@@ -96,7 +116,7 @@ const Sidebar = () => {
               <Button
                 text={"Sign Up"}
                 variant="orange"
-                extraStyles="w-full hover:shadow-orange-500 hover:shadow-xl transition-all duration-75"
+                extraStyles="w-full hover:shadow-orange-500 hover:shadow-lg transition-all duration-75"
               />
             </NavLink>
           </>
@@ -106,7 +126,7 @@ const Sidebar = () => {
               text={"Log Out"}
               variant="orange"
               clickEvent={handleLogout}
-              extraStyles="hover:shadow-orange-500 hover:shadow-xl transition-all duration-75"
+              extraStyles="hover:shadow-orange-500 hover:shadow-lg transition-all duration-75"
             />
           </>
         )}
