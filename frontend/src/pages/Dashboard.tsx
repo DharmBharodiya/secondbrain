@@ -63,6 +63,14 @@ const Dashboard = () => {
   const [starred, setStarred] = useState(false);
   const [settings, setSettings] = useState(false);
 
+  // Caching states
+  const [cachedDashboardContent, setCachedDashboardContent] = useState<
+    UserContent[] | null
+  >(null);
+  const [cachedStarredContent, setCachedStarredContent] = useState<
+    UserContent[] | null
+  >(null);
+
   const context = useContext(AuthContext);
   const token = context?.token as string;
 
@@ -73,17 +81,31 @@ const Dashboard = () => {
       try {
         setError("");
         const result = await UserFetchService(token);
-        if (starredOpened) {
-          const starredContent = await GetStarredContent(token);
-          setUserContent(starredContent);
-          setSearchUserContent(starredContent);
-        } else {
-          const fetchedUserContent: UserContent[] =
-            await FetchContentService(token);
 
-          setUserContent(fetchedUserContent);
-          setSearchUserContent(fetchedUserContent);
-          console.log("fetched: ", fetchedUserContent);
+        if (starredOpened) {
+          // Use cached starred content if available
+          if (cachedStarredContent !== null) {
+            setUserContent(cachedStarredContent);
+            setSearchUserContent(cachedStarredContent);
+          } else {
+            const starredContent = await GetStarredContent(token);
+            setCachedStarredContent(starredContent);
+            setUserContent(starredContent);
+            setSearchUserContent(starredContent);
+          }
+        } else {
+          // Use cached dashboard content if available
+          if (cachedDashboardContent !== null) {
+            setUserContent(cachedDashboardContent);
+            setSearchUserContent(cachedDashboardContent);
+          } else {
+            const fetchedUserContent: UserContent[] =
+              await FetchContentService(token);
+            setCachedDashboardContent(fetchedUserContent);
+            setUserContent(fetchedUserContent);
+            setSearchUserContent(fetchedUserContent);
+            console.log("fetched: ", fetchedUserContent);
+          }
         }
         setUsername(result.user.username);
       } catch (e) {
@@ -121,20 +143,42 @@ const Dashboard = () => {
     }
   }, [shareMessage]);
 
+  // Handle switching between starred and dashboard views
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const switchView = async () => {
       if (token) {
         try {
           setLoading(true);
-          await fetchUserContent();
-        } finally {
+          // Load cached content immediately if available
+          if (starredOpened && cachedStarredContent !== null) {
+            setUserContent(cachedStarredContent);
+            setSearchUserContent(cachedStarredContent);
+            setLoading(false);
+          } else if (!starredOpened && cachedDashboardContent !== null) {
+            setUserContent(cachedDashboardContent);
+            setSearchUserContent(cachedDashboardContent);
+            setLoading(false);
+          } else {
+            // Only fetch if cache is empty
+            await fetchUserContent();
+            setLoading(false);
+          }
+        } catch (e) {
+          console.log("View switch error: " + e);
           setLoading(false);
         }
       }
     };
 
-    fetchUserProfile();
-  }, [token, starredOpened]);
+    switchView();
+  }, [starredOpened, token]);
+
+  // Clear cache when new content is added to refetch fresh data
+  const handleContentAdded = async () => {
+    setCachedDashboardContent(null);
+    setCachedStarredContent(null);
+    await fetchUserContent();
+  };
 
   const handleShare = async () => {
     try {
@@ -279,7 +323,7 @@ const Dashboard = () => {
                   >
                     <ContentForm
                       handleClick={() => setContentFormOpen((prev) => !prev)}
-                      onContentAdded={fetchUserContent}
+                      onContentAdded={handleContentAdded}
                       contentFormOpenFunction={(value: boolean) =>
                         setContentFormOpen(value)
                       }
