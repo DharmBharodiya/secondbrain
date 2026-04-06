@@ -126,7 +126,7 @@ const Dashboard = () => {
       const filtered = userContent.filter(
         (content) =>
           content.title.toLowerCase().includes(search.toLowerCase()) ||
-          content.notes.toLowerCase().includes(search.toLowerCase()) ||
+          content.notes?.toLowerCase().includes(search.toLowerCase()) ||
           content.link?.toLowerCase().includes(search.toLowerCase()),
       );
       setSearchUserContent(filtered);

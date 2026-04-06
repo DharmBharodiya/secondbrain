@@ -104,6 +104,20 @@ const contentSchema = z.object({
   imageUrl: z.string(),
 });
 
+router.put("/user", AuthMiddleware, async (req: CustomRequest, res) => {
+  const userId = req.id;
+  const username = req.body.username;
+
+  const result = await UserModel.updateOne(
+    { _id: userId },
+    {
+      username: username,
+    },
+  );
+
+  res.status(200).json({ message: "Username updated." });
+});
+
 router.post(
   "/content",
   AuthMiddleware,
