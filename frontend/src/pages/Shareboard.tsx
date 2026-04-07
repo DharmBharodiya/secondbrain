@@ -11,6 +11,7 @@ import Button from "../components/Button";
 import { motion } from "framer-motion";
 import ImageDisplay from "../components/Dashboard/ImageDisplay";
 import Navbar from "../components/Navbar";
+import { useShareBoard } from "../hooks/useContentQueries";
 
 type UserContent = {
   _id: string;
@@ -26,20 +27,18 @@ const ShareBoard = () => {
   const [userContent, setUserContent] = useState<UserContent[]>();
   const { shareId } = useParams();
 
-  async function FetchUserContent() {
-    if (!shareId) return;
+  const { data: result, refetch } = useShareBoard(shareId);
 
-    const result = await GetSharedContent(shareId);
-    setUserContent(result);
-  }
+  // Move state update to useEffect to prevent infinite loop
+  useEffect(() => {
+    if (result) {
+      setUserContent(result);
+    }
+  }, [result]);
 
   useEffect(() => {
-    const callingFunction = async () => {
-      await FetchUserContent();
-    };
-
-    callingFunction();
-  }, [shareId]);
+    refetch();
+  }, [shareId, refetch]);
 
   const getYouTubeId = (url: string): string | null => {
     // Regex covers:
@@ -97,7 +96,7 @@ const ShareBoard = () => {
                   variants={item}
                 >
                   <div>
-                    <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0">
+                    <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0 flex justify-center">
                       {/* for spotify */}
                       {content.type === "spotify" && content.link && (
                         <SpotifyBanner link={content.link} height="152" />

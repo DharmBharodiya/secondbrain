@@ -7,7 +7,9 @@ import {
 import {
   DeleteContentService,
   FetchContentService,
+  GetSharedContent,
   GetStarredContent,
+  SetSharedBrainService,
   StarContent,
   UpdateContentService,
   UpdateUsername,
@@ -140,5 +142,23 @@ export const useUpdateUsername = () => {
       queryClient.invalidateQueries({ queryKey: ["userContent"] });
       queryClient.invalidateQueries({ queryKey: ["starredContent"] });
     },
+  });
+};
+
+export const useShareBoard = (shareId: string | undefined) => {
+  return useQuery({
+    queryKey: ["sharedContent", shareId],
+    queryFn: () => GetSharedContent(shareId),
+  });
+};
+
+interface ShareContentProps {
+  token: string;
+  shareValue: boolean;
+}
+
+export const useSetSharedBoard = () => {
+  return useMutation({
+    mutationFn: (params: ShareContentProps) => SetSharedBrainService(params),
   });
 };

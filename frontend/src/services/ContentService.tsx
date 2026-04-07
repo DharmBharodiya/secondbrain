@@ -157,7 +157,7 @@ export async function SetSharedBrainService({
   return data.message;
 }
 
-export async function GetSharedContent(shareId: string) {
+export async function GetSharedContent(shareId: string | undefined) {
   const res = await fetch(BACKEND_URL + `/brain/${shareId}`, {
     method: "GET",
   });

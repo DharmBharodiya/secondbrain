@@ -5,6 +5,7 @@ import {
   useFetchStarredContent,
   useFetchUser,
   useFetchUserContent,
+  useSetSharedBoard,
 } from "../hooks/useContentQueries";
 import { SetSharedBrainService } from "../services/ContentService";
 import YouTubeBanner from "../components/Dashboard/YoutubeBanner";
@@ -67,6 +68,7 @@ const Dashboard = () => {
   const { data: UserDetails } = useFetchUser(token);
   const { data: userContent = [] } = useFetchUserContent(token);
   const { data: starredContent = [] } = useFetchStarredContent(token);
+  const shareBrainMutation = useSetSharedBoard();
 
   // Update username when user details are fetched
   useEffect(() => {
@@ -121,7 +123,7 @@ const Dashboard = () => {
       const newShareValue = !shareValue;
       setShareValue(newShareValue);
 
-      const res = await SetSharedBrainService({
+      const res = await shareBrainMutation.mutateAsync({
         token,
         shareValue: newShareValue,
       });
