@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import InputBox from "../components/auth/InputBox";
 import { NavLink, useNavigate } from "react-router";
-import { SignupService } from "../services/AuthService";
 import { AuthContext } from "../Context/AuthContext";
 import Navbar from "../components/Navbar";
 import { useSignup } from "../hooks/useContentQueries";

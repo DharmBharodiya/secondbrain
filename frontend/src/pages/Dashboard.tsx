@@ -1,7 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
-import { UserFetchService } from "../services/AuthService";
-import { useFetchUser } from "../hooks/useContentQueries";
+import {
+  useFetchStarredContent,
+  useFetchUser,
+  useFetchUserContent,
+} from "../hooks/useContentQueries";
 import {
   FetchContentService,
   GetStarredContent,
@@ -79,41 +82,31 @@ const Dashboard = () => {
   const { data: UserDetails } = useFetchUser(token);
   const username = UserDetails?.user?.username;
 
+  const { data: starredContent = [] } = useFetchStarredContent(token);
+
+  const displayContent = starredOpened ? starredContent : userContent;
+
+  const { data: fetchedUserContent } = useFetchUserContent(token);
+  console.log(fetchedUserContent);
+
   const fetchUserContent = async () => {
     if (token) {
       try {
         setError("");
-        // const result = await UserFetchService(token);
 
-        if (starredOpened) {
-          // Use cached starred content if available
-          if (cachedStarredContent !== null) {
-            setUserContent(cachedStarredContent);
-            setSearchUserContent(cachedStarredContent);
-          } else {
-            const starredContent = await GetStarredContent(token);
-            setCachedStarredContent(starredContent);
-            setUserContent(starredContent);
-            setSearchUserContent(starredContent);
-          }
+        if (cachedDashboardContent !== null) {
+          setUserContent(cachedDashboardContent);
+          setSearchUserContent(cachedDashboardContent);
         } else {
-          // Use cached dashboard content if available
-          if (cachedDashboardContent !== null) {
-            setUserContent(cachedDashboardContent);
-            setSearchUserContent(cachedDashboardContent);
-          } else {
-            const fetchedUserContent: UserContent[] =
-              await FetchContentService(token);
-            setCachedDashboardContent(fetchedUserContent);
-            setUserContent(fetchedUserContent);
-            setSearchUserContent(fetchedUserContent);
-            console.log("fetched: ", fetchedUserContent);
-          }
+          // const fetchedUserContent: UserContent[] =
+          //   await FetchContentService(token);
+          setCachedDashboardContent(fetchedUserContent);
+          setUserContent(fetchedUserContent);
+          setSearchUserContent(fetchedUserContent);
+          console.log("fetched: ", fetchedUserContent);
         }
-        // setUsername(result.user.username);
       } catch (e) {
-        console.log("User fetch error: " + e);
-        setError("Failed to load data. Please try again.");
+        console.log("Error happend in userFetchContent", e);
       }
     }
   };
@@ -356,8 +349,8 @@ const Dashboard = () => {
                 whileInView="show"
                 viewport={{ once: true, amount: 0.2 }}
               >
-                {searchUserContent ? (
-                  searchUserContent.map((content: UserContent) => (
+                {displayContent ? (
+                  displayContent.map((content: UserContent) => (
                     <motion.div
                       variants={item}
                       key={content._id}

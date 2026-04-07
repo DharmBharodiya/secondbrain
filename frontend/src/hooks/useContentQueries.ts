@@ -4,6 +4,10 @@ import {
   SignupService,
   UserFetchService,
 } from "../services/AuthService";
+import {
+  FetchContentService,
+  GetStarredContent,
+} from "../services/ContentService";
 
 //hook for fetching user information
 export const useFetchUser = (token: string) => {
@@ -28,5 +32,21 @@ export const useLogin = () => {
 export const useSignup = () => {
   return useMutation({
     mutationFn: (params: LoginProps) => SignupService(params),
+  });
+};
+
+export const useFetchStarredContent = (token: string) => {
+  return useQuery({
+    queryKey: ["starredContent", token],
+    queryFn: () => GetStarredContent(token),
+    enabled: !!token,
+  });
+};
+
+export const useFetchUserContent = (token: string) => {
+  return useQuery({
+    queryKey: ["userContent", token],
+    queryFn: () => FetchContentService(token),
+    enabled: !!token,
   });
 };
