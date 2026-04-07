@@ -17,6 +17,7 @@ import * as z from "zod";
 import upload from "../middlewares/UploadFile.js";
 import { UploadFile } from "../utils/UploadFile.js";
 import bodyParser from "body-parser";
+import { model } from "../config/gemini.js";
 
 const JWT_SECRET = process.env.JWT_SECRET_USER || "thisisactuallyasecret";
 
@@ -109,7 +110,7 @@ router.put("/user", AuthMiddleware, async (req: CustomRequest, res) => {
   const username = req.body.username;
 
   const result = await UserModel.updateOne(
-    { _id: userId },
+    { _id: new mongoose.Types.ObjectId(userId) },
     {
       username: username,
     },
@@ -227,7 +228,9 @@ router.get("/star", AuthMiddleware, async (req: CustomRequest, res) => {
 router.get("/user", AuthMiddleware, async (req: CustomRequest, res) => {
   const userId = req.id;
 
-  const userInfo = await UserModel.findOne({ _id: userId });
+  const userInfo = await UserModel.findOne({
+    _id: new mongoose.Types.ObjectId(userId),
+  });
 
   return res.status(200).json({ user: userInfo });
 });
@@ -422,5 +425,90 @@ router.get(
     }
   },
 );
+
+router.get("/chat", async (req: CustomRequest, res) => {
+  try {
+    const result = await model.generateContent("explain react in simple terms");
+    const response = await result.response;
+
+    res.json({
+      answer: response.text(),
+    });
+  } catch (e) {
+    console.log("chat error: ", e);
+    res.json({ message: "cannot find answer" });
+  }
+});
+
+router.post("/chat-ai", AuthMiddleware, async (req: CustomRequest, res) => {
+  const userId = req.id;
+  try {
+    const { question } = req.body;
+
+    const userContent = await ContentModel.find({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
+
+    const words = question.toLowerCase().split(" ");
+
+    const relevantContent = userContent.filter((item) => {
+      const text = `${item.title} ${item.notes} ${item.link}`.toLowerCase();
+      return words.some((word: any) => text.includes(word));
+    });
+
+    const topContent = relevantContent.slice(0, 5);
+
+    if (topContent.length === 0) {
+      return res.json({
+        answer: "I couldn't find anything relevant in your saved content.",
+      });
+    }
+
+    const prompt = `
+You are a smart assistant helping a user explore their saved content.
+
+User Question:
+${question}
+
+User's Saved Content:
+${topContent
+  .map(
+    (c, i) => `
+${i + 1}.
+Title: ${c.title}
+Notes: ${c.notes}
+Link: ${c.link}
+`,
+  )
+  .join("\n")}
+
+Instructions:
+- Answer ONLY using the provided content
+- Be clear and helpful
+- If multiple items match, summarize them
+- Keep answer concise
+`;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const answer = response.text();
+
+    // 7. Send response
+    res.json({ answer });
+  } catch (e: any) {
+    console.error("Chat error:", e);
+
+    // Handle service unavailability
+    if (e.status === 503) {
+      return res
+        .status(503)
+        .json({
+          error: "AI service is currently busy. Please try again in a moment.",
+        });
+    }
+
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
 
 export { router };
