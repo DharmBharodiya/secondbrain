@@ -75,7 +75,10 @@ const Dashboard = () => {
     }
   }, [UserDetails]);
 
-  const displayContent = starredOpened ? starredContent : userContent;
+  // Filter out null values from starred content (deleted items)
+  const displayContent = starredOpened
+    ? starredContent.filter((item: any) => item !== null && item !== undefined)
+    : userContent;
   const queryClient = useQueryClient();
 
   useEffect(() => {

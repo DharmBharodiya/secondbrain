@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
-import { UpdateUsername } from "../services/ContentService";
 import { AuthContext } from "../Context/AuthContext";
+import { useUpdateUsername } from "../hooks/useContentQueries";
 
 const Settings = ({
   username,
@@ -13,17 +13,48 @@ const Settings = ({
   const [message, setMessage] = useState("");
   const { token, theme } = useContext(AuthContext);
 
+  const updateMutation = useUpdateUsername();
+
   const handleUpdate = async () => {
+    // Check if username is the same as current
     if (theUsername === username) {
       setMessage("Enter a new username.");
       return;
-    } else {
-      if (token) {
-        const result = await UpdateUsername(theUsername, token);
+    }
 
-        setMessage(result.message);
-        console.log("REsult: ", result.message);
-        setUsername(theUsername);
+    // Check if username is empty or only whitespace
+    if (!theUsername.trim()) {
+      setMessage("Username cannot be empty.");
+      return;
+    }
+
+    // Check minimum length
+    if (theUsername.trim().length < 3) {
+      setMessage("Username must be at least 3 characters long.");
+      return;
+    }
+
+    if (token) {
+      try {
+        const result = await updateMutation.mutateAsync({
+          newUsername: theUsername.trim(),
+          token,
+        });
+
+        setMessage(result.message || "Username updated successfully!");
+        console.log("Result: ", result.message);
+        setUsername(theUsername.trim());
+      } catch (error: any) {
+        // Display specific error messages
+        let errorMsg = error.message || "Failed to update username";
+
+        // Detect 500 error (username duplicate/already exists)
+        if (errorMsg.includes("400")) {
+          errorMsg = "Username already exists.";
+        }
+
+        setMessage(errorMsg);
+        console.error("Update error:", error);
       }
     }
   };

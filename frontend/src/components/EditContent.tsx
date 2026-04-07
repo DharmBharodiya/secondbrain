@@ -1,8 +1,9 @@
 import { useContext, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "../Context/AuthContext";
 import { Link, X } from "lucide-react";
 import whiteLogo from "../assets/images/white-logo.PNG";
-import { UpdateContentService } from "../services/ContentService";
+import { useUpdateContent } from "../hooks/useContentQueries";
 
 type Tags = {
   _id: string;
@@ -34,6 +35,9 @@ const EditContent = ({
   const [tags, setTags] = useState<string>(tagsJoinedString);
   const [message, setMessage] = useState("");
 
+  const editContentMutation = useUpdateContent();
+  const queryClient = useQueryClient();
+
   const tagsSorted = () => {
     const newTags = tags
       .split(",")
@@ -60,16 +64,24 @@ const EditContent = ({
 
     try {
       if (token) {
-        const result = await UpdateContentService(editData._id, token, {
-          ...(title && { title: title.trim() }),
-          ...(link && { link: link.trim() }),
-          ...(type && { type: type.trim() }),
-          ...(tags &&
-            separatedTagsArray.length > 0 && { tags: separatedTagsArray }),
-          ...(notes && { notes: notes.trim() }),
+        const result = await editContentMutation.mutateAsync({
+          contentId: editData._id,
+          token: token,
+          data: {
+            ...(title && { title: title.trim() }),
+            ...(link && { link: link.trim() }),
+            ...(type && { type: type.trim() }),
+            ...(tags &&
+              separatedTagsArray.length > 0 && { tags: separatedTagsArray }),
+            ...(notes && { notes: notes.trim() }),
+          },
         });
 
         setMessage(result);
+
+        // Invalidate queries to refresh dashboard
+        queryClient.invalidateQueries({ queryKey: ["userContent"] });
+        queryClient.invalidateQueries({ queryKey: ["starredContent"] });
 
         // Reset form fields
         setTitle("");
@@ -151,12 +163,12 @@ const EditContent = ({
             className="text-orange-600 border-2 border-orange-600 px-2 py-1 rounded-md ml-2 cursor-pointer"
           >
             <option value="instagram">instagram</option>
+            <option value="pinterest">pinterest</option>
             <option value="youtube">youtube</option>
             <option value="twitter">twitter</option>
             <option value="spotify">spotify</option>
-            <option value="article">article</option>
             <option value="quote">quote</option>
-            <option value="note">note</option>
+            <option value="image">image</option>
             <option value="default">default</option>
           </select>
         </div>

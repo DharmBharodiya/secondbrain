@@ -208,7 +208,13 @@ export async function UpdateUsername(newUsername: string, token: string) {
     body: JSON.stringify({ username: newUsername }),
   });
 
+  // Check if response is OK first
+  if (!res.ok) {
+    throw new Error(`Server error: ${res.status} ${res.statusText}`);
+  }
+
   const data = await res.json();
   console.log("Message on user update:", data);
+
   return data;
 }

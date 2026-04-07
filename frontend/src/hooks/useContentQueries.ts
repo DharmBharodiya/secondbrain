@@ -1,12 +1,16 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   LoginService,
   SignupService,
   UserFetchService,
 } from "../services/AuthService";
 import {
+  DeleteContentService,
   FetchContentService,
   GetStarredContent,
+  StarContent,
+  UpdateContentService,
+  UpdateUsername,
   UploadContentService,
 } from "../services/ContentService";
 
@@ -60,5 +64,81 @@ interface UploadContentProps {
 export const useUploadNewContent = () => {
   return useMutation({
     mutationFn: (params: UploadContentProps) => UploadContentService(params),
+  });
+};
+
+interface UpdateContentProps {
+  title?: string;
+  link?: string;
+  type?: string;
+  notes?: string;
+  tags?: string[];
+}
+
+interface UpdateContentParams {
+  contentId: string;
+  token: string;
+  data: UpdateContentProps;
+}
+
+export const useUpdateContent = () => {
+  return useMutation({
+    mutationFn: (params: UpdateContentParams) =>
+      UpdateContentService(params.contentId, params.token, params.data),
+  });
+};
+
+interface DeleteContentProps {
+  token: string;
+  contentId: string;
+}
+
+export const useDeleteContent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (params: DeleteContentProps) => DeleteContentService(params),
+    onSuccess: () => {
+      // Invalidate queries to refresh dashboard
+      queryClient.invalidateQueries({ queryKey: ["userContent"] });
+      queryClient.invalidateQueries({ queryKey: ["starredContent"] });
+    },
+  });
+};
+
+type StarContent = {
+  contentId: string;
+  token: string;
+};
+
+export const useStarContent = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (params: StarContent) =>
+      StarContent(params.contentId, params.token),
+
+    onSuccess: () => {
+      // Invalidate queries to refresh dashboard
+      queryClient.invalidateQueries({ queryKey: ["userContent"] });
+      queryClient.invalidateQueries({ queryKey: ["starredContent"] });
+    },
+  });
+};
+
+type UsernameUpdate = {
+  newUsername: string;
+  token: string;
+};
+
+export const useUpdateUsername = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (params: UsernameUpdate) =>
+      UpdateUsername(params.newUsername, params.token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userContent"] });
+      queryClient.invalidateQueries({ queryKey: ["starredContent"] });
+    },
   });
 };

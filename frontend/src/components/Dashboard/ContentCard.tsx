@@ -11,6 +11,8 @@ import { useNavigate } from "react-router";
 import ContentForm from "../ContentForm";
 import EditContent from "../EditContent";
 import ImageDisplay from "./ImageDisplay";
+import { useDeleteContent } from "../../hooks/useContentQueries";
+import { useQueryClient } from "@tanstack/react-query";
 
 type UserContent = {
   content: {
@@ -70,6 +72,8 @@ const ContentCard = ({
 
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
+
   const getYouTubeId = (url: string): string | null => {
     // Regex covers:
     // - youtube.com/watch?v=ID
@@ -84,11 +88,21 @@ const ContentCard = ({
     return match && match[2].length === 11 ? match[2] : null;
   };
 
+  const deleteContentMutation = useDeleteContent();
+
   const handleDelete = async (content: Content) => {
-    const deleteMessage = await DeleteContentService({
+    // const deleteMessage = await DeleteContentService({
+    //   token,
+    //   contentId: content._id,
+    // });
+
+    const deleteMessage = deleteContentMutation.mutateAsync({
       token,
       contentId: content._id,
     });
+
+    queryClient.invalidateQueries({ queryKey: ["userContent"] });
+    queryClient.invalidateQueries({ queryKey: ["starredContent"] });
 
     setcardopen(false);
     setMessage(deleteMessage);
