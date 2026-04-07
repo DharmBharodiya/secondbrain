@@ -7,6 +7,7 @@ import {
 import {
   FetchContentService,
   GetStarredContent,
+  UploadContentService,
 } from "../services/ContentService";
 
 //hook for fetching user information
@@ -48,5 +49,16 @@ export const useFetchUserContent = (token: string) => {
     queryKey: ["userContent", token],
     queryFn: () => FetchContentService(token),
     enabled: !!token,
+  });
+};
+
+interface UploadContentProps {
+  token: string;
+  formData: FormData;
+}
+
+export const useUploadNewContent = () => {
+  return useMutation({
+    mutationFn: (params: UploadContentProps) => UploadContentService(params),
   });
 };

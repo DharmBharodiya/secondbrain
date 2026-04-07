@@ -1,15 +1,12 @@
 import { useContext, useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "../Context/AuthContext";
 import {
   useFetchStarredContent,
   useFetchUser,
   useFetchUserContent,
 } from "../hooks/useContentQueries";
-import {
-  FetchContentService,
-  GetStarredContent,
-  SetSharedBrainService,
-} from "../services/ContentService";
+import { SetSharedBrainService } from "../services/ContentService";
 import YouTubeBanner from "../components/Dashboard/YoutubeBanner";
 import SpotifyBanner from "../components/Dashboard/Spotify";
 
@@ -51,12 +48,8 @@ type UserContent = {
 };
 
 const Dashboard = () => {
-  // const [username, setUsername] = useState("");
-  const [userContent, setUserContent] = useState<UserContent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState("");
   const [search, setSearch] = useState("");
-
   const [searchUserContent, setSearchUserContent] = useState<UserContent[]>([]);
 
   const [contentFormOpen, setContentFormOpen] = useState(false);
@@ -66,60 +59,35 @@ const Dashboard = () => {
   const [shareMessage, setShareMessage] = useState("");
   const [settings, setSettings] = useState(false);
 
-  // Caching states
-  const [cachedDashboardContent, setCachedDashboardContent] = useState<
-    UserContent[] | null
-  >(null);
-  const [cachedStarredContent, setCachedStarredContent] = useState<
-    UserContent[] | null
-  >(null);
-
   const context = useContext(AuthContext);
   const token = context?.token as string;
 
   const { theme, starredOpened, setStarredOpened } = useContext(AuthContext);
 
   const { data: UserDetails } = useFetchUser(token);
-  const username = UserDetails?.user?.username;
-
+  const { data: userContent = [] } = useFetchUserContent(token);
   const { data: starredContent = [] } = useFetchStarredContent(token);
 
-  const displayContent = starredOpened ? starredContent : userContent;
-
-  const { data: fetchedUserContent } = useFetchUserContent(token);
-  console.log(fetchedUserContent);
-
-  const fetchUserContent = async () => {
-    if (token) {
-      try {
-        setError("");
-
-        if (cachedDashboardContent !== null) {
-          setUserContent(cachedDashboardContent);
-          setSearchUserContent(cachedDashboardContent);
-        } else {
-          // const fetchedUserContent: UserContent[] =
-          //   await FetchContentService(token);
-          setCachedDashboardContent(fetchedUserContent);
-          setUserContent(fetchedUserContent);
-          setSearchUserContent(fetchedUserContent);
-          console.log("fetched: ", fetchedUserContent);
-        }
-      } catch (e) {
-        console.log("Error happend in userFetchContent", e);
-      }
+  // Update username when user details are fetched
+  useEffect(() => {
+    if (UserDetails?.user?.username) {
+      setUsername(UserDetails.user.username);
     }
-  };
+  }, [UserDetails]);
+
+  const displayContent = starredOpened ? starredContent : userContent;
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setStarredOpened(false);
   }, []);
 
+  // Filter content based on search
   useEffect(() => {
     if (search.trim() === "") {
-      setSearchUserContent(userContent);
+      setSearchUserContent(displayContent);
     } else {
-      const filtered = userContent.filter(
+      const filtered = displayContent.filter(
         (content) =>
           content.title.toLowerCase().includes(search.toLowerCase()) ||
           content.notes?.toLowerCase().includes(search.toLowerCase()) ||
@@ -127,53 +95,22 @@ const Dashboard = () => {
       );
       setSearchUserContent(filtered);
     }
-  }, [search, userContent]);
+  }, [search, displayContent]);
 
   useEffect(() => {
     if (shareMessage) {
       const timer = setTimeout(() => {
         setShareMessage("");
-      }, 15000); // 15 seconds
+      }, 15000);
 
       return () => clearTimeout(timer);
     }
   }, [shareMessage]);
 
-  // Handle switching between starred and dashboard views
-  useEffect(() => {
-    const switchView = async () => {
-      if (token) {
-        try {
-          setLoading(true);
-          // Load cached content immediately if available
-          if (starredOpened && cachedStarredContent !== null) {
-            setUserContent(cachedStarredContent);
-            setSearchUserContent(cachedStarredContent);
-            setLoading(false);
-          } else if (!starredOpened && cachedDashboardContent !== null) {
-            setUserContent(cachedDashboardContent);
-            setSearchUserContent(cachedDashboardContent);
-            setLoading(false);
-          } else {
-            // Only fetch if cache is empty
-            await fetchUserContent();
-            setLoading(false);
-          }
-        } catch (e) {
-          console.log("View switch error: " + e);
-          setLoading(false);
-        }
-      }
-    };
-
-    switchView();
-  }, [starredOpened, token]);
-
-  // Clear cache when new content is added to refetch fresh data
-  const handleContentAdded = async () => {
-    setCachedDashboardContent(null);
-    setCachedStarredContent(null);
-    await fetchUserContent();
+  // Handle content added - invalidate queries to refetch fresh data
+  const handleContentAdded = () => {
+    queryClient.invalidateQueries({ queryKey: ["userContent"] });
+    queryClient.invalidateQueries({ queryKey: ["starredContent"] });
   };
 
   const handleShare = async () => {
@@ -222,14 +159,6 @@ const Dashboard = () => {
     hidden: { opacity: 0, y: 10 },
     show: { opacity: 1, y: 0 },
   };
-
-  if (loading) {
-    return <div className="text-center mt-10">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-600 text-center mt-10">{error}</div>;
-  }
 
   return (
     <>
@@ -334,7 +263,7 @@ const Dashboard = () => {
                     {selectedContent && (
                       <ContentCard
                         setcardopen={setContentCardOpen}
-                        fetchContentAgain={fetchUserContent}
+                        fetchContentAgain={handleContentAdded}
                         content={selectedContent}
                       />
                     )}

@@ -3,6 +3,7 @@ import { Link, X } from "lucide-react";
 import { UploadContentService } from "../services/ContentService";
 import { AuthContext } from "../Context/AuthContext";
 import whiteLogo from "../assets/images/white-logo.PNG";
+import { useUploadNewContent } from "../hooks/useContentQueries";
 
 interface ContentFormProps {
   handleClick: () => void;
@@ -24,6 +25,8 @@ const ContentForm = ({
   const [notes, setNotes] = useState("");
   const [message, setMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
+
+  const uploadContentMutation = useUploadNewContent();
 
   const tagsSorted = () => {
     const newTags = tags
@@ -65,7 +68,10 @@ const ContentForm = ({
 
     try {
       if (token) {
-        const result = await UploadContentService({ token, formData });
+        const result = await uploadContentMutation.mutateAsync({
+          token,
+          formData,
+        });
 
         setMessage(result);
 
