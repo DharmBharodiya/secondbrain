@@ -1,16 +1,15 @@
 import { useContext, useState } from "react";
 import InputBox from "../components/auth/InputBox";
 import { NavLink, useNavigate } from "react-router";
-import { LoginService } from "../services/AuthService";
 import { AuthContext } from "../Context/AuthContext";
 import Navbar from "../components/Navbar";
+import { useLogin } from "../hooks/useContentQueries";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const { theme } = useContext(AuthContext);
 
@@ -23,50 +22,94 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    // Validate inputs
-    if (!username.trim()) {
-      setError("Username is required");
-      return;
+  const loginMutation = useLogin();
+  // const handleLogin = async () => {
+
+  //   // Validate inputs
+  //   if (!username.trim()) {
+  //     setError("Username is required");
+  //     return;
+  //   }
+  //   if (!password.trim()) {
+  //     setError("Password is required");
+  //     return;
+  //   }
+
+  //   setError("");
+  //   setMessage("");
+  //   setIsLoading(true); 
+
+  //   try {
+  //     const result = await LoginService({ username, password });
+
+  //     // Check if login was successful
+  //     if (result.token) {
+  //       const token = result.token;
+  //       localStorage.setItem("token", token);
+  //       setToken(token);
+  //       setLoggedIn(true);
+  //       setMessage(result.message || "Login successful!");
+  //       console.log("Login Successful. Token: " + token);
+
+  //       setTimeout(() => {
+  //         navigate("/dashboard");
+  //       }, 1000);
+  //     } else {
+  //       // Handle login failure
+  //       setError(result.message || "Invalid username or password");
+  //       console.log("Login failed:", result.message);
+  //     }
+  //   } catch (e) {
+  //     const errorMessage =
+  //       e instanceof Error ? e.message : "An error occurred during login";
+  //     setError(errorMessage);
+  //     console.error("Login Error:", e);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  const handleLogin = () => {
+  if (!username.trim()) {
+    setError("Username is required");
+    return;
+  }
+  if (!password.trim()) {
+    setError("Password is required");
+    return;
+  }
+
+  setError("");
+  setMessage("");
+
+  loginMutation.mutate(
+    { username, password },
+    {
+      onSuccess: (result) => {
+        if (result.token) {
+          const token = result.token;
+          localStorage.setItem("token", token);
+          setToken(token);
+          setLoggedIn(true);
+          setMessage(result.message || "Login successful!");
+
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 1000);
+        } else {
+          setError(result.message || "Invalid username or password");
+        }
+      },
+      onError: (err) => {
+        const errorMessage =
+          err instanceof Error
+            ? err.message
+            : "An error occurred during login";
+        setError(errorMessage);
+      },
     }
-    if (!password.trim()) {
-      setError("Password is required");
-      return;
-    }
-
-    setError("");
-    setMessage("");
-    setIsLoading(true);
-
-    try {
-      const result = await LoginService({ username, password });
-
-      // Check if login was successful
-      if (result.token) {
-        const token = result.token;
-        localStorage.setItem("token", token);
-        setToken(token);
-        setLoggedIn(true);
-        setMessage(result.message || "Login successful!");
-        console.log("Login Successful. Token: " + token);
-
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 1000);
-      } else {
-        // Handle login failure
-        setError(result.message || "Invalid username or password");
-        console.log("Login failed:", result.message);
-      }
-    } catch (e) {
-      const errorMessage =
-        e instanceof Error ? e.message : "An error occurred during login";
-      setError(errorMessage);
-      console.error("Login Error:", e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  );
+};
 
   // Clear error when user starts typing
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,11 +160,11 @@ const LoginPage = () => {
               changeEvent={handlePasswordChange}
             />
             <button
-              className={`${theme === "dark" ? "bg-white text-black" : "bg-black text-white"} px-6 py-2 rounded-lg font-semibold cursor-pointer transition-opacity ${isLoading ? "opacity-60 cursor-not-allowed" : ""}`}
+              className={`${theme === "dark" ? "bg-white text-black" : "bg-black text-white"} px-6 py-2 rounded-lg font-semibold cursor-pointer transition-opacity ${loginMutation.isPending ? "opacity-60 cursor-not-allowed" : ""}`}
               onClick={handleLogin}
-              disabled={isLoading}
+              disabled={loginMutation.isPending}
             >
-              {isLoading ? "Logging in..." : "Log In"}
+              {loginMutation.isPending ? "Logging in..." : "Log In"}
             </button>
             {error && (
               <p className="text-sm text-red-500 text-center mt-2 font-medium">

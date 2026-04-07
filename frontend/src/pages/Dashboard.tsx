@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { UserFetchService } from "../services/AuthService";
+import { useFetchUser } from "../hooks/useContentQueries";
 import {
   FetchContentService,
   GetStarredContent,
@@ -47,7 +48,7 @@ type UserContent = {
 };
 
 const Dashboard = () => {
-  const [username, setUsername] = useState("");
+  // const [username, setUsername] = useState("");
   const [userContent, setUserContent] = useState<UserContent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -60,7 +61,6 @@ const Dashboard = () => {
   const [selectedContent, setSelectedContent] = useState<UserContent>();
   const [shareValue, setShareValue] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
-  const [starred, setStarred] = useState(false);
   const [settings, setSettings] = useState(false);
 
   // Caching states
@@ -76,11 +76,14 @@ const Dashboard = () => {
 
   const { theme, starredOpened, setStarredOpened } = useContext(AuthContext);
 
+  const { data: UserDetails } = useFetchUser(token);
+  const username = UserDetails?.user?.username;
+
   const fetchUserContent = async () => {
     if (token) {
       try {
         setError("");
-        const result = await UserFetchService(token);
+        // const result = await UserFetchService(token);
 
         if (starredOpened) {
           // Use cached starred content if available
@@ -107,7 +110,7 @@ const Dashboard = () => {
             console.log("fetched: ", fetchedUserContent);
           }
         }
-        setUsername(result.user.username);
+        // setUsername(result.user.username);
       } catch (e) {
         console.log("User fetch error: " + e);
         setError("Failed to load data. Please try again.");
@@ -222,10 +225,6 @@ const Dashboard = () => {
     },
   };
 
-  const handleStarClick = () => {
-    setStarred((prev) => !prev);
-  };
-
   const item = {
     hidden: { opacity: 0, y: 10 },
     show: { opacity: 1, y: 0 },
@@ -260,7 +259,7 @@ const Dashboard = () => {
             <div className="p-6 md:pt-10 flex items-center flex-col pt-30 h-screen max-w-full overflow-x-hidden">
               <div className="mb-8">
                 <h1 className="text-2xl font-advercase">
-                  {username}'s Dashboard
+                  {username || "User"}'s Dashboard
                 </h1>
               </div>
               <div className="mb-10 flex justify-center items-center w-full">

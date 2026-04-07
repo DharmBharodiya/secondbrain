@@ -88,7 +88,11 @@ const Sidebar = ({
             className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-xl"
             onClick={handleStarred}
           >
-            {starredOpened ? <p>back to dashboard</p> : <p>starred</p>}
+            {starredOpened ? (
+              <p className="text-orange-500">back to dashboard</p>
+            ) : (
+              <p>starred</p>
+            )}
           </button>
           <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
         </div>
@@ -97,7 +101,11 @@ const Sidebar = ({
             className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-xl"
             onClick={handleSettings}
           >
-            {settingsOpened ? "back to dashboard" : "settings"}
+            {settingsOpened ? (
+              <p className="text-orange-500">back to dashboard</p>
+            ) : (
+              <p>settings</p>
+            )}
           </button>
           <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
         </div>

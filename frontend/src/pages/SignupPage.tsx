@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router";
 import { SignupService } from "../services/AuthService";
 import { AuthContext } from "../Context/AuthContext";
 import Navbar from "../components/Navbar";
+import { useSignup } from "../hooks/useContentQueries";
 
 const SignupPage = () => {
   const [username, setUsername] = useState<string>("");
@@ -14,23 +15,30 @@ const SignupPage = () => {
   const { theme } = useContext(AuthContext);
 
   const [message, setMessage] = useState("");
-  const handleSignup = async () => {
-    try {
-      const result = await SignupService({ username, password });
 
-      if (result) {
-        setMessage(result);
-        console.log("Signup Successful.");
-        setTimeout(() => {
-          navigate("/login");
-        }, 1000);
-      } else {
-        setMessage(result);
-        console.log("Error");
-      }
-    } catch (e) {
-      console.log("SignUp Error: " + e);
-    }
+  const signupMutation = useSignup();
+
+  const handleSignup = async () => {
+    signupMutation.mutate(
+      { username, password },
+      {
+        onSuccess: (result) => {
+          if (result) {
+            setMessage(result);
+            console.log("Signup Successful.");
+            setTimeout(() => {
+              navigate("/login");
+            }, 1000);
+          } else {
+            setMessage(result);
+            console.log("Error");
+          }
+        },
+        onError: (err) => {
+          console.log("Signup Error: ", err);
+        },
+      },
+    );
   };
 
   return (
@@ -68,7 +76,7 @@ const SignupPage = () => {
               className={`${theme === "dark" ? "bg-white text-black" : "bg-black text-white"} px-6 py-2 rounded-lg font-semibold cursor-pointer`}
               onClick={handleSignup}
             >
-              Log In
+              Sign Up
             </button>
             <p className="text-sm text-red-600 text-center">{message}</p>
             <p className="text-sm text-center mt-2">
