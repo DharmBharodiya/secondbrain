@@ -12,7 +12,7 @@ const ChatPage = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const { token } = useContext(AuthContext);
+  const { token, theme } = useContext(AuthContext);
 
   const handleQuestionSubmit = async () => {
     if (question.trim() === "") return;
@@ -32,36 +32,25 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold">
+    <div
+      className={`w-full h-full flex flex-col justify-between p-4 bg-white ${theme === "dark" ? "text-black" : "text-black"}`}
+    >
+      <div className="mb-4">
+        <h1
+          className={`text-lg font-semibold ${theme === "dark" ? "text-black" : "text-black"}`}
+        >
           Chat with your{" "}
           <span className="font-advercase font-normal">Archive</span>
         </h1>
       </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Enter your question..."
-          className="outline-none border-orange-500 border-2 px-3 py-1 rounded-md"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-        />
-        <button
-          className="bg-orange-500 px-3 py-1 cursor-pointer rounded-md text-white font-bold ml-2"
-          onClick={handleQuestionSubmit}
-        >
-          Ask
-        </button>
-      </div>
-      <div className="w-[30%] mt-8 flex flex-col h-full overflow-y-auto space-y-4">
+      <div className="flex-1 overflow-y-auto mb-4 space-y-3 flex flex-col">
         {messages.map((msg, index) => (
           <div
             key={index}
             className={`${msg.role === "user" ? "justify-end" : "justify-start"} flex`}
           >
             <h1
-              className={`${msg.role === "user" ? "bg-orange-500 text-white p-3 rounded-bl-md" : "bg-orange-300 p-4 text-black rounded-br-md"} max-w-[80%] text-sm rounded-tr-md rounded-tl-md whitespace-pre-wrap`}
+              className={`${msg.role === "user" ? "bg-orange-500 text-white p-3 rounded-bl-md" : "bg-orange-300 p-3 text-black rounded-br-md"} max-w-[80%] text-sm rounded-tr-md rounded-tl-md whitespace-pre-wrap wrap-break-word`}
             >
               <ReactMarkdown
                 components={{
@@ -77,10 +66,26 @@ const ChatPage = () => {
           </div>
         ))}
         {loading && (
-          <div>
-            <h1>loading...</h1>
+          <div className="text-sm text-gray-500">
+            <h1>Thinking...</h1>
           </div>
         )}
+      </div>
+      <div className="flex gap-2">
+        <input
+          type="text"
+          placeholder="Enter your question..."
+          className="outline-none border-orange-500 border-2 px-3 py-2 rounded-md flex-1 text-sm"
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          onKeyPress={(e) => e.key === "Enter" && handleQuestionSubmit()}
+        />
+        <button
+          className="bg-orange-500 px-4 py-2 cursor-pointer rounded-md text-white font-bold hover:bg-orange-600 transition-colors"
+          onClick={handleQuestionSubmit}
+        >
+          Ask
+        </button>
       </div>
     </div>
   );

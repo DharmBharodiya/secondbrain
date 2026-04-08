@@ -7,11 +7,16 @@ import {
   useFetchUserContent,
   useSetSharedBoard,
 } from "../hooks/useContentQueries";
-import { SetSharedBrainService } from "../services/ContentService";
 import YouTubeBanner from "../components/Dashboard/YoutubeBanner";
 import SpotifyBanner from "../components/Dashboard/Spotify";
 
-import { SearchIcon, ArrowUpRight, PlusIcon, Share2, Star } from "lucide-react";
+import {
+  SearchIcon,
+  ArrowUpRight,
+  PlusIcon,
+  Share2,
+  Pizza,
+} from "lucide-react";
 import Article from "../components/Dashboard/Article";
 import TwitterEmbed from "../components/Dashboard/TwitterEmbed";
 import InstagramImage from "../components/Dashboard/InstagramImage";
@@ -24,6 +29,7 @@ import Sidebar from "../components/Dashboard/Sidebar";
 import Navbar from "../components/Navbar";
 import StarComponent from "../components/Dashboard/StarComponent";
 import Settings from "../components/Settings";
+import ChatPage from "./ChatPage";
 
 type Tags = {
   _id: string;
@@ -59,6 +65,7 @@ const Dashboard = () => {
   const [shareValue, setShareValue] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
   const [settings, setSettings] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   const context = useContext(AuthContext);
   const token = context?.token as string;
@@ -174,6 +181,32 @@ const Dashboard = () => {
       <div
         className={`${theme === "dark" ? "bg-black text-white" : "bg-slate-200 text-black"} w-full flex h-screen relative `}
       >
+        <div
+          className="bg-orange-500 rounded-full p-3 flex justify-center items-center absolute bottom-10 right-15 cursor-pointer shadow-xl shadow-orange-500 hover:scale-102 hover:bottom-11 hover:right-16 transition-all duration-100 group z-50"
+          onClick={() => setChatOpen(!chatOpen)}
+        >
+          <h1 className="text-sm bg-white text-black px-2 py-1 border-black absolute whitespace-nowrap bottom-14 right-0 hidden group-hover:block">
+            Chat with Archive
+          </h1>
+          <Pizza className="w-7 h-7 text-white" />
+        </div>
+
+        {chatOpen && (
+          <div className="fixed bottom-24 right-6 w-96 h-96 bg-white rounded-lg shadow-2xl z-40 flex flex-col overflow-hidden md:bottom-24 md:right-6">
+            <div className="bg-orange-500 text-white p-4 flex justify-between items-center">
+              <h2 className="font-semibold">Archive Bot</h2>
+              <button
+                onClick={() => setChatOpen(false)}
+                className="text-white hover:bg-orange-600 w-8 h-8 rounded-full cursor-pointer transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto">
+              <ChatPage />
+            </div>
+          </div>
+        )}
         <div className="md:block hidden">
           <Sidebar settings={settings} setSettings={setSettings} />
         </div>
@@ -277,7 +310,7 @@ const Dashboard = () => {
               )}
 
               <motion.div
-                className="w-[90%] columns-2 lg:columns-4 rounded-lg gap-2"
+                className="w-[90%] columns-2 lg:columns-4 rounded-lg gap-2 z-10"
                 variants={container}
                 initial="show"
                 whileInView="show"
