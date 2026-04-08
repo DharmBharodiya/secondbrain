@@ -452,7 +452,8 @@ router.post("/chat-ai", AuthMiddleware, async (req: CustomRequest, res) => {
     const words = question.toLowerCase().split(" ");
 
     const relevantContent = userContent.filter((item) => {
-      const text = `${item.title} ${item.notes} ${item.link}`.toLowerCase();
+      const text =
+        `${item.title} ${item.notes} ${item.link} ${item.type}`.toLowerCase();
       return words.some((word: any) => text.includes(word));
     });
 
@@ -465,12 +466,17 @@ router.post("/chat-ai", AuthMiddleware, async (req: CustomRequest, res) => {
     }
 
     const prompt = `
-You are a smart assistant helping a user explore their saved content.
+You are a friendly and intelligent assistant chatting with a user about their saved content.
+
+Your tone should be:
+- Conversational and natural (like ChatGPT)
+- Helpful and slightly engaging
+- Not robotic or overly formal
 
 User Question:
 ${question}
 
-User's Saved Content:
+Here is the user's saved content:
 ${topContent
   .map(
     (c, i) => `
@@ -478,15 +484,19 @@ ${i + 1}.
 Title: ${c.title}
 Notes: ${c.notes}
 Link: ${c.link}
+Type: ${c.type}
 `,
   )
   .join("\n")}
 
 Instructions:
-- Answer ONLY using the provided content
-- Be clear and helpful
-- If multiple items match, summarize them
-- Keep answer concise
+- Answer like you're having a conversation with the user
+- Use a friendly tone (e.g., "Looks like you saved...", "You have a few things about...")
+- ONLY use the provided content to answer
+- If multiple items match, naturally summarize them
+- If nothing is clearly relevant, say:
+  "Hmm, I couldn't find anything relevant in your saved content."
+- Keep the answer concise but human-like
 `;
 
     const result = await model.generateContent(prompt);
@@ -500,11 +510,9 @@ Instructions:
 
     // Handle service unavailability
     if (e.status === 503) {
-      return res
-        .status(503)
-        .json({
-          error: "AI service is currently busy. Please try again in a moment.",
-        });
+      return res.status(503).json({
+        error: "AI service is currently busy. Please try again in a moment.",
+      });
     }
 
     res.status(500).json({ error: "Something went wrong" });

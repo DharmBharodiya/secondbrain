@@ -218,3 +218,18 @@ export async function UpdateUsername(newUsername: string, token: string) {
 
   return data;
 }
+
+export async function ChatWithAI(token: string, question: string) {
+  const res = await fetch(BACKEND_URL + "/chat-ai", {
+    method: "POST",
+    body: JSON.stringify({ question }),
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await res.json();
+
+  return data;
+}
