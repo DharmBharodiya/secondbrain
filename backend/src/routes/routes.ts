@@ -393,13 +393,60 @@ router.get("/brain/:shareId", async (req, res) => {
       return res.status(404).json({ message: "Sorry! No such brains." });
     }
 
-    const content = await ContentModel.find({ userId: brain.userId });
+    const content = await ContentModel.find({
+      userId: brain.userId,
+      sharing: "public",
+    });
 
     res.json({ content: content });
   } catch (e) {
     console.log("Error: " + e);
   }
 });
+
+router.post(
+  "/brain/make-public/",
+  AuthMiddleware,
+  async (req: CustomRequest, res) => {
+    try {
+      const userId = req.id;
+      const contentId = req.body.contentId as string;
+
+      const findContent = await ContentModel.findOne({
+        userId: new mongoose.Types.ObjectId(userId),
+        _id: new mongoose.Types.ObjectId(contentId),
+      });
+
+      if (!findContent) {
+        return res.status(404).json({ message: "Content not found." });
+      }
+
+      const sharing = findContent.sharing;
+      const setSharing = sharing === "public" ? "private" : "public";
+
+      await ContentModel.updateOne(
+        {
+          userId: new mongoose.Types.ObjectId(userId),
+          _id: new mongoose.Types.ObjectId(contentId),
+        },
+        {
+          $set: {
+            sharing: setSharing,
+          },
+        },
+      );
+
+      res.json({
+        message:
+          setSharing === "public"
+            ? "Content is now publicly sharable."
+            : "Content is now private.",
+      });
+    } catch (e) {
+      res.status(500).json({ message: "Server error" });
+    }
+  },
+);
 
 //search route
 router.get(

@@ -68,6 +68,10 @@ const ContentSchema = new Schema({
   imageUrl: String,
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+  sharing: {
+    type: String,
+    enum: ["public", "private"],
+  },
 });
 
 const StarredSchema = new mongoose.Schema({
