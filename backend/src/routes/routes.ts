@@ -497,6 +497,10 @@ Instructions:
 - If nothing is clearly relevant, say:
   "Hmm, I couldn't find anything relevant in your saved content."
 - Keep the answer concise but human-like
+- Answer in a conversational tone
+- Use proper markdown formatting (bold, lists, paragraphs)
+- Do NOT use quotes inside bold text
+- Example: **The pink beach:** instead of **"The pink beach":**
 `;
 
     const result = await model.generateContent(prompt);
