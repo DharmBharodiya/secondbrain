@@ -437,10 +437,7 @@ router.post(
       );
 
       res.json({
-        message:
-          setSharing === "public"
-            ? "Content is now publicly sharable."
-            : "Content is now private.",
+        message: setSharing === "public" ? "public" : "private",
       });
     } catch (e) {
       res.status(500).json({ message: "Server error" });

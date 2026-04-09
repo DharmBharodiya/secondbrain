@@ -1,5 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { DeleteContentService } from "../../services/ContentService";
+import {
+  DeleteContentService,
+  MakeContentPublic,
+} from "../../services/ContentService";
 import Article from "./Article";
 import InstagramImage from "./InstagramImage";
 import SpotifyBanner from "./Spotify";
@@ -69,6 +72,7 @@ const ContentCard = ({
   const { token, setEditData } = useContext(AuthContext);
   const [message, setMessage] = useState("");
   const [contentFormOpen, setContentFormOpen] = useState(false);
+  const [pubOrPriv, setPubOrPriv] = useState<"public" | "private">("private");
 
   const navigate = useNavigate();
 
@@ -96,18 +100,20 @@ const ContentCard = ({
     //   contentId: content._id,
     // });
 
-    const deleteMessage = deleteContentMutation.mutateAsync({
-      token,
-      contentId: content._id,
-    });
+    if (token) {
+      const deleteMessage = deleteContentMutation.mutateAsync({
+        token,
+        contentId: content._id,
+      });
 
-    queryClient.invalidateQueries({ queryKey: ["userContent"] });
-    queryClient.invalidateQueries({ queryKey: ["starredContent"] });
+      queryClient.invalidateQueries({ queryKey: ["userContent"] });
+      queryClient.invalidateQueries({ queryKey: ["starredContent"] });
 
-    setcardopen(false);
-    setMessage(deleteMessage);
-    fetchContentAgain();
-    navigate("/dashboard");
+      setcardopen(false);
+      // setMessage(deleteMessage);
+      fetchContentAgain();
+      navigate("/dashboard");
+    }
   };
 
   const handleEdit = () => {
@@ -118,6 +124,21 @@ const ContentCard = ({
     // console.log(`Content tags: ${tagTitles}`);
     setEditData(content);
     setContentFormOpen(true);
+  };
+
+  const handlePublic = async (contentId: string) => {
+    // if (pubOrPriv === "public") {
+    //   setPubOrPriv("private");
+    // } else if (pubOrPriv === "private") {
+    //   setPubOrPriv("public");
+    // }
+
+    if (token) {
+      const resultMessage = await MakeContentPublic(token, contentId);
+
+      console.log("Public message: ", resultMessage);
+      setPubOrPriv(resultMessage);
+    }
   };
 
   const { theme } = useContext(AuthContext);
@@ -174,7 +195,7 @@ const ContentCard = ({
         )}
       </div>
       <div className="ml-6 flex flex-col justify-around relative">
-        <div className="mb-6">
+        <div className="mb-6 w-[90%]">
           <div>
             <p className="text-sm font-bold text-gray-500">
               {content.type.toUpperCase()}
@@ -213,6 +234,14 @@ const ContentCard = ({
             onClick={() => handleDelete(content)}
           >
             <Trash className="w-4 text-orange-600" />
+            <div className="border-2 border-orange-600 absolute w-full -right-4 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
+          </button>
+          <h1 className="text-sm text-orange-600 ml-2">⬤</h1>
+          <button
+            className="w-fit relative group ml-2 cursor-pointer"
+            onClick={() => handlePublic(content._id)}
+          >
+            <h1 className="text-orange-500">{pubOrPriv}</h1>
             <div className="border-2 border-orange-600 absolute w-full -right-4 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
           </button>
         </div>

@@ -233,3 +233,17 @@ export async function ChatWithAI(token: string, question: string) {
 
   return data;
 }
+
+export async function MakeContentPublic(token: string, contentId: string) {
+  const res = await fetch(BACKEND_URL + "/brain/make-public", {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ contentId }),
+    method: "POST",
+  });
+
+  const data = await res.json();
+  return data.message;
+}
