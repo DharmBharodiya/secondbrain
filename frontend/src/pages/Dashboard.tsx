@@ -43,7 +43,9 @@ type UserContent = {
     | "twitter"
     | "spotify"
     | "default"
+    | "article"
     | "quote"
+    | "note"
     | "instagram"
     | "pinterest"
     | "image";
@@ -52,6 +54,7 @@ type UserContent = {
   _id: string;
   tags: Tags[];
   imageUrl: string;
+  sharing: "public" | "private";
 };
 
 const Dashboard = () => {

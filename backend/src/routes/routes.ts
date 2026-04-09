@@ -138,7 +138,7 @@ router.post(
       //   imageUrl: fileUrl || "",
       // });
 
-      const { title, link, type, notes, tags } = req.body;
+      const { title, link, type, notes, tags, sharing } = req.body;
 
       let tagIds: mongoose.Types.ObjectId[] = [];
 
@@ -175,6 +175,7 @@ router.post(
         userId: new mongoose.Types.ObjectId(userId),
         tags: tagIds || [],
         imageUrl: fileUrl || "",
+        sharing: sharing,
       });
 
       res.status(201).json({ message: "Content added." });

@@ -17,11 +17,14 @@ type UserContent = {
     | "quote"
     | "note"
     | "instagram"
+    | "pinterest"
+    | "image"
     | string;
   link: string;
   notes: string;
   _id: string;
   tags: Tags[];
+  imageUrl?: string;
 };
 
 type AuthContextType = {

@@ -24,6 +24,7 @@ const ContentForm = ({
   const [notes, setNotes] = useState("");
   const [message, setMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [sharing, setSharing] = useState("private");
 
   const uploadContentMutation = useUploadNewContent();
 
@@ -59,6 +60,7 @@ const ContentForm = ({
     formData.append("title", title);
     formData.append("type", type);
     formData.append("link", link);
+    formData.append("sharing", sharing);
     separatedTagsArray.forEach((tag) => formData.append("tags", tag));
     formData.append("notes", notes);
     if (file) {
@@ -174,6 +176,22 @@ const ContentForm = ({
             <option value="quote">quote</option>
             <option value="image">image</option>
             <option value="default">default</option>
+          </select>
+        </div>
+        <div className="flex justify-center w-full my-2 mt-2">
+          <p className="font-garamond text-xl">Sharing : </p>
+          <select
+            name="sharing"
+            id="sharing"
+            value={sharing}
+            onChange={(e) => {
+              setSharing(e.target.value);
+              console.log("Sharing: ", sharing);
+            }}
+            className="text-orange-600 border-2 border-orange-600 px-2 py-1 rounded-md ml-2 cursor-pointer"
+          >
+            <option value="public">public</option>
+            <option value="private">private</option>
           </select>
         </div>
         <button

@@ -1,8 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import {
-  DeleteContentService,
-  MakeContentPublic,
-} from "../../services/ContentService";
+import { useContext, useState } from "react";
+import { MakeContentPublic } from "../../services/ContentService";
 import Article from "./Article";
 import InstagramImage from "./InstagramImage";
 import SpotifyBanner from "./Spotify";
@@ -11,7 +8,6 @@ import YouTubeBanner from "./YoutubeBanner";
 import { Trash, Edit2Icon } from "lucide-react";
 import { AuthContext } from "../../Context/AuthContext";
 import { useNavigate } from "react-router";
-import ContentForm from "../ContentForm";
 import EditContent from "../EditContent";
 import ImageDisplay from "./ImageDisplay";
 import { useDeleteContent } from "../../hooks/useContentQueries";
@@ -29,12 +25,14 @@ type UserContent = {
       | "quote"
       | "note"
       | "instagram"
+      | "pinterest"
       | "image";
     link: string;
     notes: string;
     _id: string;
     tags: Tags[];
     imageUrl: string;
+    sharing: "public" | "private";
   };
   setcardopen: (value: boolean) => void;
   fetchContentAgain: () => void;
@@ -51,12 +49,14 @@ type Content = {
     | "quote"
     | "note"
     | "instagram"
+    | "pinterest"
     | "image";
   link: string;
   notes: string;
   _id: string;
-  tags: string;
+  tags: Tags[];
   imageUrl: string;
+  sharing: "public" | "private";
 };
 
 type Tags = {
@@ -70,9 +70,9 @@ const ContentCard = ({
   fetchContentAgain,
 }: UserContent) => {
   const { token, setEditData } = useContext(AuthContext);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [contentFormOpen, setContentFormOpen] = useState(false);
-  const [pubOrPriv, setPubOrPriv] = useState<"public" | "private">("private");
+  const [pubOrPriv, setPubOrPriv] = useState(content.sharing);
 
   const navigate = useNavigate();
 
@@ -101,7 +101,7 @@ const ContentCard = ({
     // });
 
     if (token) {
-      const deleteMessage = deleteContentMutation.mutateAsync({
+      deleteContentMutation.mutateAsync({
         token,
         contentId: content._id,
       });
@@ -127,17 +127,20 @@ const ContentCard = ({
   };
 
   const handlePublic = async (contentId: string) => {
-    // if (pubOrPriv === "public") {
-    //   setPubOrPriv("private");
-    // } else if (pubOrPriv === "private") {
-    //   setPubOrPriv("public");
-    // }
+    if (pubOrPriv === "public") {
+      setPubOrPriv("private");
+    } else if (pubOrPriv === "private") {
+      setPubOrPriv("public");
+    }
 
     if (token) {
       const resultMessage = await MakeContentPublic(token, contentId);
 
       console.log("Public message: ", resultMessage);
-      setPubOrPriv(resultMessage);
+      // Update state based on actual API response
+      if (resultMessage) {
+        setPubOrPriv(resultMessage);
+      }
     }
   };
 
