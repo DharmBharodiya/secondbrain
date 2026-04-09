@@ -492,15 +492,55 @@ router.post("/chat-ai", AuthMiddleware, async (req: CustomRequest, res) => {
 
     const userContent = await ContentModel.find({
       userId: new mongoose.Types.ObjectId(userId),
-    });
+    }).populate("tags", "title");
 
     const words = question.toLowerCase().split(" ");
 
-    const relevantContent = userContent.filter((item) => {
-      const text =
-        `${item.title} ${item.notes} ${item.link} ${item.type}`.toLowerCase();
-      return words.some((word: any) => text.includes(word));
-    });
+    // Filter out common stop words
+    const stopWords = new Set([
+      "what",
+      "is",
+      "the",
+      "that",
+      "i",
+      "a",
+      "an",
+      "and",
+      "or",
+      "in",
+      "on",
+      "at",
+      "to",
+      "for",
+      "of",
+      "this",
+      "you",
+      "me",
+      "my",
+      "they",
+    ]);
+    const meaningfulWords = words.filter(
+      (word: string) => !stopWords.has(word) && word.length > 2,
+    );
+
+    const relevantContent = userContent
+      .map((item) => {
+        const tagTitles = (item.tags as any[])
+          .map((tag: any) => tag.title)
+          .join(" ");
+        const text =
+          `${item.title} ${item.notes} ${item.link} ${item.type} ${tagTitles}`.toLowerCase();
+
+        // Count how many meaningful words match
+        const matchCount = meaningfulWords.filter((word: string) =>
+          text.includes(word),
+        ).length;
+
+        return { item, matchCount };
+      })
+      .filter(({ matchCount }) => matchCount > 0)
+      .sort((a, b) => b.matchCount - a.matchCount)
+      .map(({ item }) => item);
 
     const topContent = relevantContent.slice(0, 5);
 
@@ -530,6 +570,7 @@ Title: ${c.title}
 Notes: ${c.notes}
 Link: ${c.link}
 Type: ${c.type}
+Tags: ${(c.tags as any[]).map((tag: any) => tag.title).join(", ") || "No tags"}
 `,
   )
   .join("\n")}
