@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import { useContext } from "react";
 import { AuthContext } from "./Context/AuthContext";
 import ChatPage from "./pages/ChatPage";
+import MobileSidebar from "./components/MobileSidebar";
 
 function App() {
   const { theme } = useContext(AuthContext);
@@ -39,7 +40,7 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route path="/chat-ai" element={<ChatPage />} />
+        <Route path="/mobile" element={<MobileSidebar />} />
         <Route
           path="/dashboard"
           element={

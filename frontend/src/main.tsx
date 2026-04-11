@@ -5,7 +5,6 @@ import "./index.css";
 import App from "@/App.tsx";
 import { BrowserRouter } from "react-router";
 import { AuthProvider } from "./Context/AuthContext.tsx";
-import { ScrollProvider } from "./Context/ScrollContext.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -14,11 +13,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ScrollProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </ScrollProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>,

@@ -30,6 +30,7 @@ import Navbar from "../components/Navbar";
 import StarComponent from "../components/Dashboard/StarComponent";
 import Settings from "../components/Settings";
 import ChatPage from "./ChatPage";
+import Navbar2 from "@/components/Navbar2";
 
 type Tags = {
   _id: string;
@@ -180,7 +181,7 @@ const Dashboard = () => {
   return (
     <>
       <div className="md:hidden">
-        <Navbar scrollElement={contentScrollRef.current} />
+        <Navbar2 scrollElement={contentScrollRef.current} />
       </div>
 
       <div
@@ -221,7 +222,10 @@ const Dashboard = () => {
               <Settings username={username} setUsername={setUsername} />
             </div>
           ) : (
-            <div ref={contentScrollRef} className="p-6 md:pt-10 flex items-center flex-col pt-30 h-screen max-w-full overflow-x-hidden overflow-y-auto">
+            <div
+              ref={contentScrollRef}
+              className="p-6 md:pt-10 flex items-center flex-col pt-30 h-screen max-w-full overflow-x-hidden overflow-y-auto"
+            >
               <div className="mb-8">
                 <h1 className="text-2xl font-advercase">
                   {username || "User"}'s Dashboard
@@ -360,7 +364,7 @@ const Dashboard = () => {
 
                           {/* Inside searchUserContent.map in Dashboard.tsx */}
                           {content.type === "twitter" && content.link && (
-                            <div className="w-full flex justify-center items-start min-h-[200px] overflow-visible">
+                            <div className="w-full flex justify-center items-start min-h-50 overflow-visible">
                               <TwitterEmbed url={content.link} />
                             </div>
                           )}
