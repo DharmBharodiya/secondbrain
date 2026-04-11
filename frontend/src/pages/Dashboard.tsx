@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "../Context/AuthContext";
 import {
@@ -69,6 +69,8 @@ const Dashboard = () => {
   const [shareMessage, setShareMessage] = useState("");
   const [settings, setSettings] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+
+  const contentScrollRef = useRef<HTMLDivElement>(null);
 
   const context = useContext(AuthContext);
   const token = context?.token as string;
@@ -177,8 +179,8 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="inline md:hidden">
-        <Navbar />
+      <div className="md:hidden">
+        <Navbar scrollElement={contentScrollRef.current} />
       </div>
 
       <div
@@ -213,13 +215,13 @@ const Dashboard = () => {
         <div className="md:block hidden">
           <Sidebar settings={settings} setSettings={setSettings} />
         </div>
-        <div className="h-screen flex flex-col flex-1">
+        <div className="h-screen w-full flex flex-col flex-1">
           {settings ? (
             <div className="w-full flex items-center h-screen">
               <Settings username={username} setUsername={setUsername} />
             </div>
           ) : (
-            <div className="p-6 md:pt-10 flex items-center flex-col pt-30 h-screen max-w-full overflow-x-hidden">
+            <div ref={contentScrollRef} className="p-6 md:pt-10 flex items-center flex-col pt-30 h-screen max-w-full overflow-x-hidden overflow-y-auto">
               <div className="mb-8">
                 <h1 className="text-2xl font-advercase">
                   {username || "User"}'s Dashboard
@@ -229,7 +231,7 @@ const Dashboard = () => {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="font-garamond text-4xl px-4 text-gray-400 font-bold outline-0"
+                  className="font-garamond text-2xl md:text-4xl px-4 text-gray-400 font-bold outline-0"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />

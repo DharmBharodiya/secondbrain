@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { GetSharedContent } from "../services/ContentService";
 import { useParams } from "react-router";
 import SpotifyBanner from "../components/Dashboard/Spotify";
 import YouTubeBanner from "../components/Dashboard/YoutubeBanner";

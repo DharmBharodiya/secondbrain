@@ -538,9 +538,9 @@ router.post("/chat-ai", AuthMiddleware, async (req: CustomRequest, res) => {
 
         return { item, matchCount };
       })
-      .filter(({ matchCount }) => matchCount > 0)
-      .sort((a, b) => b.matchCount - a.matchCount)
-      .map(({ item }) => item);
+      .filter(({ matchCount }) => matchCount > 0) //keep only items with at least 1 match
+      .sort((a, b) => b.matchCount - a.matchCount) //rank them, arrange by highest score to lowest score
+      .map(({ item }) => item); //and extracct just the items, no matchcount
 
     const topContent = relevantContent.slice(0, 5);
 

@@ -25,7 +25,7 @@ const HomePage = () => {
   const { theme } = useContext(AuthContext);
 
   return (
-    <div>
+    <div className="w-full h-screen">
       <Navbar />
       <motion.div
         className={`${theme === "dark" ? "text-white bg-black" : "bg-white text-black"} w-full min-h-screen relative flex flex-col justify-center items-center`}

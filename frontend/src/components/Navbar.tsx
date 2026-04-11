@@ -6,7 +6,11 @@ import { AuthContext } from "../Context/AuthContext";
 import BlackLogo from "../assets/images/black-logo.PNG";
 import WhiteLogo from "../assets/images/white-logo.PNG";
 
-const Navbar = () => {
+interface NavbarProps {
+  scrollElement?: HTMLElement | null;
+}
+
+const Navbar = ({ scrollElement }: NavbarProps) => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -18,12 +22,17 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (scrollElement) {
+        setScrolled(scrollElement.scrollTop > 20);
+      } else {
+        setScrolled(window.scrollY > 20);
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    const element = scrollElement || window;
+    element.addEventListener("scroll", handleScroll);
+    return () => element.removeEventListener("scroll", handleScroll);
+  }, [scrollElement]);
 
   const handleLogout = () => {
     logOut();
@@ -41,7 +50,7 @@ const Navbar = () => {
 
   return (
     <div
-      className={` fixed top-10 left-0 right-0 rounded-full z-10000 px-3 py-3 ${scrolled ? "bg-white/70 backdrop-blur-sm shadow-md py-3 w-[80%] md:w-[60%] flex justify-between items-center ml-auto mr-auto" : "w-full mr-5 ml-5 flex justify-around items-center"}`}
+      className={` fixed top-10 left-0 right-0 rounded-full z-10000 px-3 py-3 ${scrolled ? "bg-white/70 backdrop-blur-sm shadow-md py-3 w-[90%] md:w-[60%] flex justify-between items-center ml-auto mr-auto" : "w-[90%] mr-5 ml-5 flex justify-between items-center"}`}
     >
       <div className="ml-4 flex justify-center items-center">
         <NavLink to="/" className="flex justify-center items-center">
