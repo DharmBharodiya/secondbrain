@@ -50,7 +50,7 @@ const Navbar = ({ scrollElement }: NavbarProps) => {
 
   return (
     <div
-      className={` fixed top-10 left-0 right-0 rounded-full z-10000 px-3 py-3 ${scrolled ? "bg-white/70 backdrop-blur-sm shadow-md py-3 w-[90%] md:w-[60%] flex justify-between items-center ml-auto mr-auto" : "w-[90%] mr-5 ml-5 flex justify-between items-center"}`}
+      className={` fixed top-10 left-1/2 -translate-x-1/2 rounded-full z-10000 px-3 py-3 ${scrolled ? "bg-white/70 backdrop-blur-sm shadow-md py-3 w-[90%] md:w-[60%] flex justify-between items-center ml-auto mr-auto" : "w-[80%] flex justify-between items-center"}`}
     >
       <div className="ml-4 flex justify-center items-center">
         <NavLink to="/" className="flex justify-center items-center">

@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import ImageDisplay from "../components/Dashboard/ImageDisplay";
 import Navbar from "../components/Navbar";
 import { useShareBoard } from "../hooks/useContentQueries";
+import Navbar2 from "@/components/Navbar2";
 
 type UserContent = {
   _id: string;

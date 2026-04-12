@@ -10,7 +10,6 @@ import ShareBoard from "./pages/Shareboard";
 import NotFound from "./pages/NotFound";
 import { useContext } from "react";
 import { AuthContext } from "./Context/AuthContext";
-import ChatPage from "./pages/ChatPage";
 import MobileSidebar from "./components/MobileSidebar";
 
 function App() {
@@ -18,7 +17,7 @@ function App() {
 
   return (
     <div
-      className={`${theme === "dark" ? "bg-black text-white" : "bg-slate-200 text-black"} w-screen min-h-screen flex flex-col justify-center items-center selection:bg-orange-600 selection:text-white`}
+      className={`${theme === "dark" ? "bg-black text-white" : "bg-slate-200 text-black"} w-full min-h-screen flex flex-col justify-center items-center selection:bg-orange-600 selection:text-white`}
     >
       {/* <Navbar /> */}
 
