@@ -100,6 +100,10 @@ const Dashboard = () => {
     setStarredOpened(false);
   }, []);
 
+  useEffect(() => {
+    console.log("Starred Content: ", starredContent);
+  }, [starredContent]);
+
   // Filter content based on search
   useEffect(() => {
     if (search.trim() === "") {
@@ -389,7 +393,10 @@ const Dashboard = () => {
                           className="w-8 h-8 top-3 right-4 absolute group-hover:flex justify-center items-center bg-white/80 rounded-full text-xs p-2 hidden"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <StarComponent contentId={content._id} />
+                          <StarComponent
+                            contentId={content._id}
+                            starredContent={starredContent}
+                          />
                         </div>
                         {content.link ? (
                           <div className="w-fit bottom-3 right-4 absolute group-hover:flex justify-center items-center bg-orange-600/90 rounded-lg text-xs pr-10 py-2 px-3 hidden">

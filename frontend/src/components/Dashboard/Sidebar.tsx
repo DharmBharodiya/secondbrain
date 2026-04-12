@@ -2,10 +2,10 @@ import { NavLink, useNavigate } from "react-router";
 
 import BlackLogo from "../../assets/images/black-logo.PNG";
 import WhiteLogo from "../../assets/images/white-logo.PNG";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 import Button from "../Button";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, ImageIcon } from "lucide-react";
 
 const Sidebar = ({
   settings,
@@ -83,6 +83,43 @@ const Sidebar = ({
             <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
           </div>
         ))} */}
+        <div className="w-fit relative group ml-4 mb-4">
+          <button
+            className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-xl"
+            onClick={handleSettings}
+          >
+            <p>folders</p>
+          </button>
+          <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
+          <div className="mt-3 ml-4">
+            <ul>
+              <li>
+                <div className="flex">
+                  <div className="flex justify-center items-center mr-1">
+                    <ImageIcon className="size-4" />
+                  </div>
+                  <h1>images</h1>
+                </div>
+              </li>
+              <li>
+                <div className="flex">
+                  <div className="flex justify-center items-center mr-1">
+                    <ImageIcon className="size-4" />
+                  </div>
+                  <h1>instagram</h1>
+                </div>
+              </li>
+              <li>
+                <div className="flex">
+                  <div className="flex justify-center items-center mr-1">
+                    <ImageIcon className="size-4" />
+                  </div>
+                  <h1>twitter</h1>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
         <div className="w-fit relative group ml-4 mb-4">
           <button
             className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-xl"
