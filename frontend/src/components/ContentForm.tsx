@@ -52,9 +52,20 @@ const ContentForm = ({
   };
 
   const handleSubmit = async () => {
+    // Validate required fields
+    if (!title.trim()) {
+      setMessage("Please enter a title");
+      return;
+    }
+    if (!type) {
+      setMessage("Please select a content type");
+      return;
+    }
+
     const separatedTagsArray = tagsSorted();
     console.log("Separated tags:", separatedTagsArray);
     console.log("Original tags:", tags);
+    console.log("Type being sent:", type);
 
     const formData = new FormData();
     formData.append("title", title);
@@ -168,6 +179,9 @@ const ContentForm = ({
             onChange={(e) => setType(e.target.value)}
             className="text-orange-600 border-2 border-orange-600 px-2 py-1 rounded-md ml-2 cursor-pointer"
           >
+            <option value="" disabled>
+              Select a type
+            </option>
             <option value="instagram">instagram</option>
             <option value="pinterest">pinterest</option>
             <option value="youtube">youtube</option>

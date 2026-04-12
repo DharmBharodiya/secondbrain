@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState, useRef, useMemo } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AuthContext } from "../Context/AuthContext";
 import {
@@ -31,6 +31,7 @@ import StarComponent from "../components/Dashboard/StarComponent";
 import Settings from "../components/Settings";
 import ChatPage from "./ChatPage";
 import Navbar2 from "@/components/Navbar2";
+import { FolderContent } from "@/Context/FolderContext";
 
 type Tags = {
   _id: string;
@@ -70,6 +71,7 @@ const Dashboard = () => {
   const [shareMessage, setShareMessage] = useState("");
   const [settings, setSettings] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const { folders, setFolders } = useContext(FolderContent);
 
   const contentScrollRef = useRef<HTMLDivElement>(null);
 
@@ -91,9 +93,19 @@ const Dashboard = () => {
   }, [UserDetails]);
 
   // Filter out null values from starred content (deleted items)
-  const displayContent = starredOpened
-    ? starredContent.filter((item: any) => item !== null && item !== undefined)
-    : userContent;
+  const displayContent = useMemo(() => {
+    let filtered = starredOpened
+      ? starredContent.filter((item) => item !== null && item !== undefined)
+      : userContent;
+
+    // Filter by content type if a specific folder is selected
+    if (folders && folders !== "all") {
+      filtered = filtered.filter((content) => content.type === folders);
+    }
+
+    return filtered;
+  }, [starredOpened, starredContent, userContent, folders]);
+
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -118,6 +130,24 @@ const Dashboard = () => {
       setSearchUserContent(filtered);
     }
   }, [search, displayContent]);
+
+  useEffect(() => {
+    const validUserContent = userContent.filter(
+      (c) => c !== null && c !== undefined,
+    );
+    const validStarredContent = starredContent.filter(
+      (c) => c !== null && c !== undefined,
+    );
+
+    console.log(
+      "All user content types:",
+      validUserContent.map((c) => ({ title: c.title, type: c.type })),
+    );
+    console.log(
+      "All starred content types:",
+      validStarredContent.map((c) => ({ title: c.title, type: c.type })),
+    );
+  }, [userContent, starredContent]);
 
   useEffect(() => {
     if (shareMessage) {
@@ -329,7 +359,7 @@ const Dashboard = () => {
                 whileInView="show"
                 viewport={{ once: true, amount: 0.2 }}
               >
-                {displayContent ? (
+                {displayContent && displayContent.length > 0 ? (
                   displayContent.map((content: UserContent) => (
                     <motion.div
                       variants={item}
@@ -411,7 +441,9 @@ const Dashboard = () => {
                   ))
                 ) : (
                   <p className="font-advercase text-xl">
-                    No links yet. Start building your archive
+                    {folders !== "all"
+                      ? `No ${folders} posts yet`
+                      : "No links yet. Start building your archive"}
                   </p>
                 )}
               </motion.div>

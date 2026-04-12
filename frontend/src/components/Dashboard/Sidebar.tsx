@@ -2,10 +2,11 @@ import { NavLink, useNavigate } from "react-router";
 
 import BlackLogo from "../../assets/images/black-logo.PNG";
 import WhiteLogo from "../../assets/images/white-logo.PNG";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 import Button from "../Button";
 import { Moon, Sun, ImageIcon } from "lucide-react";
+import { FolderContent } from "@/Context/FolderContext";
 
 const Sidebar = ({
   settings,
@@ -24,6 +25,9 @@ const Sidebar = ({
     setSettingsOpened,
     settingsOpened,
   } = useContext(AuthContext);
+
+  const { folders, setFolders } = useContext(FolderContent);
+  const [subMenuOpen, setSubMenuOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -53,6 +57,13 @@ const Sidebar = ({
     setSettings(!settings);
   };
 
+  const handleFilterClick = (type: string) => {
+    if (folders === type) {
+      setFolders("all"); // deselect if already selected
+    } else {
+      setFolders(type); // select the new type
+    }
+  };
   return (
     <div
       className={`${theme === "dark" ? "bg-orange-900/30" : "bg-slate-100"} px-4 py-3 shrink-0 h-screen w-60 flex flex-col justify-between`}
@@ -83,42 +94,69 @@ const Sidebar = ({
             <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
           </div>
         ))} */}
-        <div className="w-fit relative group ml-4 mb-4">
-          <button
-            className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-xl"
-            onClick={handleSettings}
-          >
-            <p>folders</p>
-          </button>
-          <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
-          <div className="mt-3 ml-4">
-            <ul>
-              <li>
-                <div className="flex">
-                  <div className="flex justify-center items-center mr-1">
-                    <ImageIcon className="size-4" />
-                  </div>
-                  <h1>images</h1>
-                </div>
-              </li>
-              <li>
-                <div className="flex">
-                  <div className="flex justify-center items-center mr-1">
-                    <ImageIcon className="size-4" />
-                  </div>
-                  <h1>instagram</h1>
-                </div>
-              </li>
-              <li>
-                <div className="flex">
-                  <div className="flex justify-center items-center mr-1">
-                    <ImageIcon className="size-4" />
-                  </div>
-                  <h1>twitter</h1>
-                </div>
-              </li>
-            </ul>
+        <div className="max-w-fit relative ml-4 mb-4">
+          <div className="group max-w-fit ">
+            <button
+              className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-xl"
+              onClick={() => setSubMenuOpen((prev) => !prev)}
+            >
+              <p>folders</p>
+            </button>
+            <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
           </div>
+          {subMenuOpen && (
+            <div className="mt-3 ml-4 transition-all duration-300">
+              <ul>
+                <li>
+                  <button
+                    onClick={() => handleFilterClick("image")}
+                    className="flex cursor-pointer"
+                  >
+                    <div className="flex justify-center items-center mr-1">
+                      <ImageIcon className="size-4" />
+                    </div>
+                    <h1
+                      className={folders === "image" ? "text-orange-600" : ""}
+                    >
+                      images
+                    </h1>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => handleFilterClick("instagram")}
+                    className="flex cursor-pointer"
+                  >
+                    <div className="flex justify-center items-center mr-1">
+                      <ImageIcon className="size-4" />
+                    </div>
+                    <h1
+                      className={
+                        folders === "instagram" ? "text-orange-600" : ""
+                      }
+                    >
+                      instagram
+                    </h1>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => handleFilterClick("twitter")}
+                    className="flex cursor-pointer"
+                  >
+                    <div className="flex justify-center items-center mr-1">
+                      <ImageIcon className="size-4" />
+                    </div>
+                    <h1
+                      className={folders === "twitter" ? "text-orange-600" : ""}
+                    >
+                      twitter
+                    </h1>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
         <div className="w-fit relative group ml-4 mb-4">
           <button

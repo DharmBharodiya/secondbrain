@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
-import { StarContent } from "../../services/ContentService";
 import { useStarContent } from "../../hooks/useContentQueries";
 
 interface starredContent {
