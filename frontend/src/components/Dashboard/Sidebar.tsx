@@ -5,7 +5,15 @@ import WhiteLogo from "../../assets/images/white-logo.PNG";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 import Button from "../Button";
-import { Moon, Sun, ImageIcon } from "lucide-react";
+import {
+  Moon,
+  Sun,
+  ImageIcon,
+  Quote,
+  X,
+  Camera,
+  FileImage,
+} from "lucide-react";
 import { FolderContent } from "@/Context/FolderContext";
 
 const Sidebar = ({
@@ -98,7 +106,10 @@ const Sidebar = ({
           <div className="group max-w-fit ">
             <button
               className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-xl"
-              onClick={() => setSubMenuOpen((prev) => !prev)}
+              onClick={() => {
+                setFolders("all");
+                setSubMenuOpen((prev) => !prev);
+              }}
             >
               <p>folders</p>
             </button>
@@ -113,7 +124,7 @@ const Sidebar = ({
                     className="flex cursor-pointer"
                   >
                     <div className="flex justify-center items-center mr-1">
-                      <ImageIcon className="size-4" />
+                      <FileImage className="size-4" />
                     </div>
                     <h1
                       className={folders === "image" ? "text-orange-600" : ""}
@@ -128,7 +139,7 @@ const Sidebar = ({
                     className="flex cursor-pointer"
                   >
                     <div className="flex justify-center items-center mr-1">
-                      <ImageIcon className="size-4" />
+                      <Camera className="size-4" />
                     </div>
                     <h1
                       className={
@@ -145,12 +156,27 @@ const Sidebar = ({
                     className="flex cursor-pointer"
                   >
                     <div className="flex justify-center items-center mr-1">
-                      <ImageIcon className="size-4" />
+                      <X className="size-4" />
                     </div>
                     <h1
                       className={folders === "twitter" ? "text-orange-600" : ""}
                     >
                       twitter
+                    </h1>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => handleFilterClick("quote")}
+                    className="flex cursor-pointer"
+                  >
+                    <div className="flex justify-center items-center mr-1">
+                      <Quote className="size-4" />
+                    </div>
+                    <h1
+                      className={folders === "quote" ? "text-orange-600" : ""}
+                    >
+                      quotes
                     </h1>
                   </button>
                 </li>

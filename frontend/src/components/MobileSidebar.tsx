@@ -2,10 +2,11 @@ import { NavLink, useNavigate } from "react-router";
 
 import BlackLogo from "../assets/images/black-logo.PNG";
 import WhiteLogo from "../assets/images/white-logo.PNG";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Button from "./Button";
 import { AuthContext } from "@/Context/AuthContext";
-import { Moon, Sun, X } from "lucide-react";
+import { Camera, FileImage, Moon, Quote, Sun, X } from "lucide-react";
+import { FolderContent } from "@/Context/FolderContext";
 
 const MobileSidebar = ({
   settings,
@@ -29,6 +30,9 @@ const MobileSidebar = ({
   } = useContext(AuthContext);
 
   const navigate = useNavigate();
+  const [subMenuOpen, setSubMenuOpen] = useState(false);
+
+  const { folders, setFolders } = useContext(FolderContent);
 
   const handleLogout = () => {
     logOut();
@@ -56,6 +60,14 @@ const MobileSidebar = ({
     setSettings(!settings);
   };
 
+  const handleFilterClick = (type: string) => {
+    if (folders === type) {
+      setFolders("all"); // deselect if already selected
+    } else {
+      setFolders(type); // select the new type
+    }
+  };
+
   return (
     <div
       className={`fixed inset-0 top-0 left-0 right-0 bottom-0 ${theme === "dark" ? "bg-black" : "bg-white"} px-4 py-3 w-full h-screen flex flex-col justify-between items-center z-9999`}
@@ -80,6 +92,90 @@ const MobileSidebar = ({
         </div>
       </div>
       <div className="mb-20">
+        <div className="max-w-fit relative ml-4 mb-4">
+          <div className="group max-w-fit ">
+            <button
+              className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-3xl"
+              onClick={() => {
+                setFolders("all");
+                setSubMenuOpen((prev) => !prev);
+              }}
+            >
+              <p>folders</p>
+            </button>
+            <div className="border-2 z-10 border-orange-600 absolute w-full -left-30 opacity-0 group-hover:left-0 group-hover:opacity-100 transition-all duration-400 "></div>
+          </div>
+          {subMenuOpen && (
+            <div className="mt-3 ml-4 transition-all duration-300">
+              <ul>
+                <li>
+                  <button
+                    onClick={() => handleFilterClick("image")}
+                    className="flex cursor-pointer"
+                  >
+                    <div className="flex justify-center items-center mr-1">
+                      <FileImage className="size-4" />
+                    </div>
+                    <h1
+                      className={
+                        folders === "image" ? "text-orange-600" : "text-black"
+                      }
+                    >
+                      images
+                    </h1>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => handleFilterClick("instagram")}
+                    className="flex cursor-pointer"
+                  >
+                    <div className="flex justify-center items-center mr-1">
+                      <Camera className="size-4" />
+                    </div>
+                    <h1
+                      className={
+                        folders === "instagram" ? "text-orange-600" : ""
+                      }
+                    >
+                      instagram
+                    </h1>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => handleFilterClick("twitter")}
+                    className="flex cursor-pointer"
+                  >
+                    <div className="flex justify-center items-center mr-1">
+                      <X className="size-4" />
+                    </div>
+                    <h1
+                      className={folders === "twitter" ? "text-orange-600" : ""}
+                    >
+                      twitter
+                    </h1>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => handleFilterClick("quote")}
+                    className="flex cursor-pointer"
+                  >
+                    <div className="flex justify-center items-center mr-1">
+                      <Quote className="size-4" />
+                    </div>
+                    <h1
+                      className={folders === "quote" ? "text-orange-600" : ""}
+                    >
+                      quotes
+                    </h1>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
         <div className="w-fit relative group ml-4 mb-4">
           <button
             className="hover:text-orange-600 transition-all duration-75 cursor-pointer font-semibold text-3xl"
