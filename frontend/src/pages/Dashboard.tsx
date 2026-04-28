@@ -26,7 +26,6 @@ import { motion } from "framer-motion";
 import PinterestImage from "../components/Dashboard/PinterstEmbed";
 import ImageDisplay from "../components/Dashboard/ImageDisplay";
 import Sidebar from "../components/Dashboard/Sidebar";
-import Navbar from "../components/Navbar";
 import StarComponent from "../components/Dashboard/StarComponent";
 import Settings from "../components/Settings";
 import ChatPage from "./ChatPage";
@@ -57,6 +56,7 @@ type UserContent = {
   tags: Tags[];
   imageUrl: string;
   sharing: "public" | "private";
+  createdAt: string;
 };
 
 const Dashboard = () => {
@@ -72,7 +72,6 @@ const Dashboard = () => {
   const [settings, setSettings] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const { folders, setFolders } = useContext(FolderContent);
-  const { userSharedQuote, setUserSharedQuote } = useContext(AuthContext);
 
   const contentScrollRef = useRef<HTMLDivElement>(null);
 
@@ -427,13 +426,14 @@ const Dashboard = () => {
                             <InstagramImage url={content.link} />
                           )}
                         </div>
-                        {/* <div className="flex justify-center items-center flex-col mt-1 mb-1">
-                  <h1
-                    className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
-                  >
-                    {content.title}
-                  </h1>
-                </div> */}
+                        <div className="flex justify-center items-center flex-col mt-1 mb-1">
+                          <h1
+                            className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
+                          >
+                            {/* {content.title} */}
+                            {new Date(content.createdAt).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
+                          </h1>
+                        </div>
                         <div
                           className="w-8 h-8 top-3 right-4 absolute group-hover:flex justify-center items-center bg-white/80 rounded-full text-xs p-2 hidden"
                           onClick={(e) => e.stopPropagation()}

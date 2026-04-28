@@ -33,6 +33,7 @@ type UserContent = {
     tags: Tags[];
     imageUrl: string;
     sharing: "public" | "private";
+    createdAt: string;
   };
   setcardopen: (value: boolean) => void;
   fetchContentAgain: () => void;
@@ -57,6 +58,7 @@ type Content = {
   tags: Tags[];
   imageUrl: string;
   sharing: "public" | "private";
+  createdAt: string;
 };
 
 type Tags = {
@@ -202,6 +204,14 @@ const ContentCard = ({
           <div>
             <p className="text-sm font-bold text-gray-500">
               {content.type.toUpperCase()}
+            </p>
+            <p className="text-sm mb-3 text-gray-500">
+              {new Date(content.createdAt).toLocaleDateString("en-US", {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
             </p>
             <h1 className="text-4xl font-advercase">{content.title}</h1>
             <h1 className="text-md">{content.notes}</h1>
