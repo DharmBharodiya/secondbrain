@@ -11,7 +11,6 @@ import { motion } from "framer-motion";
 import ImageDisplay from "../components/Dashboard/ImageDisplay";
 import Navbar from "../components/Navbar";
 import { useShareBoard } from "../hooks/useContentQueries";
-import Navbar2 from "@/components/Navbar2";
 import { AuthContext } from "@/Context/AuthContext";
 
 type UserContent = {
@@ -22,6 +21,7 @@ type UserContent = {
   tags: string[];
   notes: string;
   imageUrl: string;
+  createdAt: string;
 };
 
 type userType = {
@@ -34,7 +34,7 @@ type userType = {
 const ShareBoard = () => {
   const [userContent, setUserContent] = useState<UserContent[]>();
   const { shareId } = useParams();
-  const { userSharedQuote } = useContext(AuthContext);
+  const { userSharedQuote, theme } = useContext(AuthContext);
   const [userData, setUserData] = useState<userType>();
 
   const { data: result, refetch } = useShareBoard(shareId);
@@ -147,9 +147,40 @@ const ShareBoard = () => {
                         <InstagramImage url={content.link} />
                       )}
                     </div>
-                    <div className="flex justify-center items-center flex-col mt-1">
-                      <h1 className="text-slate-600 text-xs">
-                        {content.title}
+                    <div className="flex justify-between px-3 items-center mt-1">
+                      <h1
+                        className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
+                      >
+                        {/* {content.title} */}
+                        {(() => {
+                          const createdDate = new Date(content.createdAt);
+                          const currentDate = new Date();
+                          const diffTime = Math.abs(
+                            currentDate.getTime() - createdDate.getTime(),
+                          );
+                          const diffDays = Math.ceil(
+                            diffTime / (1000 * 60 * 60 * 24),
+                          );
+                          return diffDays === 0
+                            ? "Today"
+                            : diffDays === 1
+                              ? "1 day ago"
+                              : `${diffDays} days ago`;
+                        })()}
+                      </h1>
+                      <h1
+                        className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
+                      >
+                        {/* {content.title} */}
+                        {new Date(content.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            weekday: "short",
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          },
+                        )}
                       </h1>
                     </div>
                     {content.link ? (

@@ -372,7 +372,7 @@ router.post("/brain/share", AuthMiddleware, async (req: CustomRequest, res) => {
       }
 
       const hash = generateHash(10);
-      const newBrain = await LinkModel.create({
+      await LinkModel.create({
         userId: new mongoose.Types.ObjectId(userId),
         hash: hash,
       });

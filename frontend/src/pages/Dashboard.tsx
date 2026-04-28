@@ -426,12 +426,40 @@ const Dashboard = () => {
                             <InstagramImage url={content.link} />
                           )}
                         </div>
-                        <div className="flex justify-center items-center flex-col mt-1 mb-1">
+                        <div className="flex justify-between px-3 mt-1 mb-1">
                           <h1
                             className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
                           >
                             {/* {content.title} */}
-                            {new Date(content.createdAt).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
+                            {(() => {
+                              const createdDate = new Date(content.createdAt);
+                              const currentDate = new Date();
+                              const diffTime = Math.abs(
+                                currentDate.getTime() - createdDate.getTime(),
+                              );
+                              const diffDays = Math.ceil(
+                                diffTime / (1000 * 60 * 60 * 24),
+                              );
+                              return diffDays === 0
+                                ? "Today"
+                                : diffDays === 1
+                                  ? "1 day ago"
+                                  : `${diffDays} days ago`;
+                            })()}
+                          </h1>
+                          <h1
+                            className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
+                          >
+                            {/* {content.title} */}
+                            {new Date(content.createdAt).toLocaleDateString(
+                              "en-US",
+                              {
+                                weekday: "short",
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              },
+                            )}
                           </h1>
                         </div>
                         <div
