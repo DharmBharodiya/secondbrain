@@ -3,6 +3,7 @@ import {
   LoginService,
   SignupService,
   UserFetchService,
+  SharedUserService,
 } from "../services/AuthService";
 import {
   DeleteContentService,
@@ -25,6 +26,15 @@ export const useFetchUser = (token: string) => {
   });
 };
 
+//hook for fetching shared user information
+export const useFetchSharedUser = (userId: string) => {
+  return useQuery({
+    queryKey: ["sharedUser", userId],
+    queryFn: () => SharedUserService(userId),
+    enabled: !!userId,
+  });
+};
+
 type LoginProps = {
   username: string;
   password: string;
@@ -36,9 +46,15 @@ export const useLogin = () => {
   });
 };
 
+type SignUpProps = {
+  username: string;
+  password: string;
+  sharedQuote: string;
+};
+
 export const useSignup = () => {
   return useMutation({
-    mutationFn: (params: LoginProps) => SignupService(params),
+    mutationFn: (params: SignUpProps) => SignupService(params),
   });
 };
 

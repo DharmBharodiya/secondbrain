@@ -59,3 +59,14 @@ export async function UserFetchService(token: string) {
 
   return data;
 }
+
+export async function SharedUserService(userId: string) {
+  console.log("userId: ", userId);
+  const result = await fetch(BACKEND_URL + "/brain/user/" + userId, {
+    method: "GET",
+  });
+
+  const data = await result.json();
+  console.log("fetched user: ", data);
+  return data.user;
+}

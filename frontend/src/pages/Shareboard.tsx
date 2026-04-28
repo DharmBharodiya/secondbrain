@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import SpotifyBanner from "../components/Dashboard/Spotify";
 import YouTubeBanner from "../components/Dashboard/YoutubeBanner";
@@ -12,6 +12,7 @@ import ImageDisplay from "../components/Dashboard/ImageDisplay";
 import Navbar from "../components/Navbar";
 import { useShareBoard } from "../hooks/useContentQueries";
 import Navbar2 from "@/components/Navbar2";
+import { AuthContext } from "@/Context/AuthContext";
 
 type UserContent = {
   _id: string;
@@ -23,16 +24,30 @@ type UserContent = {
   imageUrl: string;
 };
 
+type userType = {
+  _id: string;
+  username: string;
+  password: string;
+  sharedQuote?: string;
+};
+
 const ShareBoard = () => {
   const [userContent, setUserContent] = useState<UserContent[]>();
   const { shareId } = useParams();
+  const { userSharedQuote } = useContext(AuthContext);
+  const [userData, setUserData] = useState<userType>();
 
   const { data: result, refetch } = useShareBoard(shareId);
+
+  useEffect(() => {
+    console.log("shareboard thingy: ", userSharedQuote);
+  }, [userSharedQuote]);
 
   // Move state update to useEffect to prevent infinite loop
   useEffect(() => {
     if (result) {
-      setUserContent(result);
+      setUserContent(result.content);
+      setUserData(result.shareQuote);
     }
   }, [result]);
 
@@ -74,7 +89,11 @@ const ShareBoard = () => {
       <Navbar />
       <div>
         <div className="mt-32 mb-8 text-center">
-          <h1 className="text-2xl font-advercase"> Shared Archive</h1>
+          <h1 className="text-2xl font-advercase">
+            {" "}
+            {userData?.username}'s Shared Archive
+          </h1>
+          <h1>{userData?.sharedQuote}</h1>
           <Button
             variant="orange"
             text="Create your own archive like this"

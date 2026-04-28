@@ -27,11 +27,17 @@ const router = express.Router();
 const authSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  sharedQuote: z.string(),
+});
+
+const loginSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 router.post("/signup", async (req, res) => {
   try {
-    const { username, password } = authSchema.parse(req.body);
+    const { username, password, sharedQuote } = authSchema.parse(req.body);
 
     const userAlreadyExists = await UserModel.findOne({ username });
 
@@ -44,6 +50,7 @@ router.post("/signup", async (req, res) => {
     await UserModel.create({
       username: username,
       password: hashedPassword,
+      sharedQuote,
     });
 
     res.status(201).json({ message: "Signed Up successfully." });
@@ -62,7 +69,7 @@ router.post("/signin", async (req, res) => {
   //   return res.status(500).json({ message: "Server configuration error" });
   // }
   try {
-    const { username, password } = authSchema.parse(req.body);
+    const { username, password } = loginSchema.parse(req.body);
 
     if (!username || !password) {
       return res
@@ -358,17 +365,21 @@ router.post("/brain/share", AuthMiddleware, async (req: CustomRequest, res) => {
       });
 
       if (isAlreadySharing) {
-        res.json({ message: "/brain/" + isAlreadySharing.hash });
+        res.json({
+          message: "/brain/" + isAlreadySharing.hash,
+        });
         return;
       }
 
       const hash = generateHash(10);
-      await LinkModel.create({
+      const newBrain = await LinkModel.create({
         userId: new mongoose.Types.ObjectId(userId),
         hash: hash,
       });
 
-      res.json({ message: "/brain/" + hash });
+      res.json({
+        message: "/brain/" + hash,
+      });
     } else {
       await LinkModel.deleteOne({
         userId: new mongoose.Types.ObjectId(userId),
@@ -399,7 +410,11 @@ router.get("/brain/:shareId", async (req, res) => {
       sharing: "public",
     });
 
-    res.json({ content: content });
+    const shareQuote = await UserModel.findOne({
+      _id: brain.userId,
+    });
+
+    res.json({ content: content, shareQuote });
   } catch (e) {
     console.log("Error: " + e);
   }

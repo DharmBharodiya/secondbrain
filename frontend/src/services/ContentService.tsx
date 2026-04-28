@@ -153,8 +153,9 @@ export async function SetSharedBrainService({
   });
 
   const data = await res.json();
+  console.log("shared thingy called, data: ", data);
 
-  return data.message;
+  return data;
 }
 
 export async function GetSharedContent(shareId: string | undefined) {
@@ -163,8 +164,9 @@ export async function GetSharedContent(shareId: string | undefined) {
   });
 
   const data = await res.json();
+  console.log("Shareboard data: ", data);
 
-  return data.content;
+  return data;
 }
 
 export async function StarContent(contentId: string, token: string) {

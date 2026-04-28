@@ -70,7 +70,7 @@ const MobileSidebar = ({
 
   return (
     <div
-      className={`fixed inset-0 top-0 left-0 right-0 bottom-0 ${theme === "dark" ? "bg-black" : "bg-white"} px-4 py-3 w-full h-screen flex flex-col justify-between items-center z-9999`}
+      className={`fixed top-0 left-0 w-full h-screen ${theme === "dark" ? "bg-black" : "bg-white"} px-4 py-3 flex flex-col justify-between items-center z-9999`}
     >
       <div className="w-[80%] mt-6 flex justify-between items-center">
         <NavLink to="/" className="flex justify-center items-center">

@@ -19,6 +19,9 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  sharedQuote: {
+    type: String,
+  },
 });
 
 const TagSchema = new Schema({

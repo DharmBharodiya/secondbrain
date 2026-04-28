@@ -8,6 +8,7 @@ import { useSignup } from "../hooks/useContentQueries";
 const SignupPage = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [sharedQuote, setSharedQuote] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -19,7 +20,7 @@ const SignupPage = () => {
 
   const handleSignup = async () => {
     signupMutation.mutate(
-      { username, password },
+      { username, password, sharedQuote },
       {
         onSuccess: (result) => {
           if (result) {
@@ -70,6 +71,13 @@ const SignupPage = () => {
               name="password"
               value={password}
               changeEvent={(e) => setPassword(e.target.value)}
+            />
+            <InputBox
+              type="text"
+              placeholder="Enter your share phrase"
+              name="sharedQuote"
+              value={sharedQuote}
+              changeEvent={(e) => setSharedQuote(e.target.value)}
             />
             <button
               className={`${theme === "dark" ? "bg-white text-black" : "bg-black text-white"} px-6 py-2 rounded-lg font-semibold cursor-pointer`}

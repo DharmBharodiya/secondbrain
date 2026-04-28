@@ -72,6 +72,7 @@ const Dashboard = () => {
   const [settings, setSettings] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const { folders, setFolders } = useContext(FolderContent);
+  const { userSharedQuote, setUserSharedQuote } = useContext(AuthContext);
 
   const contentScrollRef = useRef<HTMLDivElement>(null);
 
@@ -169,14 +170,28 @@ const Dashboard = () => {
     try {
       const newShareValue = !shareValue;
       setShareValue(newShareValue);
+      console.log("Share button clicked, newShareValue:", newShareValue);
 
       const res = await shareBrainMutation.mutateAsync({
         token,
         shareValue: newShareValue,
       });
 
-      console.log("Share response:", res);
-      setShareMessage(res);
+      console.log("Share response full:", res);
+      console.log("Share response fields:", Object.keys(res));
+      console.log("Share response.userId:", res.userId);
+      console.log("Share response.message:", res.message);
+
+      if (res.userId) {
+        setUserSharedQuote(res.userId);
+        console.log("1. usersharedquote: ", userSharedQuote);
+      } else if (res._id) {
+        setUserSharedQuote(res._id);
+        console.log("2. usersharedquote: ", userSharedQuote);
+      } else {
+        console.warn("No userId or _id found in response");
+      }
+      setShareMessage(res.message);
     } catch (error) {
       console.error("Share error:", error);
       setShareMessage("Error updating share settings");
@@ -364,7 +379,7 @@ const Dashboard = () => {
                     <motion.div
                       variants={item}
                       key={content._id}
-                      className="break-inside-avoid relative group mb-2 w-full"
+                      className="break-inside-avoid relative group mb-2 w-full max-h-fit"
                       onClick={() => {
                         setSelectedContent(content);
                         console.log("SelectedContent:", content);
