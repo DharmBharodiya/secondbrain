@@ -151,22 +151,7 @@ const ShareBoard = () => {
                       <h1
                         className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
                       >
-                        {/* {content.title} */}
-                        {(() => {
-                          const createdDate = new Date(content.createdAt);
-                          const currentDate = new Date();
-                          const diffTime = Math.abs(
-                            currentDate.getTime() - createdDate.getTime(),
-                          );
-                          const diffDays = Math.ceil(
-                            diffTime / (1000 * 60 * 60 * 24),
-                          );
-                          return diffDays === 0
-                            ? "Today"
-                            : diffDays === 1
-                              ? "1 day ago"
-                              : `${diffDays} days ago`;
-                        })()}
+                        {content.title}
                       </h1>
                       <h1
                         className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
