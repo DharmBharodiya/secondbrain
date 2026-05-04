@@ -78,8 +78,19 @@ const ContentForm = ({
       formData.append("file", file);
     }
 
+    const isImageHere = () => {
+      if (type === "image") {
+        if (file) {
+          return true;
+        } else {
+          setMessage("Please select an image to upload.");
+          return false;
+        }
+      }
+    };
+
     try {
-      if (token) {
+      if (token && isImageHere()) {
         const result = await uploadContentMutation.mutateAsync({
           token,
           formData,
@@ -162,14 +173,7 @@ const ContentForm = ({
           onChange={(e) => setTags(e.target.value)}
           placeholder="Tags - work, fun..."
         />
-        {type === "image" ? (
-          <input
-            type="file"
-            name="file"
-            className="text-2xl w-full border-b-2 border-orange-600 outline-0 mb-3 text-center font-garamond font-light text-gray-600"
-            onChange={handleFileChange}
-          />
-        ) : null}
+
         <div className="flex justify-center w-full my-2 mt-2">
           <p className="font-garamond text-xl">Type : </p>
           <select
@@ -192,6 +196,14 @@ const ContentForm = ({
             <option value="default">default</option>
           </select>
         </div>
+        {type === "image" ? (
+          <input
+            type="file"
+            name="file"
+            className="text-2xl w-full border-b-2 border-orange-600 outline-0 mb-3 text-center font-garamond font-light text-gray-600"
+            onChange={handleFileChange}
+          />
+        ) : null}
         <div className="flex justify-center w-full my-2 mt-2">
           <p className="font-garamond text-xl">Sharing : </p>
           <select

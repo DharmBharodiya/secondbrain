@@ -472,7 +472,7 @@ const Dashboard = () => {
                           />
                         </div>
                         {content.link ? (
-                          <div className="w-fit bottom-3 right-4 absolute group-hover:flex justify-center items-center bg-orange-600/90 rounded-lg text-xs pr-10 py-2 px-3 hidden">
+                          <div className="w-fit bottom-10 right-4 absolute group-hover:flex justify-center items-center bg-orange-600/90 rounded-lg text-xs pr-10 py-2 px-3 hidden">
                             <a href={content.link} target="_blank">
                               {content.link.slice(8, 18)}...
                               <ArrowUpRight className="w-4 float-right absolute top-1 right-4" />
