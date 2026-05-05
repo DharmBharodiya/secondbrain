@@ -29,7 +29,7 @@ const Footer = () => {
     >
       <div className="w-full h-full flex flex-col justify-center items-center bg-white rounded-4xl mr-5">
         <h1
-          className={`font-advercase text-4xl md:text-6xl mb-2 text-center ${theme === "dark" ? "text-black" : "text-black"}`}
+          className={`font-advercase font-semibold text-4xl md:text-6xl mb-2 text-center ${theme === "dark" ? "text-black" : "text-black"}`}
         >
           A home for <br /> your{" "}
           <span className="italic text-orange-500">mind.</span>
