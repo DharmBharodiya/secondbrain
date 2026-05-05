@@ -354,46 +354,181 @@ router.put(
 
 const shareSchema = z.boolean();
 
-router.post("/brain/share", AuthMiddleware, async (req: CustomRequest, res) => {
-  try {
+// router.post("/brain/share", AuthMiddleware, async (req: CustomRequest, res) => {
+//   try {
+//     const userId = req.id;
+//     const share = shareSchema.parse(req.body.share);
+
+//     if (share) {
+//       const isAlreadySharing = await LinkModel.findOne({
+//         userId: new mongoose.Types.ObjectId(userId),
+//       });
+
+//       if (isAlreadySharing) {
+//         res.json({
+//           message: "/brain/" + isAlreadySharing.hash,
+//         });
+//         return;
+//       }
+
+//       const hash = generateHash(10);
+//       await LinkModel.create({
+//         userId: new mongoose.Types.ObjectId(userId),
+//         hash: hash,
+//       });
+
+//       res.json({
+//         message: "/brain/" + hash,
+//       });
+//     } else {
+//       await LinkModel.deleteOne({
+//         userId: new mongoose.Types.ObjectId(userId),
+//       });
+
+//       res.json({ message: "Link removed." });
+//     }
+//   } catch (e) {
+//     if (e instanceof z.ZodError) {
+//       return res.status(400).json({ errors: e.issues });
+//     }
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
+// router.post("/brain/share", AuthMiddleware, async (req: CustomRequest, res) => {
+//   try {
+//     const userId = req.id;
+//     const share = shareSchema.parse(req.body.share);
+
+//     if (share) {
+//       const isAlreadySharing = await LinkModel.findOne({
+//         userId: new mongoose.Types.ObjectId(userId),
+//       });
+//       console.log("Checkpoint 1:", isAlreadySharing);
+//       if (isAlreadySharing?.share) {
+//         res.json({
+//           message: "/brain/" + isAlreadySharing.hash,
+//         });
+//         console.log("Checkpoint 2:", isAlreadySharing?.share);
+//         return;
+//       }
+
+//       const updateLink = await LinkModel.updateOne(
+//         {
+//           userId: new mongoose.Types.ObjectId(userId),
+//         },
+//         {
+//           $set: {
+//             share: true,
+//           },
+//         },
+//       );
+//       res.json({ updateLink });
+//       // res.json({
+//       //   message: "/brain/" + updateLink?.hash,
+//       // });
+//     } else {
+//       const hash = generateHash(10);
+//       console.log("Checkpoint 3:", hash);
+//       const newLink = await LinkModel.create({
+//         userId: new mongoose.Types.ObjectId(userId),
+//         hash: hash,
+//         share: true,
+//       });
+//       console.log("Checkpoint 4:", newLink);
+
+//       res.json({ message: "Link removed." });
+//     }
+//   } catch (e) {
+//     if (e instanceof z.ZodError) {
+//       return res.status(400).json({ errors: e.issues });
+//     }
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
+router.put(
+  "/seed",
+  AuthMiddleware,
+  async (req: CustomRequest, res: Response) => {
     const userId = req.id;
-    const share = shareSchema.parse(req.body.share);
+
+    const updateContent = await ContentModel.updateMany(
+      {
+        userId: new mongoose.Types.ObjectId(userId),
+      },
+      {
+        $set: {
+          sharing: "public",
+        },
+      },
+    );
+    res.json({ message: "seeded" });
+  },
+);
+
+router.post(
+  "/brain/share",
+  AuthMiddleware,
+  async (req: CustomRequest, res: Response) => {
+    const userId = req.id;
+    const share = req.body.share;
 
     if (share) {
-      const isAlreadySharing = await LinkModel.findOne({
+      const isAlreadyExisting = await LinkModel.findOne({
         userId: new mongoose.Types.ObjectId(userId),
       });
 
-      if (isAlreadySharing) {
-        res.json({
-          message: "/brain/" + isAlreadySharing.hash,
+      if (isAlreadyExisting) {
+        // Update share status to true if it was previously false
+        await LinkModel.updateOne(
+          {
+            userId: new mongoose.Types.ObjectId(userId),
+          },
+          {
+            $set: {
+              share: true,
+            },
+          },
+        );
+        return res.json({ message: "/brain/" + isAlreadyExisting?.hash });
+      } else {
+        const hash = generateHash(10);
+        const newLink = await LinkModel.create({
+          userId: new mongoose.Types.ObjectId(userId),
+          hash: hash,
+          share: true,
         });
-        return;
+
+        return res.json({
+          message: "Sharing now.",
+          at: "/brain/" + newLink.hash,
+        });
       }
-
-      const hash = generateHash(10);
-      await LinkModel.create({
-        userId: new mongoose.Types.ObjectId(userId),
-        hash: hash,
-      });
-
-      res.json({
-        message: "/brain/" + hash,
-      });
     } else {
-      await LinkModel.deleteOne({
+      const isAlreadyExisting = await LinkModel.findOne({
         userId: new mongoose.Types.ObjectId(userId),
       });
 
-      res.json({ message: "Link removed." });
+      if (isAlreadyExisting) {
+        const updateStatus = await LinkModel.updateOne(
+          {
+            userId: new mongoose.Types.ObjectId(userId),
+          },
+          {
+            $set: {
+              share: false,
+            },
+          },
+        );
+
+        return res.json({ message: "sharing restricted" });
+      } else {
+        return res.status(404).json({ message: "Not authorized" });
+      }
     }
-  } catch (e) {
-    if (e instanceof z.ZodError) {
-      return res.status(400).json({ errors: e.issues });
-    }
-    res.status(500).json({ message: "Server error" });
-  }
-});
+  },
+);
 
 router.get("/brain/:shareId", async (req, res) => {
   try {
@@ -405,18 +540,23 @@ router.get("/brain/:shareId", async (req, res) => {
       return res.status(404).json({ message: "Sorry! No such brains." });
     }
 
-    const content = await ContentModel.find({
-      userId: brain.userId,
-      sharing: "public",
-    });
+    if (brain.share === true) {
+      const content = await ContentModel.find({
+        userId: brain.userId,
+        sharing: "public",
+      });
 
-    const shareQuote = await UserModel.findOne({
-      _id: brain.userId,
-    });
+      const shareQuote = await UserModel.findOne({
+        _id: brain.userId,
+      });
 
-    res.json({ content: content, shareQuote });
+      return res.json({ content: content, shareQuote });
+    } else {
+      return res.status(403).json({ message: "This brain is not shared." });
+    }
   } catch (e) {
     console.log("Error: " + e);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 

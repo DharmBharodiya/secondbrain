@@ -41,6 +41,10 @@ const LinkSchema = new Schema({
     ref: "Users",
     unique: true,
   },
+  share: {
+    type: Boolean,
+    req: true,
+  },
 });
 
 const ContentSchema = new Schema({

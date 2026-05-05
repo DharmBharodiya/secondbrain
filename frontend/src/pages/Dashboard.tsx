@@ -69,6 +69,7 @@ const Dashboard = () => {
   const [selectedContent, setSelectedContent] = useState<UserContent>();
   const [shareValue, setShareValue] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
+  const [userSharedQuote, setUserSharedQuote] = useState("");
   const [settings, setSettings] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const { folders, setFolders } = useContext(FolderContent);
