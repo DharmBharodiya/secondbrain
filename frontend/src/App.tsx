@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import Navbar from "./components/Navbar";
 import SignupPage from "./pages/SignupPage";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -10,14 +9,13 @@ import ShareBoard from "./pages/Shareboard";
 import NotFound from "./pages/NotFound";
 import { useContext } from "react";
 import { AuthContext } from "./Context/AuthContext";
-import MobileSidebar from "./components/MobileSidebar";
 
 function App() {
   const { theme } = useContext(AuthContext);
 
   return (
     <div
-      className={`${theme === "dark" ? "bg-black text-white" : "bg-slate-200 text-black"} w-full min-h-screen flex flex-col justify-center items-center selection:bg-orange-600 selection:text-white`}
+      className={`${theme === "dark" ? "bg-black text-white" : "bg-black text-black"} w-full min-h-screen flex flex-col justify-center items-center selection:bg-orange-600 selection:text-white`}
     >
       {/* <Navbar /> */}
 
@@ -39,7 +37,6 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route path="/mobile" element={<MobileSidebar />} />
         <Route
           path="/dashboard"
           element={

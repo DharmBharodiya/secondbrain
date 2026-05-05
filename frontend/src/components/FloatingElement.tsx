@@ -10,7 +10,7 @@ const FloatingElement = ({
   return (
     <>
       <div
-        className={`bg-orange-500/40 backdrop-blur-2xl p-2.5 shadow-orange-500 rounded-full absolute ${position}`}
+        className={`bg-orange-500/60 backdrop-blur-2xl p-2.5 shadow-orange-500 rounded-full absolute ${position}`}
       >
         {/* <Link size={20} className="z-10" /> */}
         {children}

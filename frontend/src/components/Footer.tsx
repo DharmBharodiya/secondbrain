@@ -20,7 +20,7 @@ const Footer = () => {
   }
   return (
     <div
-      className={`md:mt-20 h-[90vh] md:h-[80vh] w-full md:w-[95%] md:mb-9 px-8 py-8 flex flex-col gap-2 md:flex-row md:gap-0 justify-center items-around md:rounded-4xl md:border-3 ${theme === "dark" ? "bg-[#0e0d0d] md:border-[#333333]" : "bg-[#F8F3EE] md:border-[#eae1d8]"}`}
+      className={`md:mt-20 h-[90vh] md:h-[80vh] w-full md:w-[95%] md:mb-9 px-8 py-8 flex flex-col gap-5 md:flex-row md:gap-0 justify-center items-around md:rounded-4xl md:border-3 ${theme === "dark" ? "bg-[#0e0d0d] md:border-[#333333]" : "bg-[#F8F3EE] md:border-[#eae1d8]"}`}
       // style={{
       //   backgroundImage: `url(${image})`,
       //   backgroundSize: "cover",
@@ -54,7 +54,7 @@ const Footer = () => {
         </NavLink>
       </div>
       <div
-        className="md:h-[95%] md:w-[95%] w-full h-full rounded-4xl"
+        className="md:h-[95%] md:w-[95%] w-[100%] h-full md:rounded-4xl"
         style={{
           backgroundImage: `url(${image})`,
           backgroundSize: "cover",
