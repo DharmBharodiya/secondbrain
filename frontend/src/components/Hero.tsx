@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 import bgImage from "../assets/images/bg-trans-3.png";
 import bgImage2 from "../assets/images/bg-trans-3.png";
 import whiteLogo from "../assets/images/white-logo.PNG";
-import orangeLogo from "../assets/images/orange-logo.PNG";
+// import orangeLogo from "../assets/images/orange-logo.PNG";
 import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 
@@ -19,7 +19,7 @@ const Hero = () => {
 
   return (
     <div
-      className="w-full flex flex-col justify-center items-center h-[80vh] md:h-screen"
+      className="w-full overflow-x-hidden flex flex-col justify-center items-center h-[80vh] md:h-screen"
       style={{
         backgroundImage: `url(${image})`,
         backgroundSize: "cover",
