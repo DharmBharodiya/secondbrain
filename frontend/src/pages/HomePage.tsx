@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { AuthContext } from "../Context/AuthContext";
 import { div } from "framer-motion/client";
 import Navbar from "../components/Navbar";
+import Hero2 from "@/components/Hero2";
 
 const container = {
   hidden: {},

@@ -18,6 +18,14 @@ const item = {
 const HeroCardMaster = () => {
   return (
     <div className="w-full md:w-[80%] h-full flex flex-col justify-center items-center  px-10 py-5">
+      <div className="w-full flex justify-center flex-col items-center mb-4">
+        <h1 className="font-bold text-orange-500 text-xs">
+          BUILT FOR HOW YOU THINK
+        </h1>
+        <h1 className="font-advercase mt-1 text-2xl">
+          A system for your thoughts
+        </h1>
+      </div>
       <motion.div
         className="w-full grid md:grid-cols-2 px-6 py-2 gap-y-6 gap-x-4"
         variants={container}

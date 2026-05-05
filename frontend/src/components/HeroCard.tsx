@@ -20,7 +20,7 @@ const HeroCard = ({
 
   return (
     <div
-      className={`w-full h-auto px-4 py-4 rounded-lg shadow-md ${theme === "dark" ? "bg-black" : "bg-white"} ${extraStyles}`}
+      className={`w-full h-auto px-4 py-4 rounded-lg shadow-md ${theme === "dark" ? "bg-[#11110F]" : "bg-white"} ${extraStyles}`}
     >
       <div className="h-37 md:h-30 w-[95%]">
         <p className="text-[12px] md:text-xs mb-1">{Icon}</p>
