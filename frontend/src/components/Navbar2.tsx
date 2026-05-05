@@ -1,5 +1,5 @@
 import Button from "./Button";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, RefObject } from "react";
 import { Menu, X } from "lucide-react";
 import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
@@ -10,7 +10,7 @@ import Settings from "./Settings";
 import MobileSidebar from "./MobileSidebar";
 
 interface NavbarProps {
-  scrollElement?: HTMLElement | null;
+  scrollElement?: RefObject<HTMLDivElement | HTMLElement | null>;
 }
 
 const Navbar2 = ({ scrollElement }: NavbarProps) => {
@@ -26,8 +26,8 @@ const Navbar2 = ({ scrollElement }: NavbarProps) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (scrollElement) {
-        setScrolled(scrollElement.scrollTop > 20);
+      if (scrollElement?.current) {
+        setScrolled(scrollElement.current.scrollTop > 20);
       } else {
         setScrolled(window.scrollY > 20);
       }

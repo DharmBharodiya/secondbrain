@@ -96,12 +96,16 @@ const Dashboard = () => {
   // Filter out null values from starred content (deleted items)
   const displayContent = useMemo(() => {
     let filtered = starredOpened
-      ? starredContent.filter((item) => item !== null && item !== undefined)
+      ? starredContent.filter(
+          (item: UserContent) => item !== null && item !== undefined,
+        )
       : userContent;
 
     // Filter by content type if a specific folder is selected
     if (folders && folders !== "all") {
-      filtered = filtered.filter((content) => content.type === folders);
+      filtered = filtered.filter(
+        (content: UserContent) => content.type === folders,
+      );
     }
 
     return filtered;
@@ -123,7 +127,7 @@ const Dashboard = () => {
       setSearchUserContent(displayContent);
     } else {
       const filtered = displayContent.filter(
-        (content) =>
+        (content: UserContent) =>
           content.title.toLowerCase().includes(search.toLowerCase()) ||
           content.notes?.toLowerCase().includes(search.toLowerCase()) ||
           content.link?.toLowerCase().includes(search.toLowerCase()),
@@ -131,24 +135,6 @@ const Dashboard = () => {
       setSearchUserContent(filtered);
     }
   }, [search, displayContent]);
-
-  useEffect(() => {
-    const validUserContent = userContent.filter(
-      (c) => c !== null && c !== undefined,
-    );
-    const validStarredContent = starredContent.filter(
-      (c) => c !== null && c !== undefined,
-    );
-
-    console.log(
-      "All user content types:",
-      validUserContent.map((c) => ({ title: c.title, type: c.type })),
-    );
-    console.log(
-      "All starred content types:",
-      validStarredContent.map((c) => ({ title: c.title, type: c.type })),
-    );
-  }, [userContent, starredContent]);
 
   useEffect(() => {
     if (shareMessage) {
@@ -230,7 +216,7 @@ const Dashboard = () => {
   return (
     <>
       <div className="md:hidden">
-        <Navbar2 scrollElement={contentScrollRef.current} />
+        <Navbar2 scrollElement={contentScrollRef} />
       </div>
 
       <div
