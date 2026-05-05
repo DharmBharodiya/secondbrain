@@ -21,7 +21,7 @@ const item = {
 
 const HeroCardMaster = () => {
   return (
-    <div className="w-full md:w-[80%] h-full flex flex-col justify-center items-center  px-10 py-5">
+    <div className="w-full lg:w-[80%] h-full flex flex-col justify-center items-center  px-10 py-5">
       <div className="w-full flex justify-center flex-col items-center mb-4">
         <h1 className="font-bold text-orange-500 text-xs">
           BUILT FOR HOW YOU THINK
@@ -31,7 +31,7 @@ const HeroCardMaster = () => {
         </h1>
       </div>
       <motion.div
-        className="w-full grid md:grid-cols-2 md:px-6 px-1 py-2 gap-y-6 gap-x-4"
+        className="w-full grid md:grid-cols-2 md:px-6 px-1 py-2 gap-y-6 gap-x-2 md:gap-x-4"
         variants={container}
         initial="hidden"
         whileInView="show"

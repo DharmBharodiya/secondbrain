@@ -28,7 +28,7 @@ const Button = ({
   const variantStyles = styles[variant];
   return (
     <motion.button
-      className={`${styles.base} ${variantStyles} ${extraStyles && extraStyles}`}
+      className={`${styles.base} ${variantStyles} ${extraStyles && extraStyles} whitespace-nowrap`}
       onClick={clickEvent}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}

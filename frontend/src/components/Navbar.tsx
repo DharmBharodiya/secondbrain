@@ -74,23 +74,22 @@ const Navbar = ({ scrollElement }: NavbarProps) => {
         </NavLink>
       </div>
 
-      <div className="hidden lg:flex justify-center items-center gap-6">
+      <div className="hidden xl:flex justify-center items-center gap-6">
         {list.map((ls, idx) => (
-          <div
-            key={idx}
-            className="flex justify-center items-center gap-2 group cursor-pointer"
-          >
-            <div
-              className={`w-2 h-2 ${colors[idx]} rounded-full relative`}
-            ></div>
+          <NavLink to={`/info/${ls}`} key={idx}>
+            <div className="flex justify-center items-center gap-2 group cursor-pointer whitespace-nowrap">
+              <div
+                className={`w-2 h-2 ${colors[idx]} rounded-full relative`}
+              ></div>
 
-            <div className="relative">
-              <p className="text-sm font-semibold md:text-sm text-center">
-                {ls}
-              </p>
-              <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-current group-hover:w-full transition-all duration-300"></div>
+              <div className="relative">
+                <p className="text-sm font-semibold md:text-sm text-center">
+                  {ls}
+                </p>
+                <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-current group-hover:w-full transition-all duration-300"></div>
+              </div>
             </div>
-          </div>
+          </NavLink>
         ))}
       </div>
 

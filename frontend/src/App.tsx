@@ -9,6 +9,7 @@ import ShareBoard from "./pages/Shareboard";
 import NotFound from "./pages/NotFound";
 import { useContext } from "react";
 import { AuthContext } from "./Context/AuthContext";
+import InfoPage from "./pages/InfoPage";
 
 function App() {
   const { theme } = useContext(AuthContext);
@@ -37,6 +38,7 @@ function App() {
             </PublicRoute>
           }
         />
+        <Route path="/info/:topic" element={<InfoPage />} />
         <Route
           path="/dashboard"
           element={

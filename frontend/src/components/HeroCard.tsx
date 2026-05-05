@@ -22,7 +22,7 @@ const HeroCard = ({
     <div
       className={`w-full h-auto px-4 py-4 rounded-lg shadow-md ${theme === "dark" ? "bg-[#11110F]" : "bg-white"} ${extraStyles}`}
     >
-      <div className="h-37 md:h-30 w-[95%]">
+      <div className="w-[95%] h-auto">
         <p className="text-[12px] md:text-xs mb-1">{Icon}</p>
         <h1
           className={`${theme === "dark" ? "text-white" : "text-black"} font-bold font-advercase text-2xl`}
@@ -35,7 +35,7 @@ const HeroCard = ({
           {description}
         </p>
       </div>
-      <div className="w-full h-40 rounded-md">
+      <div className="w-full h-40 rounded-md mt-3">
         <img
           className="w-full h-40 object-cover rounded-md"
           src={src}
