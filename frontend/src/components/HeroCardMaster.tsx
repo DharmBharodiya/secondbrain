@@ -1,5 +1,9 @@
 import HeroCard from "./HeroCard";
 import { motion } from "framer-motion";
+import orange1 from "../assets/images/orange-1.jpeg";
+import orange2 from "../assets/images/orange-2.jpeg";
+import orange3 from "../assets/images/orange-3.jpeg";
+import orange4 from "../assets/images/orange-4.jpeg";
 
 const container = {
   hidden: {},
@@ -37,7 +41,7 @@ const HeroCardMaster = () => {
           <HeroCard
             title="Capture"
             description="Instantly save fragments of inspiration, web clippings, and fleeting ideas. No folders, no friction. Just the essence"
-            src="src/assets/images/orange-1.jpeg"
+            src={orange1}
             icon="INTENTIONAL ENTRY"
           />
         </motion.div>
@@ -45,7 +49,7 @@ const HeroCardMaster = () => {
           <HeroCard
             title="Collect"
             description="Archive bridges connnections between your notes. Watch your knowledge map itself in real-time"
-            src="src/assets/images/orange-4.jpeg"
+            src={orange4}
             icon="SEMANTIC HUB"
           />
         </motion.div>
@@ -53,7 +57,7 @@ const HeroCardMaster = () => {
           <HeroCard
             title="Reflect"
             description="Turn raw data into refined insights with an interface that stays out of your way."
-            src="src/assets/images/orange-2.jpeg"
+            src={orange2}
             icon="COGNITIVE SPACE "
           />
         </motion.div>
@@ -61,7 +65,7 @@ const HeroCardMaster = () => {
           <HeroCard
             title="Archive"
             description="Your life's work, securely stored. Searchable by concept, color or feeling. Never lose a spark of genius again."
-            src="src/assets/images/orange-3.jpeg"
+            src={orange3}
             icon={"ETERNAL STORAGE"}
           />
         </motion.div>

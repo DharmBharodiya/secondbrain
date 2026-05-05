@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import Navbar from "../components/Navbar";
 import { useSignup } from "../hooks/useContentQueries";
+import orange3 from "../assets/images/orange-3.jpeg";
 
 const SignupPage = () => {
   const [username, setUsername] = useState<string>("");
@@ -46,11 +47,7 @@ const SignupPage = () => {
       <Navbar />
       <div className="mt-30 md:mt-4 flex-col md:flex md:flex-row justify-center items-center">
         <div className="hidden md:block rounded-lg md:mb-0 mb-5">
-          <img
-            className="w-80 h-80 rounded-lg"
-            src="src/assets/images/orange-2.jpeg"
-            alt="image"
-          />
+          <img className="w-80 h-80 rounded-lg" src={orange3} alt="image" />
         </div>
         <div className="md:ml-10 w-80">
           <div className="flex justify-center items-center flex-col">
@@ -95,11 +92,7 @@ const SignupPage = () => {
           </div>
         </div>
         <div className="block md:hidden mt-4 md:mt-0 rounded-lg md:mb-0 mb-5">
-          <img
-            className="w-80 h-80 rounded-lg"
-            src="src/assets/images/orange-3.jpeg"
-            alt="image"
-          />
+          <img className="w-80 h-80 rounded-lg" src={orange3} alt="image" />
         </div>
       </div>
     </>

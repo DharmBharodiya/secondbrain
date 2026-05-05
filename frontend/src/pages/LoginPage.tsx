@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import Navbar from "../components/Navbar";
 import { useLogin } from "../hooks/useContentQueries";
+import orange1 from "../assets/images/orange-1.jpeg";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -37,7 +38,7 @@ const LoginPage = () => {
 
   //   setError("");
   //   setMessage("");
-  //   setIsLoading(true); 
+  //   setIsLoading(true);
 
   //   try {
   //     const result = await LoginService({ username, password });
@@ -70,46 +71,46 @@ const LoginPage = () => {
   // };
 
   const handleLogin = () => {
-  if (!username.trim()) {
-    setError("Username is required");
-    return;
-  }
-  if (!password.trim()) {
-    setError("Password is required");
-    return;
-  }
-
-  setError("");
-  setMessage("");
-
-  loginMutation.mutate(
-    { username, password },
-    {
-      onSuccess: (result) => {
-        if (result.token) {
-          const token = result.token;
-          localStorage.setItem("token", token);
-          setToken(token);
-          setLoggedIn(true);
-          setMessage(result.message || "Login successful!");
-
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 1000);
-        } else {
-          setError(result.message || "Invalid username or password");
-        }
-      },
-      onError: (err) => {
-        const errorMessage =
-          err instanceof Error
-            ? err.message
-            : "An error occurred during login";
-        setError(errorMessage);
-      },
+    if (!username.trim()) {
+      setError("Username is required");
+      return;
     }
-  );
-};
+    if (!password.trim()) {
+      setError("Password is required");
+      return;
+    }
+
+    setError("");
+    setMessage("");
+
+    loginMutation.mutate(
+      { username, password },
+      {
+        onSuccess: (result) => {
+          if (result.token) {
+            const token = result.token;
+            localStorage.setItem("token", token);
+            setToken(token);
+            setLoggedIn(true);
+            setMessage(result.message || "Login successful!");
+
+            setTimeout(() => {
+              navigate("/dashboard");
+            }, 1000);
+          } else {
+            setError(result.message || "Invalid username or password");
+          }
+        },
+        onError: (err) => {
+          const errorMessage =
+            err instanceof Error
+              ? err.message
+              : "An error occurred during login";
+          setError(errorMessage);
+        },
+      },
+    );
+  };
 
   // Clear error when user starts typing
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,11 +128,7 @@ const LoginPage = () => {
       <Navbar />
       <div className="mt-30 md:mt-4 flex-col md:flex md:flex-row justify-center items-center">
         <div className="hidden md:block rounded-lg md:mb-0 mb-5">
-          <img
-            className="w-80 h-80 rounded-lg"
-            src="src/assets/images/orange-1.jpeg"
-            alt="image"
-          />
+          <img className="w-80 h-80 rounded-lg" src={orange1} alt="image" />
         </div>
         <div className="md:ml-10 w-80">
           <div className="flex justify-center items-center flex-col">
@@ -188,11 +185,7 @@ const LoginPage = () => {
           </div>
         </div>
         <div className="block md:hidden mt-4 md:mt-0 rounded-lg md:mb-0 mb-5">
-          <img
-            className="w-80 h-80 rounded-lg"
-            src="src/assets/images/orange-1.jpeg"
-            alt="image"
-          />
+          <img className="w-80 h-80 rounded-lg" src={orange1} alt="image" />
         </div>
       </div>
     </>
