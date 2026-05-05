@@ -23,7 +23,9 @@ const InstagramImage = ({ url }: InstagramImageOnlyProps) => {
     <div
       style={{
         width: "100%",
+        height: "100%",
         maxWidth: "500px",
+        maxHeight: "100%",
         aspectRatio: "1 / 1", // Forces a square look
         overflow: "hidden", // This is the "Clipper"
         position: "relative",

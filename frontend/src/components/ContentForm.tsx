@@ -87,6 +87,7 @@ const ContentForm = ({
           return false;
         }
       }
+      return true; // For non-image types, proceed with submission
     };
 
     try {
@@ -193,7 +194,6 @@ const ContentForm = ({
             <option value="spotify">spotify</option>
             <option value="quote">quote</option>
             <option value="image">image</option>
-            <option value="default">default</option>
           </select>
         </div>
         {type === "image" ? (

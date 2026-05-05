@@ -196,7 +196,9 @@ const ContentCard = ({
         )}
 
         {content.type === "instagram" && content.link && (
-          <InstagramImage url={content.link} />
+          <div className="w-full h-full flex items-center justify-center overflow-hidden">
+            <InstagramImage url={content.link} />
+          </div>
         )}
       </div>
       <div className="ml-6 flex flex-col justify-around relative">
