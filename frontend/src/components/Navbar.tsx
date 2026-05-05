@@ -13,6 +13,13 @@ interface NavbarProps {
 const Navbar = ({ scrollElement }: NavbarProps) => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const list = ["Explore", "Why Archive", "How it works", "What's New"];
+  const colors = [
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-pink-500",
+    "bg-yellow-500",
+  ];
 
   const navigate = useNavigate();
 
@@ -65,6 +72,26 @@ const Navbar = ({ scrollElement }: NavbarProps) => {
             Archive
           </h1>
         </NavLink>
+      </div>
+
+      <div className="hidden lg:flex justify-center items-center gap-6">
+        {list.map((ls, idx) => (
+          <div
+            key={idx}
+            className="flex justify-center items-center gap-2 group cursor-pointer"
+          >
+            <div
+              className={`w-2 h-2 ${colors[idx]} rounded-full relative`}
+            ></div>
+
+            <div className="relative">
+              <p className="text-sm font-semibold md:text-sm text-center">
+                {ls}
+              </p>
+              <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-current group-hover:w-full transition-all duration-300"></div>
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="hidden md:flex justify-center items-center">

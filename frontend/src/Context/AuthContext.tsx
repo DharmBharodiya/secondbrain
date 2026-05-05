@@ -80,8 +80,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   });
   const [settingsOpened, setSettingsOpened] = useState(false);
 
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setThemeState] = useState<"light" | "dark">(() => {
+    const storedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+    return storedTheme || "light";
+  });
   const [starredOpened, setStarredOpenedState] = useState(false);
+
+  // Wrapper for setTheme that also saves to localStorage
+  const setTheme = useCallback((value: "light" | "dark") => {
+    localStorage.setItem("theme", value);
+    setThemeState(value);
+  }, []);
 
   // Memoized wrapper to update state with logging
   const setStarredOpened = useCallback((value: boolean) => {
