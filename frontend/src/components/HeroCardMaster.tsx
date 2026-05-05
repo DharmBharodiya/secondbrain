@@ -27,7 +27,7 @@ const HeroCardMaster = () => {
         </h1>
       </div>
       <motion.div
-        className="w-full grid md:grid-cols-2 px-6 py-2 gap-y-6 gap-x-4"
+        className="w-full grid md:grid-cols-2 md:px-6 px-1 py-2 gap-y-6 gap-x-4"
         variants={container}
         initial="hidden"
         whileInView="show"
