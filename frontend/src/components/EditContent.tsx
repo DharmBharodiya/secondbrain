@@ -5,11 +5,6 @@ import { Link, X } from "lucide-react";
 import whiteLogo from "../assets/images/white-logo.PNG";
 import { useUpdateContent } from "../hooks/useContentQueries";
 
-type Tags = {
-  _id: string;
-  title: string;
-};
-
 interface EditContentProps {
   handleClick: () => void;
   onContentAdded?: () => void;
@@ -23,10 +18,7 @@ const EditContent = ({
 }: EditContentProps) => {
   const { editData, token } = useContext(AuthContext);
 
-  let tagsJoinedString: string = "";
-  let tagsJoined = editData.tags.map(
-    (tag) => (tagsJoinedString += tag.title + ", "),
-  );
+  const tagsJoinedString = editData.tags.map((tag) => tag.title).join(", ");
 
   const [title, setTitle] = useState<string>(editData.title);
   const [type, setType] = useState<string>(editData.type);
@@ -59,6 +51,8 @@ const EditContent = ({
     }
 
     const separatedTagsArray = tagsSorted();
+    // console.log("tagsjoine: ", tagsJoined);
+    console.log("tagsjoinedstring: ", tagsJoinedString);
     console.log("Separated tags:", separatedTagsArray);
     console.log("Original tags:", tags);
 

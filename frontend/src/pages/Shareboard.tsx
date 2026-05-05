@@ -34,14 +34,10 @@ type userType = {
 const ShareBoard = () => {
   const [userContent, setUserContent] = useState<UserContent[]>();
   const { shareId } = useParams();
-  const { userSharedQuote, theme } = useContext(AuthContext);
+  const { theme } = useContext(AuthContext);
   const [userData, setUserData] = useState<userType>();
 
   const { data: result, refetch } = useShareBoard(shareId);
-
-  useEffect(() => {
-    console.log("shareboard thingy: ", userSharedQuote);
-  }, [userSharedQuote]);
 
   // Move state update to useEffect to prevent infinite loop
   useEffect(() => {

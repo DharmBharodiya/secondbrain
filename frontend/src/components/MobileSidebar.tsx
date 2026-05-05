@@ -11,7 +11,6 @@ import { FolderContent } from "@/Context/FolderContext";
 const MobileSidebar = ({
   settings,
   setSettings,
-  menuOpen,
   setMenuOpen,
 }: {
   settings: boolean;

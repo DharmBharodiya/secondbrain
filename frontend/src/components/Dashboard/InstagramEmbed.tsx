@@ -44,7 +44,7 @@ const InstagramEmbed = ({ url }: InstagramEmbedProps) => {
             href={url}
             style={{
               background: "#FFFFFF",
-              line_height: "0",
+              lineHeight: "0",
               padding: "0 0",
               textAlign: "center",
               textDecoration: "none",

@@ -62,7 +62,6 @@ type UserContent = {
 const Dashboard = () => {
   const [username, setUsername] = useState("");
   const [search, setSearch] = useState("");
-  const [searchUserContent, setSearchUserContent] = useState<UserContent[]>([]);
 
   const [contentFormOpen, setContentFormOpen] = useState(false);
   const [contentCardOpen, setContentCardOpen] = useState(false);
@@ -72,7 +71,7 @@ const Dashboard = () => {
   const [userSharedQuote, setUserSharedQuote] = useState("");
   const [settings, setSettings] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-  const { folders, setFolders } = useContext(FolderContent);
+  const { folders } = useContext(FolderContent);
 
   const contentScrollRef = useRef<HTMLDivElement>(null);
 
@@ -121,18 +120,18 @@ const Dashboard = () => {
     console.log("Starred Content: ", starredContent);
   }, [starredContent]);
 
-  // Filter content based on search
-  useEffect(() => {
+  // Derive searchUserContent from displayContent and search without setState
+  const searchUserContent = useMemo(() => {
     if (search.trim() === "") {
-      setSearchUserContent(displayContent);
+      return displayContent;
     } else {
-      const filtered = displayContent.filter(
+      return displayContent.filter(
         (content: UserContent) =>
           content.title.toLowerCase().includes(search.toLowerCase()) ||
           content.notes?.toLowerCase().includes(search.toLowerCase()) ||
-          content.link?.toLowerCase().includes(search.toLowerCase()),
+          content.link?.toLowerCase().includes(search.toLowerCase()) ||
+          content.type?.toLowerCase().includes(search.toLowerCase()),
       );
-      setSearchUserContent(filtered);
     }
   }, [search, displayContent]);
 
@@ -360,8 +359,8 @@ const Dashboard = () => {
                 whileInView="show"
                 viewport={{ once: true, amount: 0.2 }}
               >
-                {displayContent && displayContent.length > 0 ? (
-                  displayContent.map((content: UserContent) => (
+                {searchUserContent && searchUserContent.length > 0 ? (
+                  searchUserContent.map((content: UserContent) => (
                     <motion.div
                       variants={item}
                       key={content._id}
@@ -413,7 +412,7 @@ const Dashboard = () => {
                             <InstagramImage url={content.link} />
                           )}
                         </div>
-                        <div className="flex justify-between px-3 mt-1 mb-1">
+                        <div className="flex justify-between items-center px-3 mt-1 mb-1">
                           <h1
                             className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
                           >
@@ -442,7 +441,7 @@ const Dashboard = () => {
                               "en-US",
                               {
                                 weekday: "short",
-                                year: "numeric",
+                                year: "2-digit",
                                 month: "short",
                                 day: "numeric",
                               },

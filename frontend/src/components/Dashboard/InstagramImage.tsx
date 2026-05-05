@@ -1,11 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 interface InstagramImageOnlyProps {
   url: string;
 }
 
 const InstagramImage = ({ url }: InstagramImageOnlyProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  // const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Force Instagram to process the embed when the component mounts

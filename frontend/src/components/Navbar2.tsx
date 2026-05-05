@@ -1,12 +1,10 @@
-import Button from "./Button";
-import { useState, useEffect, useContext, RefObject } from "react";
+import { useState, useEffect, useContext } from "react";
+import type { RefObject } from "react";
 import { Menu, X } from "lucide-react";
-import { NavLink, useNavigate } from "react-router";
+import { NavLink } from "react-router";
 import { AuthContext } from "../Context/AuthContext";
 import BlackLogo from "../assets/images/black-logo.PNG";
 import WhiteLogo from "../assets/images/white-logo.PNG";
-import Sidebar from "./Dashboard/Sidebar";
-import Settings from "./Settings";
 import MobileSidebar from "./MobileSidebar";
 
 interface NavbarProps {
@@ -18,11 +16,7 @@ const Navbar2 = ({ scrollElement }: NavbarProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settings, setSettings] = useState(false);
 
-  const navigate = useNavigate();
-
-  const { theme, setTheme } = useContext(AuthContext);
-
-  const { loggedIn, logOut } = useContext(AuthContext);
+  const { theme } = useContext(AuthContext);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,9 +27,14 @@ const Navbar2 = ({ scrollElement }: NavbarProps) => {
       }
     };
 
-    const element = scrollElement || window;
-    element.addEventListener("scroll", handleScroll);
-    return () => element.removeEventListener("scroll", handleScroll);
+    if (scrollElement?.current) {
+      scrollElement.current.addEventListener("scroll", handleScroll);
+      return () =>
+        scrollElement.current?.removeEventListener("scroll", handleScroll);
+    } else {
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
   }, [scrollElement]);
 
   return (

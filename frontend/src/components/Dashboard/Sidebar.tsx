@@ -5,15 +5,7 @@ import WhiteLogo from "../../assets/images/white-logo.PNG";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 import Button from "../Button";
-import {
-  Moon,
-  Sun,
-  ImageIcon,
-  Quote,
-  X,
-  Camera,
-  FileImage,
-} from "lucide-react";
+import { Moon, Sun, Quote, X, Camera, FileImage } from "lucide-react";
 import { FolderContent } from "@/Context/FolderContext";
 
 const Sidebar = ({
@@ -23,7 +15,7 @@ const Sidebar = ({
   settings: boolean;
   setSettings: (value: boolean) => void;
 }) => {
-  const sidebarList = ["starred", "settings"];
+  // const sidebarList = ["starred", "settings"];
   const { theme, setTheme } = useContext(AuthContext);
   const {
     loggedIn,

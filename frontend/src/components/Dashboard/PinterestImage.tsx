@@ -5,7 +5,7 @@ interface PinterestImageProps {
   width?: number; // Default width to fetch
 }
 
-const PinterestImage = ({ url, width = 600 }: PinterestImageProps) => {
+const PinterestImage = ({ url }: PinterestImageProps) => {
   const imageUrl = useMemo(() => {
     if (!url) return null;
 
