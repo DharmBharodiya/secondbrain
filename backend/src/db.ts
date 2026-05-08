@@ -92,10 +92,32 @@ const StarredSchema = new mongoose.Schema({
   },
 });
 
+const CommentSchema = new Schema({
+  comment: {
+    type: String,
+  },
+  userId: {
+    type: mongoose.Types.ObjectId,
+    ref: "Users",
+  },
+  shareId: {
+    type: String,
+    ref: "Links",
+  },
+});
+
 const UserModel = model("Users", UserSchema);
 const TagModel = model("Tags", TagSchema);
 const LinkModel = model("Links", LinkSchema);
 const ContentModel = model("Content", ContentSchema);
 const StarModel = model("Starred", StarredSchema);
+const CommentModel = model("Comment", CommentSchema);
 
-export { UserModel, ContentModel, LinkModel, TagModel, StarModel };
+export {
+  UserModel,
+  ContentModel,
+  LinkModel,
+  TagModel,
+  StarModel,
+  CommentModel,
+};

@@ -95,7 +95,7 @@ const Hero = () => {
             text="Start your archive"
             variant="orange"
             extraStyles={
-              " shadow-orange-500 shadow-xl font-semibold flex justify-center items-center"
+              " shadow-orange-500 shadow-lg font-semibold flex justify-center items-center"
             }
           >
             <img

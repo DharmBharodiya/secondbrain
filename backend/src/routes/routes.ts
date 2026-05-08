@@ -7,6 +7,7 @@ import {
   UserModel,
   TagModel,
   StarModel,
+  CommentModel,
 } from "../db.js";
 import jwt from "jsonwebtoken";
 import { AuthMiddleware } from "../middlewares/AuthMiddleware.js";
@@ -764,4 +765,81 @@ Instructions:
   }
 });
 
+router.post(
+  "/comments/:shareId",
+  AuthMiddleware,
+  async (req: CustomRequest, res: Response) => {
+    const userId = req.id;
+    const shareId = req.params.shareId as string;
+    const userComment = req.body.comment;
+
+    if (!shareId || !userId) {
+      return res.json({ message: "Please provide shareId or userId" });
+    }
+
+    if (!userComment) {
+      return res.json({ message: "Please enter a comment to publish." });
+    }
+
+    const createComment = await CommentModel.create({
+      comment: userComment,
+      userId,
+      shareId,
+    });
+
+    res.json({ message: "Commented." });
+  },
+);
+
+router.get(
+  "/comments/:shareId",
+  AuthMiddleware,
+  async (req: CustomRequest, res: Response) => {
+    const shareId = req.params.shareId as string;
+
+    if (!shareId) {
+      return res.json({ message: "Shareid not provided" });
+    }
+
+    const getComments = await CommentModel.find({
+      shareId: shareId,
+    });
+
+    return res.json({ message: "Comments fetched.", comments: getComments });
+  },
+);
+
+router.put(
+  "/password",
+  AuthMiddleware,
+  async (req: CustomRequest, res: Response) => {
+    const userId = req.id;
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+
+    if (!oldPassword || !newPassword) {
+      return res.json({ message: "Old or New Password is empty." });
+    }
+
+    const findUser = await UserModel.findById(userId);
+    if (!findUser) {
+      return res.json({ message: "No user found to update password for." });
+    }
+
+    const comparePass = await bcrypt.compare(oldPassword, findUser.password);
+
+    if (comparePass) {
+      const hashPass = await bcrypt.hash(newPassword, 3);
+      await UserModel.findByIdAndUpdate(userId, {
+        $set: {
+          password: hashPass,
+        },
+      });
+
+      return res.json({ message: "Password updated." });
+    } else {
+      return res.status(401).json({ message: "Old password is incorrect." });
+    }
+  },
+);
 export { router };
