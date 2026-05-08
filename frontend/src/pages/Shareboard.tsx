@@ -5,13 +5,14 @@ import YouTubeBanner from "../components/Dashboard/YoutubeBanner";
 import Article from "../components/Dashboard/Article";
 import TwitterEmbed from "../components/Dashboard/TwitterEmbed";
 import InstagramImage from "../components/Dashboard/InstagramImage";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, MessageCircle } from "lucide-react";
 import Button from "../components/Button";
 import { motion } from "framer-motion";
 import ImageDisplay from "../components/Dashboard/ImageDisplay";
 import Navbar from "../components/Navbar";
 import { useShareBoard } from "../hooks/useContentQueries";
 import { AuthContext } from "@/Context/AuthContext";
+import CommentsPage from "./CommentsPage";
 
 type UserContent = {
   _id: string;
@@ -36,6 +37,7 @@ const ShareBoard = () => {
   const { shareId } = useParams();
   const { theme } = useContext(AuthContext);
   const [userData, setUserData] = useState<userType>();
+  const [commentsOpen, setCommentsOpen] = useState(false);
 
   const { data: result, refetch } = useShareBoard(shareId);
 
@@ -83,23 +85,54 @@ const ShareBoard = () => {
   return (
     <>
       <Navbar />
-      <div>
-        <div className="mt-32 mb-8 text-center">
-          <h1 className="text-2xl font-advercase">
-            {" "}
+      <div
+        className={`w-full min-h-screen pt-20 md:pt-24 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"} overflow-x-hidden`}
+      >
+        <div className="px-4 md:px-6 py-8 md:py-12 text-center">
+          <h1 className="text-xl md:text-3xl font-advercase mb-2">
             {userData?.username}'s Shared Archive
           </h1>
-          <h1>{userData?.sharedQuote}</h1>
+          <h1 className="text-sm md:text-base mb-4">{userData?.sharedQuote}</h1>
           <Button
             variant="orange"
             text="Create your own archive like this"
             extraStyles="shadow-orange-500 shadow-xl transition-all duration-75 mt-3"
           />
         </div>
-        <div className="w-full flex justify-center items-center">
+
+        {/* Floating Comments Button */}
+        <div
+          className="bg-orange-500 rounded-full p-3 flex justify-center items-center fixed bottom-6 right-4 md:bottom-10 md:right-6 cursor-pointer shadow-xl shadow-orange-500 hover:scale-102 transition-all duration-100 group z-50"
+          onClick={() => setCommentsOpen(!commentsOpen)}
+        >
+          <h1 className="text-sm bg-white text-black px-2 py-1 border-black absolute whitespace-nowrap bottom-14 right-0 hidden group-hover:block">
+            Comments
+          </h1>
+          <MessageCircle className="w-6 md:w-7 h-6 md:h-7 text-white" />
+        </div>
+
+        {/* Comments Modal */}
+        {commentsOpen && shareId && (
+          <div className="fixed bottom-20 md:bottom-24 right-4 md:right-6 w-[calc(100vw-2rem)] md:w-96 h-96 bg-white rounded-lg shadow-2xl z-40 flex flex-col overflow-hidden">
+            <div className="bg-orange-500 text-white p-4 flex justify-between items-center">
+              <h2 className="font-semibold">Comments</h2>
+              <button
+                onClick={() => setCommentsOpen(false)}
+                className="text-white hover:bg-orange-600 w-8 h-8 rounded-full cursor-pointer transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto">
+              <CommentsPage shareId={shareId} />
+            </div>
+          </div>
+        )}
+
+        <div className="w-full flex justify-center items-center px-4 md:px-6 pb-8 md:pb-12">
           {userContent && userContent.length > 0 ? (
             <motion.div
-              className="w-[90%] columns-1 xs:columns-2 md:columns-3 lg:columns-4 rounded-lg gap-2"
+              className="w-full max-w-6xl columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4"
               variants={container}
               initial="show"
               animate="show"
@@ -107,11 +140,11 @@ const ShareBoard = () => {
               {userContent.map((content: UserContent) => (
                 <motion.div
                   key={content._id}
-                  className="break-inside-avoid relative group"
+                  className="break-inside-avoid relative group mb-4"
                   variants={item}
                 >
                   <div>
-                    <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0 flex justify-center">
+                    <div className="px-1 py-1 rounded-2xl bg-slate-100 border-2 border-slate-100 hover:border-gray-300 cursor-pointer outline-0 flex justify-center w-full">
                       {/* for spotify */}
                       {content.type === "spotify" && content.link && (
                         <SpotifyBanner link={content.link} height="152" />
@@ -130,7 +163,7 @@ const ShareBoard = () => {
                         <ImageDisplay url={content.imageUrl} />
                       ) : null}
                       {content.type === "quote" ? (
-                        <div className="flex justify-center items-center">
+                        <div className="flex justify-center items-center w-full">
                           <Article content={content} />
                         </div>
                       ) : null}
@@ -143,16 +176,15 @@ const ShareBoard = () => {
                         <InstagramImage url={content.link} />
                       )}
                     </div>
-                    <div className="flex justify-between px-3 items-center mt-1">
+                    <div className="flex justify-between px-2 md:px-3 items-center mt-1 gap-2">
                       <h1
-                        className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
+                        className={`text-xs truncate ${theme === "dark" ? "text-slate-300" : "text-slate-600"}`}
                       >
-                        {content.title}
+                        {content.title.slice(0, 14) + ".."}
                       </h1>
                       <h1
-                        className={`${theme === "dark" ? "text-slate-300" : "text-slate-600 text-xs"} text-xs`}
+                        className={`text-xs flex-shrink-0 ${theme === "dark" ? "text-slate-300" : "text-slate-600"}`}
                       >
-                        {/* {content.title} */}
                         {new Date(content.createdAt).toLocaleDateString(
                           "en-US",
                           {
@@ -177,7 +209,7 @@ const ShareBoard = () => {
               ))}
             </motion.div>
           ) : (
-            <p className="font-advercase text-xl text-center">
+            <p className="font-advercase text-lg md:text-xl text-center py-12">
               No links yet. Start building your archive
             </p>
           )}

@@ -249,3 +249,43 @@ export async function MakeContentPublic(token: string, contentId: string) {
   const data = await res.json();
   return data.message;
 }
+
+export async function postComment(
+  token: string,
+  shareId: string,
+  comment: string,
+) {
+  const res = await fetch(BACKEND_URL + `/comments/${shareId}`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ comment }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Error posting comment");
+  }
+
+  return data;
+}
+
+export async function fetchComments(token: string, shareId: string) {
+  const res = await fetch(BACKEND_URL + `/comments/${shareId}`, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Error fetching comments");
+  }
+
+  return data;
+}

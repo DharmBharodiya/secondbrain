@@ -33,17 +33,33 @@ const ChatPage = () => {
 
   return (
     <div
-      className={`w-full h-full flex flex-col justify-between p-4 bg-white ${theme === "dark" ? "text-black" : "text-black"}`}
+      className={`w-full h-full flex flex-col justify-between p-4 ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
     >
+      <style>{`
+        .chat-scroll::-webkit-scrollbar {
+          width: 8px;
+        }
+        .chat-scroll::-webkit-scrollbar-track {
+          background: ${theme === "dark" ? "#1f2937" : "#f3f4f6"};
+          border-radius: 4px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+          background: #f97316;
+          border-radius: 4px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb:hover {
+          background: #ea580c;
+        }
+      `}</style>
       <div className="mb-4">
         <h1
-          className={`text-lg font-semibold ${theme === "dark" ? "text-black" : "text-black"}`}
+          className={`text-lg font-semibold ${theme === "dark" ? "text-white" : "text-black"}`}
         >
           Chat with your{" "}
           <span className="font-advercase font-normal">Archive</span>
         </h1>
       </div>
-      <div className="flex-1 overflow-y-auto mb-4 space-y-3 flex flex-col">
+      <div className="flex-1 overflow-y-auto mb-4 space-y-3 flex flex-col chat-scroll">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -66,7 +82,9 @@ const ChatPage = () => {
           </div>
         ))}
         {loading && (
-          <div className="text-sm text-gray-500">
+          <div
+            className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
+          >
             <h1>Thinking...</h1>
           </div>
         )}
@@ -75,7 +93,7 @@ const ChatPage = () => {
         <input
           type="text"
           placeholder="Enter your question..."
-          className="outline-none border-orange-500 border-2 px-3 py-2 rounded-md flex-1 text-sm"
+          className={`outline-none border-orange-500 border-2 px-3 py-2 rounded-md flex-1 text-sm ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-black"}`}
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && handleQuestionSubmit()}

@@ -353,7 +353,7 @@ const Dashboard = () => {
               )}
 
               <motion.div
-                className="w-[90%] columns-2 lg:columns-4 rounded-lg gap-2 z-10"
+                className="w-[90%] columns-1 md:columns-2 lg:columns-4 rounded-lg gap-2 z-10"
                 variants={container}
                 initial="show"
                 whileInView="show"
@@ -364,7 +364,7 @@ const Dashboard = () => {
                     <motion.div
                       variants={item}
                       key={content._id}
-                      className="break-inside-avoid relative group mb-2 w-full max-h-fit"
+                      className="break-inside-avoid relative group mb-2.5 w-full max-h-fit"
                       onClick={() => {
                         setSelectedContent(content);
                         console.log("SelectedContent:", content);

@@ -50,11 +50,11 @@ const TwitterEmbed = ({ url }: TwitterEmbedProps) => {
   return (
     <div
       ref={wrapperRef}
-      className="w-full flex justify-center items-center overflow-visible"
+      className="w-full flex justify-center items-start overflow-hidden"
       style={{
-        // This ensures the height adjusts as the scaled element shrinks
         height: scale < 1 ? `${450 * scale}px` : "auto",
         minHeight: "150px",
+        maxWidth: "100%",
       }}
     >
       <div
@@ -63,7 +63,9 @@ const TwitterEmbed = ({ url }: TwitterEmbedProps) => {
           transform: `scale(${scale})`,
           transformOrigin: "top center",
           width: scale < 1 ? "250px" : "100%",
+          maxWidth: "100%",
           transition: "transform 0.2s ease-out",
+          boxSizing: "border-box",
         }}
       >
         <blockquote

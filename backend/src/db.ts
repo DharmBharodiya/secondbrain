@@ -104,6 +104,7 @@ const CommentSchema = new Schema({
     type: String,
     ref: "Links",
   },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const UserModel = model("Users", UserSchema);
