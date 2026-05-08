@@ -808,14 +808,16 @@ router.get(
     return res.json({ message: "Comments fetched.", comments: getComments });
   },
 );
-
+const passUpdateSchema = z.object({
+  oldPassword: z.string().min(6, "Password must be at least 6 characters"),
+  newPassword: z.string().min(6, "Password must be at least 6 characters"),
+});
 router.put(
   "/password",
   AuthMiddleware,
   async (req: CustomRequest, res: Response) => {
     const userId = req.id;
-    const oldPassword = req.body.oldPassword;
-    const newPassword = req.body.newPassword;
+    const { oldPassword, newPassword } = passUpdateSchema.parse(req.body);
 
     if (!oldPassword || !newPassword) {
       return res.json({ message: "Old or New Password is empty." });
