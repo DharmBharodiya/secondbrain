@@ -127,6 +127,30 @@ router.put("/user", AuthMiddleware, async (req: CustomRequest, res) => {
   res.status(200).json({ message: "Username updated." });
 });
 
+router.put("/user/quote", AuthMiddleware, async (req: CustomRequest, res) => {
+  const userId = req.id;
+  const { sharedQuote } = req.body;
+
+  if (!sharedQuote) {
+    return res.status(400).json({ message: "Shared quote is required." });
+  }
+
+  const result = await UserModel.updateOne(
+    { _id: new mongoose.Types.ObjectId(userId) },
+    {
+      $set: {
+        sharedQuote: sharedQuote,
+      },
+    },
+  );
+
+  if (result.matchedCount === 0) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  res.status(200).json({ message: "Shared quote updated successfully." });
+});
+
 router.post(
   "/content",
   AuthMiddleware,

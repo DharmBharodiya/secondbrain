@@ -50,11 +50,14 @@ const Sidebar = ({
   };
   const handleStarred = () => {
     setStarredOpened(!starredOpened);
+    setSettingsOpened(false); // Close settings when opening starred
+    setSettings(false); // Also close settings in Dashboard
   };
 
   const handleSettings = () => {
     setSettingsOpened(!settingsOpened);
     setSettings(!settings);
+    setStarredOpened(false); // Close starred when opening settings
   };
 
   const handleFilterClick = (type: string) => {

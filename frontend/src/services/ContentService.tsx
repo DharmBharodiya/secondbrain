@@ -289,3 +289,45 @@ export async function fetchComments(token: string, shareId: string) {
 
   return data;
 }
+
+export async function UpdatePassword(
+  token: string,
+  oldPassword: string,
+  newPassword: string,
+) {
+  const res = await fetch(BACKEND_URL + "/password", {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify({ oldPassword, newPassword }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Error updating password");
+  }
+
+  return data;
+}
+
+export async function UpdateSharedQuote(token: string, sharedQuote: string) {
+  const res = await fetch(BACKEND_URL + "/user/quote", {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+    method: "PUT",
+    body: JSON.stringify({ sharedQuote }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Error updating shared quote");
+  }
+
+  return data;
+}

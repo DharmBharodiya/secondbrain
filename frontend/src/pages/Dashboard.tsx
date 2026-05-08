@@ -215,7 +215,11 @@ const Dashboard = () => {
   return (
     <>
       <div className="md:hidden">
-        <Navbar2 scrollElement={contentScrollRef} />
+        <Navbar2
+          scrollElement={contentScrollRef}
+          settings={settings}
+          setSettings={setSettings}
+        />
       </div>
 
       <div

@@ -52,11 +52,16 @@ const MobileSidebar = ({
   };
   const handleStarred = () => {
     setStarredOpened(!starredOpened);
+    setSettingsOpened(false); // Close settings when opening starred
+    setSettings(false); // Also close settings in Dashboard
+    setMenuOpen(false); // Close the mobile menu
   };
 
   const handleSettings = () => {
     setSettingsOpened(!settingsOpened);
     setSettings(!settings);
+    setStarredOpened(false); // Close starred when opening settings
+    setMenuOpen(false); // Close the mobile menu
   };
 
   const handleFilterClick = (type: string) => {
@@ -65,6 +70,7 @@ const MobileSidebar = ({
     } else {
       setFolders(type); // select the new type
     }
+    setMenuOpen(false); // Close the mobile menu after selection
   };
 
   return (

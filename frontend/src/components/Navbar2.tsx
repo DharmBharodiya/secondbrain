@@ -9,12 +9,22 @@ import MobileSidebar from "./MobileSidebar";
 
 interface NavbarProps {
   scrollElement?: RefObject<HTMLDivElement | HTMLElement | null>;
+  settings?: boolean;
+  setSettings?: (value: boolean) => void;
 }
 
-const Navbar2 = ({ scrollElement }: NavbarProps) => {
+const Navbar2 = ({
+  scrollElement,
+  settings: propSettings,
+  setSettings: propSetSettings,
+}: NavbarProps) => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [settings, setSettings] = useState(false);
+
+  // Use props if provided (from Dashboard), otherwise use local state
+  const actualSettings = propSettings !== undefined ? propSettings : settings;
+  const actualSetSettings = propSetSettings || setSettings;
 
   const { theme } = useContext(AuthContext);
 
@@ -75,8 +85,8 @@ const Navbar2 = ({ scrollElement }: NavbarProps) => {
       <div>
         {menuOpen && (
           <MobileSidebar
-            settings={settings}
-            setSettings={setSettings}
+            settings={actualSettings}
+            setSettings={actualSetSettings}
             menuOpen={menuOpen}
             setMenuOpen={setMenuOpen}
           />
