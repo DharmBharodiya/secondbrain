@@ -50,10 +50,9 @@ const TwitterEmbed = ({ url }: TwitterEmbedProps) => {
   return (
     <div
       ref={wrapperRef}
-      className="w-full flex justify-center items-start overflow-hidden"
+      className="w-full flex justify-center items-start overflow-visible"
       style={{
-        height: scale < 1 ? `${450 * scale}px` : "auto",
-        minHeight: "150px",
+        height: "fit-content",
         maxWidth: "100%",
       }}
     >
